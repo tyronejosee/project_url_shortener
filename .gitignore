@@ -1,0 +1,98 @@
+# Project
+
+db.sqlite3
+.env
+desktop.ini
+backend/static/admin
+backend/static/cloudinary
+backend/static/drf_spectacular_sidecar
+backend/static/rest_framework
+backend/static/import_export
+
+# Backend
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/*python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Unit test / coverage reports
+.coveragerc
+htmlcov/
+.tox/
+.nox/
+.cache
+nosetests.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# PEP 582
+__pypackages__/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Frontend
+
+# dependencies
+frontend/node_modules
+frontend/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+frontend//coverage
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+frontend/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
