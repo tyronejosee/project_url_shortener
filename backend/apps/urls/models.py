@@ -1,8 +1,5 @@
 """Models for Urls App."""
 
-import random
-import string
-
 from django.db import models
 
 from apps.utils.models import BaseModel
@@ -15,6 +12,7 @@ class URL(BaseModel):
 
     original_url = models.URLField(max_length=2000)
     short_url = models.CharField(max_length=10, blank=True, unique=True)
+    click_count = models.IntegerField(default=0)
 
     class Meta:
         ordering = ["pk"]
@@ -22,15 +20,28 @@ class URL(BaseModel):
         verbose_name_plural = "urls"
 
     def save(self, *args, **kwargs):
-        if not self.short_url:
-            self.short_url = self.generate_short_url()
-        super().save(*args, **kwargs)
+        from .services import URLService
 
-    def generate_short_url(self):
-        length = 6
-        characters = string.ascii_letters + string.digits
-        short_url = "".join(random.choice(characters) for _ in range(length))
-        return short_url
+        if not self.short_url:
+            self.short_url = URLService.generate_short_url()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.original_url} -> {self.short_url}"
+
+
+class Click(BaseModel):
+    """
+    Model definition for Click.
+    """
+
+    url_id = models.ForeignKey(
+        URL,
+        on_delete=models.CASCADE,
+        related_name="clicks",
+    )
+    ip_address = models.GenericIPAddressField()
+    country = models.CharField(max_length=10, blank=True, null=True)
+
+    def __str__(self):
+        return f"Click on {self.url_id.short_url}"
