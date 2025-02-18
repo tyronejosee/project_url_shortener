@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-outfit: "Outfit", sans-serif;
+  --font-roboto-mono: "Roboto Mono", monospace;
+}
+
+html {
+  @apply bg-white text-neutral-950 selection:bg-primary selection:text-neutral-950;
+}
+
+body {
+  font-family: var(--font-outfit);
+}
+
+.code {
+  font-family: var(--font-roboto-mono);
+}
+
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@-webkit-keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.fade-in {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem
+  }
+}
