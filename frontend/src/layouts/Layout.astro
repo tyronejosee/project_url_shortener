@@ -1,7 +1,7 @@
 ---
 import "./src/styles/global.css";
-import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import NavbarWrapper from "../components/NavbarWrapper";
 ---
 
 <!doctype html>
@@ -14,7 +14,7 @@ import Footer from "../components/Footer.astro";
     <title>Astro Basics</title>
   </head>
   <body>
-    <Navbar />
+    <NavbarWrapper client:only="react" />
     <main class="min-h-screen text-neutral-950">
       <slot />
     </main>
