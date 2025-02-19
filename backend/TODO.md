@@ -1,68 +1,109 @@
-Para que un proyecto de acortador de URLs sea correcto y funcional, debe cubrir varios aspectos clave en cuanto a diseño, arquitectura y características técnicas. A continuación, te detallo los requisitos esenciales que debe cumplir el proyecto:
+# **Endpoints**
 
-### 1. **Generación de URLs Cortas Únicas**
+## **Crear una URL corta**
 
-- El sistema debe generar un identificador único y corto para cada URL.
-- Es recomendable usar un esquema de codificación (como base62 o base64) que permita crear identificadores compactos, evitando colisiones de URL.
+**POST** `/api/shorten`
 
-### 2. **Persistencia de Datos**
+- **Descripción**: Genera una URL corta a partir de una URL larga.
+- **Entrada (JSON)**:
 
-- **Base de Datos** : Debes tener un sistema que guarde las URLs originales junto con las cortas generadas. Una base de datos relacional (como MySQL o PostgreSQL) o no relacional (como MongoDB) es adecuada.
-- **Escalabilidad** : Si el proyecto va a manejar grandes volúmenes de tráfico, debes considerar la escalabilidad de la base de datos (sharding, replicación).
+  ```json
+  {
+    "original_url": "https://www.ejemplo.com/pagina-larga"
+  }
+  ```
 
-### 3. **Redirección de URLs**
+- **Salida (JSON)**:
 
-- El sistema debe ser capaz de redirigir al usuario desde la URL corta hacia la URL original.
-- Usualmente se utiliza el código HTTP 301 (redirección permanente) para estas redirecciones.
+  ```json
+  {
+    "short_url": "https://short.ly/abcd1234",
+    "original_url": "https://www.ejemplo.com/pagina-larga"
+  }
+  ```
 
-### 4. **Interfaz de Usuario (UI)**
+## **Obtener información de una URL corta**
 
-- Debes tener una página web donde los usuarios puedan ingresar sus URLs largas y obtener una versión corta.
-- La UI debe ser simple y fácil de usar, proporcionando un formulario de entrada, un botón para generar el enlace y un campo para mostrar la URL corta.
+**GET** `/api/url/{short_code}`
 
-### 5. **API RESTful**
+- **Descripción**: Obtiene información sobre una URL acortada, como su URL original y estadísticas.
+- **Salida (JSON)**:
 
-- **Crear URL corta** : Una API para recibir una URL larga y devolver la corta.
-- **Redirigir a URL original** : Otro endpoint que maneje la redirección, aceptando la URL corta y devolviendo una respuesta de redirección.
-- **Registro y estadística** : Opcionalmente, podrías implementar endpoints para registrar estadísticas sobre el uso de las URLs cortas (número de clics, geolocalización, etc.).
+  ```json
+  {
+    "short_url": "https://short.ly/abcd1234",
+    "original_url": "https://www.ejemplo.com/pagina-larga",
+    "created_at": "2025-02-11T12:00:00Z",
+    "clicks": 120
+  }
+  ```
 
-### 6. **Manejo de Errores**
+## **Redirigir una URL corta**
 
-- Validación de las URLs largas que recibes, asegurándote de que sean URLs válidas.
-- Respuestas claras de error en caso de que la URL corta no exista o sea inválida.
+**GET** `/{short_code}`
 
-### 7. **Seguridad**
+- **Descripción**: Redirige al usuario a la URL original.
+- **Ejemplo**:
+  - Un usuario accede a `https://short.ly/abcd1234`
+  - El backend devuelve un **HTTP 301** o **302** hacia `https://www.ejemplo.com/pagina-larga`
 
-- **Prevención de abuso** : Implementa un sistema para evitar el abuso del servicio, como evitar la generación de URLs de phishing o contenido malicioso.
-- **Autenticación** (opcional): Si deseas permitir que los usuarios gestionen sus enlaces, puedes implementar autenticación mediante tokens JWT o OAuth.
+## **Obtener estadísticas de una URL corta**
 
-### 8. **Análisis y Estadísticas** (Opcional)
+**GET** `/api/url/{short_code}/stats`
 
-- Registrar estadísticas sobre cada URL corta: clics, geolocalización de los usuarios, hora del clic, etc.
-- Proporcionar una interfaz para que los usuarios vean estas estadísticas (si se desea ofrecer esta funcionalidad).
+- **Descripción**: Devuelve estadísticas detalladas sobre el uso de la URL.
+- **Salida (JSON)**:
 
-### 9. **Optimización de Rendimiento**
+  ```json
+  {
+    "short_url": "https://short.ly/abcd1234",
+    "clicks": 120,
+    "unique_visitors": 80,
+    "last_accessed": "2025-02-11T15:30:00Z",
+    "geo_distribution": {
+      "US": 50,
+      "MX": 30,
+      "ES": 20,
+      "BR": 20
+    },
+    "device_distribution": {
+      "mobile": 90,
+      "desktop": 30
+    }
+  }
+  ```
 
-- **Cacheo** : Utiliza caché para reducir la carga en la base de datos, especialmente para las redirecciones frecuentes.
-- **Redirección Rápida** : La redirección debe ser rápida, sin retrasos perceptibles para el usuario.
+## **Eliminar una URL corta**
 
-### 10. **Mantenimiento y Monitorización**
+**DELETE** `/api/url/{short_code}`
 
-- **Logs** : Implementa un sistema de logs para rastrear el funcionamiento del servicio.
-- **Monitorización** : Utiliza herramientas como Prometheus o Grafana para monitorear el estado de la aplicación y posibles errores.
+- **Descripción**: Elimina una URL acortada.
+- **Salida (JSON)**:
 
-### 11. **Escalabilidad**
+  ```json
+  {
+    "message": "Short URL deleted successfully."
+  }
+  ```
 
-- **Contenedores (Docker)** : Utiliza Docker para contenerizar la aplicación, facilitando el despliegue y escalado.
-- **Kubernetes** : Si se espera un alto volumen de tráfico, Kubernetes podría ser útil para la orquestación de contenedores y garantizar alta disponibilidad.
+## **Lista de URLs acortadas de un usuario (opcional, si hay autenticación)**
 
-### 12. **Versionado de API**
+**GET** `/api/user/urls`
 
-- Es importante que tu API esté versionada desde el principio, para facilitar la evolución del sistema sin afectar a los clientes actuales.
+- **Descripción**: Devuelve todas las URLs acortadas por un usuario autenticado.
+- **Salida (JSON)**:
 
-### 13. **Pruebas**
-
-- **Pruebas unitarias y de integración** para asegurar que todos los componentes funcionen correctamente.
-- **Pruebas de rendimiento** para evaluar cómo se comporta la aplicación bajo carga.
-
-En resumen, un acortador de URLs debe ser simple pero eficiente, asegurando una experiencia de usuario fluida, alta disponibilidad, seguridad y escalabilidad. Además, debe contar con una arquitectura bien estructurada y preparada para un crecimiento futuro.
+  ```json
+  [
+    {
+      "short_url": "https://short.ly/abcd1234",
+      "original_url": "https://www.ejemplo.com/pagina-larga",
+      "clicks": 120
+    },
+    {
+      "short_url": "https://short.ly/wxyz5678",
+      "original_url": "https://www.otro-ejemplo.com/",
+      "clicks": 45
+    }
+  ]
+  ```

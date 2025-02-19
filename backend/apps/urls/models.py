@@ -1,5 +1,6 @@
 """Models for Urls App."""
 
+from django.contrib.auth.models import User
 from django.db import models
 
 from apps.utils.models import BaseModel
@@ -10,6 +11,10 @@ class URL(BaseModel):
     Model definition for URL.
     """
 
+    user_id = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
     original_url = models.URLField(max_length=2000)
     short_url = models.CharField(max_length=10, blank=True, unique=True)
     click_count = models.IntegerField(default=0)

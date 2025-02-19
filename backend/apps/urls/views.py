@@ -1,5 +1,6 @@
 """Views for Urls App."""
 
+from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.gis.geoip2 import GeoIP2
 from rest_framework import status
@@ -7,8 +8,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 
+from apps.utils.helpers import generate_email, generate_username
 from .models import URL, Click
 from .serializers import URLSerializer, URLStatsSerializer
+
+User = settings.AUTH_USER_MODEL
 
 
 class URLCreateView(APIView):
@@ -20,9 +24,21 @@ class URLCreateView(APIView):
     """
 
     def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            user = request.user
+            user_ip = None
+        else:
+            user = None
+            user_ip = request.META.get("REMOTE_ADDR")
+            user = User.objects.get_or_create(
+                email=generate_email(),
+                username=generate_username(),
+                ip_address=user_ip,
+            )
+
         serializer = URLSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user_id=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

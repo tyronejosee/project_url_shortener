@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from apps.utils.models import BaseModel
 from .managers import UserManager
+from .choices import PlanChoices
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -13,6 +14,16 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     email = models.EmailField(max_length=100, unique=True, db_index=True)
     username = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
+    ip_address = models.GenericIPAddressField(
+        unique=True,
+        null=True,
+        blank=True,
+    )
+    plan = models.CharField(
+        max_length=10,
+        choices=PlanChoices.choices,
+        default=PlanChoices.FREE,
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
