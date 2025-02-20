@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Roboto_Mono } from "next/font/google";
+import { HeroUIProvider } from "@heroui/system";
 import "../styles/globals.css";
 import { Footer, Navigation } from "@/components";
 
@@ -27,12 +28,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${outfit.variable} ${robotoMono.variable} antialiased`}
-      >
-        <Navigation />
-        {children}
-        <Footer />
+      <body className={`${outfit.variable} ${robotoMono.variable} antialiased`}>
+        <HeroUIProvider>
+          <Navigation />
+          {children}
+          <Footer />
+        </HeroUIProvider>
       </body>
     </html>
   );
