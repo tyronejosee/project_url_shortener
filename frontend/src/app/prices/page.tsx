@@ -3,17 +3,17 @@ import { Button } from "@heroui/button";
 
 export default function PricesPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center py-6 px-4">
+    <main className="max-w-screen-lg mx-auto p-6 flex flex-col items-center">
       <h1 className="text-4xl font-bold text-center">Pricing Plans</h1>
       <p className="text-gray-600 mt-2 text-center">
         Choose the plan that best suits your needs.
       </p>
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
+      <section className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`space-y-4 border border-neutral-300 rounded-xl p-6 text-center hover:shadow-xl transition ${
-              plan.popular ? "border-blue-600 ring-4 ring-blue-400" : ""
+            className={`space-y-4 border border-neutral-300 rounded-2xl p-6 text-center transition ${
+              plan.popular ? "border-blue-600 ring-2 ring-blue-400" : ""
             }`}
           >
             <h2 className="text-2xl font-semibold">{plan.name}</h2>
@@ -36,7 +36,7 @@ export default function PricesPage() {
             </Button>
           </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
