@@ -8,7 +8,7 @@
 }
 
 html {
-  @apply bg-white text-neutral-950 selection:bg-primary selection:text-neutral-950;
+  @apply bg-white text-neutral-950 selection:bg-primary selection:text-white;
 }
 
 body {
