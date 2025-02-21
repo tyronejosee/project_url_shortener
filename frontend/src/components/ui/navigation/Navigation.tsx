@@ -1,6 +1,9 @@
+"use client"
+
 import Link from "next/link";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Button } from "@heroui/button";
+import { usePathname } from "next/navigation";
 
 export const AcmeLogo = () => {
   return (
@@ -16,6 +19,11 @@ export const AcmeLogo = () => {
 };
 
 export const Navigation = () => {
+  const pathname = usePathname();
+  const isDashboard = pathname.startsWith("/dashboard");
+
+  if (isDashboard) return null;
+
   return (
     <Navbar isBordered>
       <NavbarBrand>
