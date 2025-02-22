@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Home, Users, Settings, ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@heroui/button";
+import clsx from "clsx";
+import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Scissors, Link as Link2, Globe, Folder, Gem, HeartHandshake, LogOut, MousePointer2 } from "lucide-react";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -25,69 +25,70 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className={`transition-all duration-300 ease-in-out ${
-        isOpen ? "w-64" : "w-20"
-      } bg-white border-r border-neutral-300 p-5 flex flex-col relative`}
+      className={clsx(
+        "relative z-40 transition-all duration-300 ease-in-out bg-white border-r border-neutral-300 p-5 flex flex-col h-screen",
+        isOpen ? "w-56" : "w-20"
+      )}
     >
-      {/* Toggle Button */}
+      {/* Button */}
       <button
         aria-label="Toggle Sidebar"
         onClick={toggleSidebar}
-        className="bg-white p-2 rounded-md border border-neutral-300 absolute top-4 -right-3 z-10"
+        className="bg-white p-1 rounded-md border border-neutral-300 absolute top-4 -right-4 z-50 outline-none focus:ring-0"
       >
-        {isOpen ? (
-          <ArrowLeft color="black" size={24} className="cursor-pointer" />
-        ) : (
-          <ArrowRight color="black" size={24} className="cursor-pointer" />
-        )}
+        {isOpen ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
       </button>
 
-      {/* Logo or Title */}
-      <h2
-        className={`text-2xl font-bold mb-8 transition-all duration-300 ${
-          isOpen ? "visible" : "invisible"
-        }`}
-      >
-        {/* URL Shortener */}
-      </h2>
+      <div className="h-20 bg-neutral-50 rounded-xl w-full"></div>
 
       {/* Links */}
-      <ul className="space-y-4 flex-1">
-        <li className="flex items-center space-x-2">
-          <Home size={20} className="transition-all duration-200" />
-          <Link
-            href="/dashboard"
-            className="hover:text-blue-300 transition-all duration-200"
-          >
-            {isOpen ? "Dashboard" : ""}
-          </Link>
-        </li>
-        <li className="flex items-center space-x-2">
-          <Users size={20} className="transition-all duration-200" />
-          <Link
-            href="/users"
-            className="hover:text-blue-300 transition-all duration-200"
-          >
-            {isOpen ? "Users" : ""}
-          </Link>
-        </li>
-        <li className="flex items-center space-x-2">
-          <Settings size={20} className="transition-all duration-200" />
-          <Link
-            href="/settings"
-            className="hover:text-blue-300 transition-all duration-200"
-          >
-            {isOpen ? "Settings" : ""}
-          </Link>
-        </li>
+      <ul className="flex-1 mt-4 space-y-2">
+        {[
+          { href: "/dashboard/analytics", label: "Analytics", icon: <ChartNoAxesColumn size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/cutter", label: "Cutter", icon: <Scissors size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/links", label: "Links", icon: <Link2 size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/clicks", label: "Clicks", icon: <MousePointer2 size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/domains", label: "Domains", icon: <Globe size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/groups", label: "Groups", icon: <Folder size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/prices", label: "Prices", icon: <Gem size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/support", label: "Support", icon: <HeartHandshake size={20} className="flex-shrink-0" /> },
+          { href: "/dashboard/logout", label: "Logout", icon: <LogOut size={20} className="flex-shrink-0" /> },
+        ].map((item, index) => (
+          <li key={index}>
+            <Link
+              href={item.href}
+              className="flex items-center p-2 rounded-md hover:bg-gray-100 transition-all"
+            >
+              <div className="w-6 flex-shrink-0">{item.icon}</div>
+              <span
+                className={clsx(
+                  "ml-3 transition-all overflow-hidden",
+                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+                )}
+              >
+                {item.label}
+              </span>
+            </Link>
+          </li>
+        ))}
       </ul>
 
       {/* Footer */}
-      {isOpen && (
-        <footer className="mt-8 text-sm text-gray-400">
-          <p>Made with ♥️ by Tyrone Jose</p>
-        </footer>
-      )}
+      {/* <footer className="pb-4 flex items-center">
+        <div className="flex items-center">
+          <div className="w-6 flex-shrink-0">
+            <Settings size={20} className="flex-shrink-0" />
+          </div>
+          <span
+            className={clsx(
+              "ml-3 transition-all overflow-hidden",
+              isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+            )}
+          >
+            Made with ♥️ by Tyrone Jose
+          </span>
+        </div>
+      </footer> */}
     </aside>
   );
 };
