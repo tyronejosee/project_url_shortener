@@ -1,5 +1,5 @@
-"use client";
+import PricingPlans from "@/components/home/pricing-plans/PricingPlans";
 
-export default function PricesPage() {
-  return <h1>Prices</h1>;
+export default function PricesSPage() {
+  return <PricingPlans />;
 }
