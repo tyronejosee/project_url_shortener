@@ -7,8 +7,9 @@ import {
   TableColumn,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
 } from "@heroui/table";
+import { Chip } from "@heroui/chip";
 import { domains } from "@/config/constants";
 
 export default function DomainsPage() {
@@ -17,13 +18,12 @@ export default function DomainsPage() {
       <Table
         aria-label="Domains Table"
         color="primary"
-        selectionMode="multiple"
+        selectionMode="single"
         radius="lg"
         shadow="none"
         className="border border-neutral-300 rounded-xl"
       >
         <TableHeader>
-          <TableColumn>#</TableColumn>
           <TableColumn>Domain</TableColumn>
           <TableColumn>Links</TableColumn>
           <TableColumn>Clicks</TableColumn>
@@ -32,11 +32,26 @@ export default function DomainsPage() {
         <TableBody>
           {domains.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
               <TableCell>{item.domain}</TableCell>
               <TableCell>{item.links}</TableCell>
               <TableCell>{item.clicks}</TableCell>
-              <TableCell>{item.verificationStatus}</TableCell>
+              <TableCell>
+                <Chip
+                  size="sm"
+                  color={
+                    item.verification_status === "Pending"
+                      ? "default"
+                      : item.verification_status === "Failed"
+                      ? "danger"
+                      : item.verification_status === "Verified"
+                      ? "success"
+                      : "default"
+                  }
+                  variant="flat"
+                >
+                  {item.verification_status}
+                </Chip>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

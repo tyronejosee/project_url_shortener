@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import clsx from "clsx";
-import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Scissors, Link as Link2, Globe, Folder, Gem, HeartHandshake, LogOut, MousePointer2 } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { SidebarList } from "../sidebar-list/SidebarList";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -41,37 +41,7 @@ export const Sidebar = () => {
 
       <div className="h-20 bg-neutral-50 rounded-xl w-full"></div>
 
-      {/* Links */}
-      <ul className="flex-1 mt-4 space-y-2">
-        {[
-          { href: "/dashboard/analytics", label: "Analytics", icon: <ChartNoAxesColumn size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/cutter", label: "Cutter", icon: <Scissors size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/links", label: "Links", icon: <Link2 size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/clicks", label: "Clicks", icon: <MousePointer2 size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/domains", label: "Domains", icon: <Globe size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/groups", label: "Groups", icon: <Folder size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/prices", label: "Prices", icon: <Gem size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/support", label: "Support", icon: <HeartHandshake size={20} className="flex-shrink-0" /> },
-          { href: "/dashboard/logout", label: "Logout", icon: <LogOut size={20} className="flex-shrink-0" /> },
-        ].map((item, index) => (
-          <li key={index}>
-            <Link
-              href={item.href}
-              className="flex items-center p-2 rounded-md hover:bg-gray-100 transition-all"
-            >
-              <div className="w-6 flex-shrink-0">{item.icon}</div>
-              <span
-                className={clsx(
-                  "ml-3 transition-all overflow-hidden",
-                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
-                )}
-              >
-                {item.label}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <SidebarList isOpen={isOpen}/>
 
       {/* Footer */}
       {/* <footer className="pb-4 flex items-center">

@@ -2,6 +2,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { IFeedbackForm } from "@/interfaces/feedback.interface";
 import { Input } from "@heroui/input";
+import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 
 export default function FeedbackPage() {
@@ -29,8 +30,10 @@ export default function FeedbackPage() {
 
   return (
     <div className="mx-auto p-4">
-      <section className="max-w-md mx-auto p-6 rounded-2xl border border-neutral-300 hover:shadow-xl">
-        <h1 className="text-4xl font-bold text-center mb-2">Support, Feedback</h1>
+      <section className="max-w-lg mx-auto p-6 rounded-2xl">
+        <h1 className="text-4xl font-bold text-center mb-2">
+          Support, Feedback
+        </h1>
         <p className="text-center mb-8 text-neutral-500">
           Have a question? We will be happy to help you.
         </p>
@@ -38,28 +41,30 @@ export default function FeedbackPage() {
           <p className="text-green-600">Thank you for your feedback!</p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              isRequired
-              label="Your name"
-              type="text"
-              variant="bordered"
-              // value={form.name}
-              onChange={handleChange}
-            />
-            <Input
-              isRequired
-              label="Email"
-              type="email"
-              variant="bordered"
-              // value={form.email}
-              onChange={handleChange}
-            />
-            <Input
+            <div className="space-y-10">
+              <Input
+                isRequired
+                label="Name"
+                type="text"
+                labelPlacement="outside"
+                placeholder="Joe Doe"
+                onChange={handleChange}
+              />
+              <Input
+                isRequired
+                label="Email"
+                type="email"
+                labelPlacement="outside"
+                placeholder="you@example.com"
+                onChange={handleChange}
+              />
+            </div>
+            <Textarea
               isRequired
               label="Message"
               type="textarea"
-              variant="bordered"
-              // value={form.email}
+              labelPlacement="outside"
+              placeholder="Your message here..."
               onChange={handleChange}
             />
             <Button type="submit" color="primary" className="w-full">

@@ -15,9 +15,9 @@ export default function ClicksPage() {
   return (
     <div className="flex flex-col gap-3">
       <Table
-        aria-label="Domains Table"
+        aria-label="Clicks Table"
         color="primary"
-        selectionMode="multiple"
+        selectionMode="single"
         radius="lg"
         shadow="none"
         className="border border-neutral-300 rounded-xl"

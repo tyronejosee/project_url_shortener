@@ -8,7 +8,6 @@ export const Header = () => {
     <header className="z-30 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
       <div className="ml-8 text-xl font-semibold">URL Shortener</div>
       <div className="flex items-center space-x-4">
-        <button className="p-2 bg-gray-200 rounded-full">Settings</button>
         <Badge color="danger" content="5" shape="circle">
           <Avatar
             isBordered

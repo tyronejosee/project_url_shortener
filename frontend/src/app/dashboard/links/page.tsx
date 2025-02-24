@@ -10,6 +10,7 @@ import {
   TableCell
 } from "@heroui/table";
 import { linksList } from "@/config/constants";
+import { Chip } from "@heroui/chip";
 
 export default function LinksPage() {
   return (
@@ -39,7 +40,19 @@ export default function LinksPage() {
               <TableCell>{link.date}</TableCell>
               <TableCell>{link.deactivation_date}</TableCell>
               <TableCell>{link.group}</TableCell>
-              <TableCell>{link.type}</TableCell>
+              <TableCell>
+              <Chip
+                  size="sm"
+                  color={
+                    link.type === "public"
+                      ? "success"
+                      : "default"
+                  }
+                  variant="flat"
+                >
+                  {link.type}
+                </Chip>
+              </TableCell>
               <TableCell>{link.password}</TableCell>
             </TableRow>
           ))}
