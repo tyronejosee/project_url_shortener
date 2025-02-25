@@ -1,7 +1,7 @@
 """Views for Urls App."""
 
-from django.conf import settings
 from django.shortcuts import redirect
+from django.contrib.auth import get_user_model
 from django.contrib.gis.geoip2 import GeoIP2
 from rest_framework import status
 from rest_framework.response import Response
@@ -12,7 +12,7 @@ from apps.utils.helpers import generate_email, generate_username
 from .models import URL, Click
 from .serializers import URLSerializer, URLStatsSerializer
 
-User = settings.AUTH_USER_MODEL
+User = get_user_model()
 
 
 class URLCreateView(APIView):
