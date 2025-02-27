@@ -3,8 +3,8 @@
 from django.db import models
 
 
-class BaseManager(models.Manager):
-    """Base Manager."""
+class BaseRepository(models.Manager):
+    """Base Repository."""
 
     def get_available(self):
         return self.filter(is_available=True)
