@@ -8,18 +8,18 @@ from pathlib import Path
 import environ
 from datetime import timedelta
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 environ.Env.read_env("backend/.env")
 
-DEBUG = True
+DEBUG = env.bool("DEBUG")
 
-SECRET_KEY = "v2bwhb^*1ti9a=1uis906vc#)cmkf*qf7z-$*&3%izsnpi#dd0"
+SECRET_KEY = env.str("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
-BASE_APPS = [
+BASE_APPS: list[str] = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -28,7 +28,7 @@ BASE_APPS = [
     "django.contrib.staticfiles",
 ]
 
-PROJECT_APPS = [
+PROJECT_APPS: list[str] = [
     "apps.communications",
     "apps.domains",
     "apps.urls",
@@ -36,7 +36,7 @@ PROJECT_APPS = [
     "apps.utils",
 ]
 
-THIRD_APPS = [
+THIRD_APPS: list[str] = [
     "rest_framework",
     "djoser",
     "corsheaders",
@@ -46,9 +46,9 @@ THIRD_APPS = [
     "django_filters",
 ]
 
-INSTALLED_APPS = BASE_APPS + PROJECT_APPS + THIRD_APPS
+INSTALLED_APPS: list[str] = BASE_APPS + PROJECT_APPS + THIRD_APPS
 
-MIDDLEWARE = [
+MIDDLEWARE: list[str] = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -61,7 +61,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "core.urls"
 
-TEMPLATES = [
+TEMPLATES: list[dict] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
@@ -90,7 +90,7 @@ if "test" in sys.argv:
         }
     }
 else:
-    DATABASES = {
+    DATABASES: dict = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": env("POSTGRES_DB"),
@@ -101,7 +101,7 @@ else:
         }
     }
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict] = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
@@ -131,7 +131,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK: dict = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
@@ -161,7 +161,7 @@ REST_FRAMEWORK = {
 }
 
 
-DJOSER = {
+DJOSER: dict = {
     "LOGIN_FIELD": "email",
     "USER_CREATE_PASSWORD_RETYPE": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
@@ -187,7 +187,7 @@ DJOSER = {
     },
 }
 
-SIMPLE_JWT = {
+SIMPLE_JWT: dict = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
@@ -196,20 +196,20 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS: tuple = (
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.facebook.FacebookOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
 
 
-DISCORD_WEBHOOKS = {
+DISCORD_WEBHOOKS: dict = {
     "support": env("DISCORD_SUPPORT_WEBHOOK"),
     "feedback": env("DISCORD_FEEDBACK_WEBHOOK"),
 }
 
 
-SPECTACULAR_SETTINGS = {
+SPECTACULAR_SETTINGS: dict = {
     "TITLE": "Proyecto Url Shortener",
     "DESCRIPTION": "Pending description",
     "VERSION": "v1",
