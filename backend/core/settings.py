@@ -29,8 +29,11 @@ BASE_APPS = [
 ]
 
 PROJECT_APPS = [
+    "apps.communications",
+    "apps.domains",
     "apps.urls",
     "apps.users",
+    "apps.utils",
 ]
 
 THIRD_APPS = [
@@ -78,12 +81,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 AUTH_USER_MODEL = "users.User"
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 if "test" in sys.argv:
     DATABASES = {
@@ -137,7 +134,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-        # "rest_framework.permissions.AllowAny",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -205,6 +201,12 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.facebook.FacebookOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
+
+
+DISCORD_WEBHOOKS = {
+    "support": env("DISCORD_SUPPORT_WEBHOOK"),
+    "feedback": env("DISCORD_FEEDBACK_WEBHOOK"),
+}
 
 
 SPECTACULAR_SETTINGS = {
