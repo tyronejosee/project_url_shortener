@@ -20,6 +20,5 @@ class URLAdmin(admin.ModelAdmin):
 
 @admin.register(Click)
 class ClickAdmin(admin.ModelAdmin):
-    list_display: list[str] = ["url", "ip_address", "country"]
-    search_fields: list[str] = ["url__url", "ip_address", "country"]
-    list_filter: list[str] = ["country"]
+    list_display: list[str] = ["url", "ip_address"]
+    search_fields: list[str] = ["url__url", "ip_address"]

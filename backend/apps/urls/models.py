@@ -1,12 +1,12 @@
 """Models for Urls App."""
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from apps.utils.models import BaseModel
+from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
 
-User: type[AbstractUser] = get_user_model()
+User = get_user_model()
 
 
 class URL(BaseModel):
@@ -80,10 +80,21 @@ class Click(BaseModel):
         related_name="clicks",
     )
     ip_address = models.GenericIPAddressField()
-    country = models.CharField(max_length=10, blank=True, null=True)
-    browser = models.CharField(max_length=50, blank=True, null=True)
-    os = models.CharField(max_length=50, blank=True, null=True)
-    device = models.CharField(max_length=20, blank=True, null=True)
+    device = models.CharField(
+        max_length=20,
+        choices=DeviceTypeChoices.choices,
+        default=DeviceTypeChoices.UNKNOWN,
+    )
+    browser = models.CharField(
+        max_length=20,
+        choices=BrowserTypeChoices.choices,
+        default=BrowserTypeChoices.UNKNOWN,
+    )
+    os = models.CharField(
+        max_length=20,
+        choices=OSTypeChoices.choices,
+        default=OSTypeChoices.UNKNOWN,
+    )
 
     class Meta:
         db_table: str = "clicks"
