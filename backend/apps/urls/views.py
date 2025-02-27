@@ -6,12 +6,13 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import AllowAny
-from user_agents import parse
 
 from apps.users.services import UserService
-from .models import URL, Click
+from .models import URL
+from .services import URLService
 from .serializers import URLSerializer, URLStatsSerializer
 
 User = get_user_model()
@@ -27,7 +28,7 @@ class URLCreateView(APIView):
 
     permission_classes: list = [AllowAny]
 
-    def post(self, request, *args, **kwargs) -> Response:
+    def post(self, request: Request) -> Response:
         user = UserService.get_or_create_user(request)
         serializer = URLSerializer(data=request.data)
         if serializer.is_valid():
@@ -45,48 +46,17 @@ class URLRedirectView(APIView):
     """
 
     def get(
-        self,
-        request,
-        alias,
-        *args,
-        **kwargs,
+        self, request: Request, alias: str
     ) -> Response | HttpResponseRedirect | HttpResponsePermanentRedirect:
         try:
-            alias = URL.objects.get(alias=alias)
+            url_instance = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             return Response(
                 {"error": "Short URL not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        # TODO: Add service layer
-        # ip_address = request.META.get("REMOTE_ADDR", "0.0.0.0")
-        # user_agent_string = request.META.get("HTTP_USER_AGENT", "")
-        # user_agent = parse(user_agent_string)
-
-        # browser = user_agent.browser.family
-        # os = user_agent.os.family
-
-        # if user_agent.is_mobile:
-        #     device = "Mobile"
-        # elif user_agent.is_tablet:
-        #     device = "Tablet"
-        # elif user_agent.is_pc:
-        #     device = "PC"
-        # elif user_agent.is_bot:
-        #     device = "Bot"
-        # else:
-        #     device = "Unknown"
-
-        # Click.objects.create(
-        #     url=alias,
-        #     ip_address=ip_address,
-        #     country=country,
-        #     browser=browser,
-        #     os=os,
-        #     device=device,
-        # )
-        return redirect(alias.url)
+        URLService.record_click(request, url_instance)
+        return redirect(url_instance.url)
 
 
 class URLDeleteView(APIView):
@@ -97,12 +67,12 @@ class URLDeleteView(APIView):
     - DELETE /api/urls/{alias}
     """
 
-    def delete(self, request, alias, *args, **kwargs) -> Response:
+    def delete(self, request: Request, alias: str) -> Response:
         try:
-            alias = URL.objects.get(alias=alias)
+            url_instance = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             raise NotFound("Short URL not found.")
-        alias.delete()
+        url_instance.delete()
         return Response(
             {"message": "URL deleted."},
             status=status.HTTP_204_NO_CONTENT,
@@ -117,11 +87,11 @@ class URLStatsView(APIView):
     - GET /api/urls/{alias}/stats
     """
 
-    def get(self, request, alias, *args, **kwargs) -> Response:
+    def get(self, request: Request, alias: str) -> Response:
         try:
-            alias = URL.objects.get(alias=alias)
+            url_instance = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             raise NotFound("Alias not found.")
 
-        serializer = URLStatsSerializer(alias)
+        serializer = URLStatsSerializer(url_instance)
         return Response(serializer.data)
