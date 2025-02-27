@@ -48,3 +48,4 @@ uritemplate==4.1.1
 urllib3==2.3.0
 user-agents==2.2.0
 colorlog==6.9.0
+icecream==2.1.4

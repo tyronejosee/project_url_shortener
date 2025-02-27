@@ -1,16 +1,34 @@
 """Views for Support App."""
 
-from django.conf import settings as cfg
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .observers.notifier import Notifier
-from .observers.discord import DiscordNotifier
+from .serializers import NotificationSerializer
+from .services import NotificationService
 
 
-class SupportView(APIView):
+class BaseNotifierView(APIView):
+    permission_classes: list = [AllowAny]
+    webhook_key: str
+    success_message: str
+
+    def post(self, request) -> Response:
+        serializer = NotificationSerializer(data=request.data)
+        if serializer.is_valid():
+            if isinstance(serializer.validated_data, dict):
+                NotificationService(self.webhook_key).send_notification(
+                    serializer.validated_data,
+                )
+            return Response(
+                {"message": self.success_message},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SupportView(BaseNotifierView):
     """
     View to send support messages.
 
@@ -18,45 +36,17 @@ class SupportView(APIView):
     - GET /api/support
     """
 
-    permission_classes: list = [AllowAny]
-
-    def post(self, request) -> Response:
-        notifier = Notifier()
-        discord_observer = DiscordNotifier(cfg.DISCORD_WEBHOOKS["support"])
-        notifier.attach(discord_observer)
-        data: dict = {
-            "name": request.data.get("name"),
-            "email": request.data.get("email"),
-            "message": request.data.get("message"),
-        }
-        notifier.notify_all(data)
-        return Response(
-            {"message": "Support sent"},
-            status=status.HTTP_201_CREATED,
-        )
+    webhook_key = "support"
+    success_message = "Support sent"
 
 
-class FeedbackView(APIView):
+class FeedbackView(BaseNotifierView):
     """
     View to send feedback messages.
 
     Endpoints:
-    - GET /api/support
+    - GET /api/feedback
     """
 
-    permission_classes: list = [AllowAny]
-
-    def post(self, request) -> Response:
-        notifier = Notifier()
-        discord_observer = DiscordNotifier(cfg.DISCORD_WEBHOOKS["feedback"])
-        notifier.attach(discord_observer)
-        data: dict = {
-            "name": request.data.get("name"),
-            "email": request.data.get("email"),
-            "message": request.data.get("message"),
-        }
-        notifier.notify_all(data)
-        return Response(
-            {"message": "Feedback sent"},
-            status=status.HTTP_201_CREATED,
-        )
+    webhook_key = "feedback"
+    success_message = "Feedback sent"

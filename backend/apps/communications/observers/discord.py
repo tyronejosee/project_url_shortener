@@ -23,14 +23,11 @@ class DiscordNotifier(Observer):
         self.webhook_url: str = webhook_url
 
     def notify(self, data: dict) -> None:
-        if not all(key in data for key in ["name", "email", "message"]):
-            raise ValueError(
-                "Missing required data fields: 'name', 'email', 'message'."
-            )
+        name: str = f"# {data['name']}\n\n"
+        email: str = f"- Email: `{data['email']}`\n"
+        message: str = f"- Message: `{data['message']}`"
+        payload: dict[str, str] = {"content": f"{name}{email}{message}"}
 
-        payload: dict[str, str] = {
-            "content": f"# {data['name']}\n\n- **Email**: `{data['email']}`\n- **Message**: `{data['message']}`"
-        }
         try:
             response: requests.Response = requests.post(
                 self.webhook_url,
