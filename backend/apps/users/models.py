@@ -14,11 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     email = models.EmailField(max_length=100, unique=True, db_index=True)
     username = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
-    ip_address = models.GenericIPAddressField(
-        unique=True,
-        null=True,
-        blank=True,
-    )
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     plan = models.CharField(
         max_length=10,
         choices=PlanChoices.choices,
@@ -29,13 +25,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    USERNAME_FIELD: str = "email"
+    REQUIRED_FIELDS: list[str] = ["username"]
 
     class Meta:
-        ordering = ["pk"]
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        db_table: str = "users"
+        ordering: list[str] = ["pk"]
+        verbose_name: str = "user"
+        verbose_name_plural: str = "users"
 
-    def __str__(self):
-        return self.username
+    def __str__(self) -> str:
+        return f"{self.pk} - {self.username}"
