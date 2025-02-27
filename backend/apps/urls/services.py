@@ -10,8 +10,8 @@ class URLService:
     """
 
     @staticmethod
-    def generate_short_url():
+    def generate_alias() -> str:
         length = 6
-        characters = string.ascii_letters + string.digits
-        short_url = "".join(random.choice(characters) for _ in range(length))
-        return short_url
+        characters: str = string.ascii_letters + string.digits
+        alias: str = "".join(random.choice(characters) for _ in range(length))
+        return alias

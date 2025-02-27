@@ -1,14 +1,16 @@
 """Views for Urls App."""
 
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
-from django.contrib.gis.geoip2 import GeoIP2
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import AllowAny
+from user_agents import parse
 
-from apps.utils.helpers import generate_email, generate_username
+from apps.users.services import UserService
 from .models import URL, Click
 from .serializers import URLSerializer, URLStatsSerializer
 
@@ -23,22 +25,13 @@ class URLCreateView(APIView):
     - POST /api/urls/shorten
     """
 
-    def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            user = request.user
-            user_ip = None
-        else:
-            user = None
-            user_ip = request.META.get("REMOTE_ADDR")
-            user = User.objects.get_or_create(
-                email=generate_email(),
-                username=generate_username(),
-                ip_address=user_ip,
-            )
+    permission_classes: list = [AllowAny]
 
+    def post(self, request, *args, **kwargs) -> Response:
+        user = UserService.get_or_create_user(request)
         serializer = URLSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user_id=user)
+            serializer.save(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -48,34 +41,52 @@ class URLRedirectView(APIView):
     View to handle redirection from a shortened URL.
 
     Endpoints:
-    - GET /{short_url}
+    - GET /{alias}
     """
 
-    def get(self, request, short_url, *args, **kwargs):
+    def get(
+        self,
+        request,
+        alias,
+        *args,
+        **kwargs,
+    ) -> Response | HttpResponseRedirect | HttpResponsePermanentRedirect:
         try:
-            short_url = URL.objects.get(short_url=short_url)
+            alias = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             return Response(
                 {"error": "Short URL not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        ip_address = request.META.get("REMOTE_ADDR", "0.0.0.0")
-        country = "Unknown"
-        try:
-            geo = GeoIP2()
-            country = geo.country(ip_address)["country_code"]
-        except Exception:
-            pass
+        # TODO: Add service layer
+        # ip_address = request.META.get("REMOTE_ADDR", "0.0.0.0")
+        # user_agent_string = request.META.get("HTTP_USER_AGENT", "")
+        # user_agent = parse(user_agent_string)
 
-        Click.objects.create(
-            url_id=short_url,
-            ip_address=ip_address,
-            country=country,
-        )
-        short_url.click_count += 1
-        short_url.save()
-        return redirect(short_url.original_url)
+        # browser = user_agent.browser.family
+        # os = user_agent.os.family
+
+        # if user_agent.is_mobile:
+        #     device = "Mobile"
+        # elif user_agent.is_tablet:
+        #     device = "Tablet"
+        # elif user_agent.is_pc:
+        #     device = "PC"
+        # elif user_agent.is_bot:
+        #     device = "Bot"
+        # else:
+        #     device = "Unknown"
+
+        # Click.objects.create(
+        #     url=alias,
+        #     ip_address=ip_address,
+        #     country=country,
+        #     browser=browser,
+        #     os=os,
+        #     device=device,
+        # )
+        return redirect(alias.url)
 
 
 class URLDeleteView(APIView):
@@ -83,15 +94,15 @@ class URLDeleteView(APIView):
     View to delete a shortened URL.
 
     Endpoints:
-    - DELETE /api/urls/{short_url}
+    - DELETE /api/urls/{alias}
     """
 
-    def delete(self, request, short_url, *args, **kwargs):
+    def delete(self, request, alias, *args, **kwargs) -> Response:
         try:
-            short_url = URL.objects.get(short_url=short_url)
+            alias = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             raise NotFound("Short URL not found.")
-        short_url.delete()
+        alias.delete()
         return Response(
             {"message": "URL deleted."},
             status=status.HTTP_204_NO_CONTENT,
@@ -103,14 +114,14 @@ class URLStatsView(APIView):
     View to retrieve statistics for a shortened URL.
 
     Endpoints:
-    - GET /api/urls/{short_url}/stats
+    - GET /api/urls/{alias}/stats
     """
 
-    def get(self, request, short_url, *args, **kwargs):
+    def get(self, request, alias, *args, **kwargs) -> Response:
         try:
-            short_url = URL.objects.get(short_url=short_url)
+            alias = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
-            raise NotFound("Short URL not found.")
+            raise NotFound("Alias not found.")
 
-        serializer = URLStatsSerializer(short_url)
+        serializer = URLStatsSerializer(alias)
         return Response(serializer.data)

@@ -1,11 +1,12 @@
 """Models for Urls App."""
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from apps.utils.models import BaseModel
 
-User = get_user_model()
+User: type[AbstractUser] = get_user_model()
 
 
 class URL(BaseModel):
@@ -13,28 +14,59 @@ class URL(BaseModel):
     Model definition for URL.
     """
 
-    user_id = models.ForeignKey(
-        User,
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    url = models.URLField(max_length=2000)
+    alias = models.CharField(max_length=10, blank=True, unique=True)
+    group = models.ForeignKey(
+        "Group",
         on_delete=models.CASCADE,
+        related_name="urls",
+        blank=True,
+        null=True,
     )
-    original_url = models.URLField(max_length=2000)
-    short_url = models.CharField(max_length=10, blank=True, unique=True)
-    click_count = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ["pk"]
-        verbose_name = "url"
-        verbose_name_plural = "urls"
+        db_table: str = "urls"
+        ordering: list[str] = ["user"]
+        verbose_name: str = "url"
+        verbose_name_plural: str = "urls"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         from .services import URLService
 
-        if not self.short_url:
-            self.short_url = URLService.generate_short_url()
+        if not self.alias:
+            self.alias = URLService.generate_alias()
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.original_url} -> {self.short_url}"
+    def __str__(self) -> str:
+        return f"{self.url} -> {self.alias}"
+
+
+class Group(BaseModel):
+    """
+    Model definition for Group.
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    alias = models.CharField(max_length=10, blank=True, unique=True)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table: str = "groups"
+        ordering: list[str] = ["user"]
+        verbose_name: str = "group"
+        verbose_name_plural: str = "groups"
+
+    def save(self, *args, **kwargs) -> None:
+        from .services import URLService
+
+        if not self.alias:
+            self.alias = URLService.generate_alias()
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Click(BaseModel):
@@ -42,13 +74,22 @@ class Click(BaseModel):
     Model definition for Click.
     """
 
-    url_id = models.ForeignKey(
+    url = models.ForeignKey(
         URL,
         on_delete=models.CASCADE,
         related_name="clicks",
     )
     ip_address = models.GenericIPAddressField()
     country = models.CharField(max_length=10, blank=True, null=True)
+    browser = models.CharField(max_length=50, blank=True, null=True)
+    os = models.CharField(max_length=50, blank=True, null=True)
+    device = models.CharField(max_length=20, blank=True, null=True)
 
-    def __str__(self):
-        return f"Click on {self.url_id.short_url}"
+    class Meta:
+        db_table: str = "clicks"
+        ordering: list[str] = ["url"]
+        verbose_name: str = "click"
+        verbose_name_plural: str = "clicks"
+
+    def __str__(self) -> str:
+        return f"Click on {self.url.url}"

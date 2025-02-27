@@ -11,9 +11,9 @@ class URLSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = URL
-        fields = [
-            "original_url",
-            "short_url",
+        fields: list[str] = [
+            "url",
+            "alias",
         ]
 
 
@@ -29,8 +29,8 @@ class URLStatsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = URL
-        fields = [
-            "short_url",
+        fields: list[str] = [
+            "alias",
             "clicks",
             "unique_visitors",
             "last_accessed",
