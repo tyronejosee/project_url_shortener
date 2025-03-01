@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.utils.models import BaseModel
+from .repositories import URLGroupRepository
 from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
 
 User = get_user_model()
@@ -18,7 +19,7 @@ class URL(BaseModel):
     url = models.URLField(max_length=2000)
     alias = models.CharField(max_length=10, blank=True, unique=True)
     group = models.ForeignKey(
-        "Group",
+        "URLGroup",
         on_delete=models.CASCADE,
         related_name="urls",
         blank=True,
@@ -42,7 +43,7 @@ class URL(BaseModel):
         return f"{self.url} -> {self.alias}"
 
 
-class Group(BaseModel):
+class URLGroup(BaseModel):
     """
     Model definition for Group.
     """
@@ -52,11 +53,13 @@ class Group(BaseModel):
     alias = models.CharField(max_length=10, blank=True, unique=True)
     description = models.TextField(blank=True, null=True)
 
+    objects = URLGroupRepository()
+
     class Meta:
-        db_table: str = "groups"
+        db_table: str = "url_groups"
         ordering: list[str] = ["user"]
-        verbose_name: str = "group"
-        verbose_name_plural: str = "groups"
+        verbose_name: str = "url group"
+        verbose_name_plural: str = "url groups"
 
     def save(self, *args, **kwargs) -> None:
         from .services import URLService

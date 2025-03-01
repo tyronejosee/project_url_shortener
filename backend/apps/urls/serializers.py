@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncDate
 from rest_framework import serializers
 
-from .models import URL
+from .models import URL, URLGroup
 from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
 
 
@@ -99,3 +99,27 @@ class URLStatsSerializer(serializers.ModelSerializer):
             }
             for entry in click_data
         ]
+
+
+class URLGroupReadSerializer(serializers.ModelSerializer):
+    """Serializer for URLGroup model (List/retrieve)."""
+
+    class Meta:
+        model = URLGroup
+        fields: list[str] = [
+            "id",
+            "name",
+            "alias",
+            "description",
+            "created_at",
+            "updated_at",
+            "is_available",
+        ]
+
+
+class URLGroupWriteSerializer(serializers.ModelSerializer):
+    """Serializer for URLGroup model (Create/update)."""
+
+    class Meta:
+        model = URLGroup
+        fields: list[str] = ["name", "description"]

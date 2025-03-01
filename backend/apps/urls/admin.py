@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import URL, Click
+from .models import URL, URLGroup, Click
 
 
 @admin.register(URL)
@@ -16,6 +16,15 @@ class URLAdmin(admin.ModelAdmin):
         if not obj.alias:
             obj.save()
         super().save_model(request, obj, form, change)
+
+
+@admin.register(URLGroup)
+class URLGroupAdmin(admin.ModelAdmin):
+    list_display: list[str] = ["name", "user", "alias", "description"]
+    search_fields: list[str] = ["name", "alias", "description"]
+    list_filter: list[str] = ["user"]
+    readonly_fields: list[str] = ["alias"]
+    ordering: list[str] = ["name"]
 
 
 @admin.register(Click)
