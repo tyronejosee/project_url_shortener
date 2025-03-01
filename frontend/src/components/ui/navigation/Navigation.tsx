@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Button } from "@heroui/button";
 import { usePathname } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 export const AcmeLogo = () => {
   return (
@@ -19,6 +20,7 @@ export const AcmeLogo = () => {
 };
 
 export const Navigation = () => {
+  const { user, loading } = useAuth();
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
 
@@ -35,14 +37,27 @@ export const Navigation = () => {
         <NavbarItem className="hidden lg:flex">
           <Link href="/prices">Prices</Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/sign-in">Sign In</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/sign-up" variant="solid">
-            Sign Up
-          </Button>
-        </NavbarItem>
+
+        {user ? (
+          <>
+            <NavbarItem className="hidden lg:flex">
+            <Button as={Link} color="primary" href="/dashboard" variant="solid">
+                Dashboard
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem className="hidden lg:flex">
+              <Link href="/sign-in">Sign In</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button as={Link} color="primary" href="/sign-up" variant="solid">
+                Sign Up
+              </Button>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
     </Navbar>
   );

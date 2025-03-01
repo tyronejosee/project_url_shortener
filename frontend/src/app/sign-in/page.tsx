@@ -5,16 +5,47 @@ import Link from "next/link";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Eye, EyeClosed } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:8050/api/tokens/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.detail || "Error logging in");
+        return;
+      }
+
+      const data = await response.json();
+      Cookies.set("access_token", data.access, { expires: 1, secure: true, sameSite: "Strict" });
+      Cookies.set("refresh_token", data.refresh, { expires: 7, secure: true, sameSite: "Strict" });
+      window.location.href = "/dashboard";
+
+    } catch (err) {
+      setError("Error connecting to the server.");
+      console.error(err);
+    }
+  };
+
   return (
-    <main className="max-w-screen-lg mx-auto p-6 flex justify-center">
-      <section className="w-full max-w-md p-8 rounded-2xl border border-neutral-300">
+    <main className="mx-auto p-4">
+      <section className="max-w-lg mx-auto p-6">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-2">
           Welcome Back!
         </h2>
@@ -22,18 +53,14 @@ export default function SignIn() {
           Sign in to access all the features of the service.
         </p>
 
-        <form
-          // onSubmit={handleSubmit}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-9">
             <Input
               isRequired
-              // isDisabled={isLoading}
               label="Email"
               value={email}
               labelPlacement="outside"
-              name="username"
+              name="email"
               placeholder="you@example.com"
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -53,7 +80,6 @@ export default function SignIn() {
                 </button>
               }
               isRequired
-              // isDisabled={isLoading}
               type={isVisible ? "text" : "password"}
               label="Password"
               value={password}
@@ -63,6 +89,8 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
+          {error && <p className="text-red-500 text-center">{error}</p>}
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
