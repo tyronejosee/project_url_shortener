@@ -10,9 +10,9 @@ from .models import User
 class UserAdmin(BaseAdmin):
     """Admin for User model."""
 
-    list_display = ["username", "email", "is_staff"]
-    list_display_links = ["username"]
-    search_fields = ["username", "email"]
-    list_filter = ["is_staff", "is_superuser", "is_active"]
-    readonly_fields = ["pk"]
-    ordering = ["username"]
+    list_display: list[str] = ["username", "email", "is_staff"]
+    list_display_links: list[str] = ["username"]
+    search_fields: list[str] = ["username", "email"]
+    list_filter: list[str] = ["is_staff", "is_superuser", "is_active"]
+    readonly_fields: list[str] = ["pk"]
+    ordering: list[str] = ["username"]

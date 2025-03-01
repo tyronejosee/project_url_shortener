@@ -2,6 +2,7 @@
 Django settings for core project.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -64,7 +65,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES: list[dict] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -130,6 +131,22 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+APPEND_SLASH = False
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS: list[str] = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_METHODS: list[str] = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+]
 
 REST_FRAMEWORK: dict = {
     "DEFAULT_PERMISSION_CLASSES": [
@@ -166,14 +183,14 @@ DJOSER: dict = {
     "USER_CREATE_PASSWORD_RETYPE": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_CONFIRMATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": False,
     "SET_USERNAME_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "SET_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_ACTIVATION_EMAIL": False,
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
         "http://localhost:8000/google",
@@ -181,8 +198,8 @@ DJOSER: dict = {
     ],
     "SERIALIZERS": {
         "user_create": "apps.users.serializers.UserWriteSerializer",
-        "user": "apps.users.serializers.UserWriteSerializer",
-        "current_user": "apps.users.serializers.UserWriteSerializer",
+        "user": "apps.users.serializers.UserReadSerializer",
+        "current_user": "apps.users.serializers.UserReadSerializer",
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
@@ -202,12 +219,10 @@ AUTHENTICATION_BACKENDS: tuple = (
     "django.contrib.auth.backends.ModelBackend",
 )
 
-
 DISCORD_WEBHOOKS: dict = {
     "support": env("DISCORD_SUPPORT_WEBHOOK"),
     "feedback": env("DISCORD_FEEDBACK_WEBHOOK"),
 }
-
 
 SPECTACULAR_SETTINGS: dict = {
     "TITLE": "Proyecto Url Shortener",

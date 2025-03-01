@@ -12,31 +12,31 @@ from .views import (
     ProviderAuthExtensionView,
 )
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash="")
 router.register(r"users", UserExtensionViewSet, basename="user")
 
 urlpatterns = [
     # Routers urls
-    path("api/v1/", include(router.urls)),
+    path("api/", include(router.urls)),
     # Djoser socials urls
     re_path(
-        r"^api/v1/socials/o/(?P<provider>\S+)/$",
+        r"^api/socials/o/(?P<provider>\S+)/$",
         ProviderAuthExtensionView.as_view(),
         name="provider-auth",
     ),
     # djangorestframework-simplejwt urls
     re_path(
-        r"^api/v1/tokens/jwt/create/?",
+        r"^api/tokens/create/?",
         TokenObtainPairExtensionView.as_view(),
         name="jwt-create",
     ),
     re_path(
-        r"^api/v1/tokens/jwt/refresh/?",
+        r"^api/tokens/refresh/?",
         TokenRefreshExtensionView.as_view(),
         name="jwt-refresh",
     ),
     re_path(
-        r"^api/v1/tokens/jwt/verify/?",
+        r"^api/tokens/verify/?",
         TokenVerifyExtensionView.as_view(),
         name="jwt-verify",
     ),
