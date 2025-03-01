@@ -1,4 +1,3 @@
-import { LogOut, HeartHandshake } from "lucide-react";
 export const links = [
   { name: "Feedback", href: "/feedback" },
   { name: "Prices", href: "/prices" },

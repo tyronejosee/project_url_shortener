@@ -30,7 +30,7 @@ importers:
         specifier: 2.2.9
         version: 2.2.9(@heroui/system@2.4.10(@heroui/theme@2.4.6(tailwindcss@3.4.17))(framer-motion@12.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@heroui/theme@2.4.6(tailwindcss@3.4.17))(framer-motion@12.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@heroui/select':
-        specifier: ^2.4.13
+        specifier: 2.4.13
         version: 2.4.13(@heroui/system@2.4.10(@heroui/theme@2.4.6(tailwindcss@3.4.17))(framer-motion@12.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@heroui/theme@2.4.6(tailwindcss@3.4.17))(framer-motion@12.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@heroui/snippet':
         specifier: 2.2.14
@@ -45,20 +45,23 @@ importers:
         specifier: 2.4.6
         version: 2.4.6(tailwindcss@3.4.17)
       '@types/d3-scale':
-        specifier: ^4.0.9
+        specifier: 4.0.9
         version: 4.0.9
       clsx:
         specifier: 2.1.1
         version: 2.1.1
       d3-scale:
-        specifier: ^4.0.2
+        specifier: 4.0.2
         version: 4.0.2
       framer-motion:
         specifier: 12.4.5
         version: 12.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       geojson-world-map:
-        specifier: ^0.0.2
+        specifier: 0.0.2
         version: 0.0.2
+      js-cookie:
+        specifier: 3.0.5
+        version: 3.0.5
       lucide-react:
         specifier: 0.475.0
         version: 0.475.0(react@19.0.0)
@@ -72,15 +75,18 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       react-simple-maps:
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(prop-types@15.8.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       recharts:
-        specifier: ^2.15.1
+        specifier: 2.15.1
         version: 2.15.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@eslint/eslintrc':
         specifier: 3.2.0
         version: 3.2.0
+      '@types/js-cookie':
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/node':
         specifier: 20.17.19
         version: 20.17.19
@@ -1134,6 +1140,9 @@ packages:
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
+  '@types/js-cookie@3.0.6':
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -2037,6 +2046,10 @@ packages:
   jiti@1.21.7:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
+
+  js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -4210,6 +4223,8 @@ snapshots:
 
   '@types/estree@1.0.6': {}
 
+  '@types/js-cookie@3.0.6': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
@@ -5310,6 +5325,8 @@ snapshots:
       '@pkgjs/parseargs': 0.11.0
 
   jiti@1.21.7: {}
+
+  js-cookie@3.0.5: {}
 
   js-tokens@4.0.0: {}
 
