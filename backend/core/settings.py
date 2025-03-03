@@ -45,6 +45,8 @@ THIRD_APPS: list[str] = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "django_filters",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
 ]
 
 INSTALLED_APPS: list[str] = BASE_APPS + PROJECT_APPS + THIRD_APPS
@@ -133,21 +135,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 APPEND_SLASH = False
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOWED_ORIGINS: list[str] = [
-    "http://localhost:3000",
-]
-
-CORS_ALLOW_METHODS: list[str] = [
-    "GET",
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE",
-]
-
 REST_FRAMEWORK: dict = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
@@ -177,6 +164,20 @@ REST_FRAMEWORK: dict = {
     "ORDERING_PARAM": "order",
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS: list[str] = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_METHODS: list[str] = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+]
 
 DJOSER: dict = {
     "LOGIN_FIELD": "email",
@@ -225,16 +226,24 @@ DISCORD_WEBHOOKS: dict = {
 }
 
 SPECTACULAR_SETTINGS: dict = {
-    "TITLE": "Proyecto Url Shortener",
-    "DESCRIPTION": "Pending description",
+    "TITLE": env.str("PROYECT_NAME"),
+    "DESCRIPTION": (
+        "The Shortened URL API provides a set of endpoints to create, "
+        "manage, and retrieve shortened URLs. "
+        "This API enables users to shorten long URLs, "
+        "track their usage, and delete them if needed. "
+        "It offers an easy-to-use interface for developers "
+        "and users to integrate URL shortening features into "
+        "their applications or websites."
+    ),
     "VERSION": "v1",
     "LICENSE": {
-        "name": "pending",
-        "url": "pending",
+        "name": env.str("LICENCE_NAME"),
+        "url": env.str("LICENCE_URL"),
     },
     "CONTACT": {
-        "name": "pending",
-        "url": "pending",
+        "name": env.str("CONTACT_NAME"),
+        "url": env.str("CONTACT_URL"),
     },
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_DIST": "SIDECAR",
@@ -249,7 +258,27 @@ SPECTACULAR_SETTINGS: dict = {
     "TAGS": [
         {
             "name": "urls",
-            "description": "All urls data",
+            "description": "Operations related to urls",
+        },
+        {
+            "name": "groups",
+            "description": "Operations related to groups",
+        },
+        {
+            "name": "communications",
+            "description": "Operations related to communications",
+        },
+        {
+            "name": "users",
+            "description": "Operations related to users",
+        },
+        {
+            "name": "socials",
+            "description": "Operations related to socials",
+        },
+        {
+            "name": "tokens",
+            "description": "Operations related to tokens",
         },
     ],
 }
