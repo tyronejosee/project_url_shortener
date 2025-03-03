@@ -1,6 +1,10 @@
 """Views for Urls App."""
 
-from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect, Http404
+from django.http import (
+    HttpResponsePermanentRedirect,
+    HttpResponseRedirect,
+    Http404,
+)
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -9,6 +13,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema_view
 
 from apps.users.services import UserService
 from apps.users.permissions import IsFree, IsBasic, IsPremium
@@ -20,11 +25,20 @@ from .serializers import (
     URLGroupReadSerializer,
     URLGroupWriteSerializer,
 )
-from icecream import ic
+
+from .schemas import (
+    url_create_schema,
+    url_redirect_schema,
+    url_delete_schema,
+    url_stats_schema,
+    url_group_list_create_schema,
+    url_group_detail_schema,
+)
 
 User = get_user_model()
 
 
+@extend_schema_view(**url_create_schema)
 class URLCreateView(APIView):
     """
     View to create a shortened URL.
@@ -44,6 +58,7 @@ class URLCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema_view(**url_redirect_schema)
 class URLRedirectView(APIView):
     """
     View to handle redirection from a shortened URL.
@@ -66,6 +81,7 @@ class URLRedirectView(APIView):
         return redirect(url_instance.url)
 
 
+@extend_schema_view(**url_delete_schema)
 class URLDeleteView(APIView):
     """
     View to delete a shortened URL.
@@ -86,6 +102,7 @@ class URLDeleteView(APIView):
         )
 
 
+@extend_schema_view(**url_stats_schema)
 class URLStatsView(APIView):
     """
     View to retrieve statistics for a shortened URL.
@@ -106,12 +123,14 @@ class URLStatsView(APIView):
         return Response(serializer.data)
 
 
+@extend_schema_view(**url_group_list_create_schema)
 class URLGroupListCreateView(APIView):
     """
-    Pending.
+    View to list and create URL groups.
 
     Endpoints:
     - GET /api/groups
+    - POST /api/groups
     """
 
     permission_classes: list = [IsFree | IsBasic | IsPremium]
@@ -129,12 +148,15 @@ class URLGroupListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema_view(**url_group_detail_schema)
 class URLGroupDetailView(APIView):
     """
-    Pending.
+    View to retrieve, update, and delete a specific URL group.
 
     Endpoints:
     - GET /api/groups/{id}
+    - PATCH /api/groups/{id}
+    - DELETE /api/groups/{id}
     """
 
     def get_object(self, group_id: str) -> URLGroup:
