@@ -6,30 +6,30 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from drf_spectacular.utils import extend_schema_view
 
-# from drf_spectacular.utils import extend_schema_view
-
-# from ....schemas import (
-#     token_obtain_pair_schemas,
-#     token_refresh_schemas,
-#     token_verify_schemas,
-#     provider_auth_schemas,
-# )
+from .schemas import (
+    token_obtain_pair_schemas,
+    token_refresh_schemas,
+    token_verify_schemas,
+    provider_auth_schemas,
+)
 
 
-# @extend_schema_view(**token_obtain_pair_schemas)
+@extend_schema_view(**token_obtain_pair_schemas)
 class TokenObtainPairExtensionView(TokenObtainPairView):
     """
     Extended view for obtaining JWT tokens.
 
-    Extends the standard TokenObtainPairView in `rest_framework_simplejwt.views`
-    to include custom schema documentation using drf-spectacular.
+    Extends the standard TokenObtainPairView in
+    `rest_framework_simplejwt.views` to include
+    custom schema documentation using drf-spectacular.
     """
 
     pass
 
 
-# @extend_schema_view(**token_refresh_schemas)
+@extend_schema_view(**token_refresh_schemas)
 class TokenRefreshExtensionView(TokenRefreshView):
     """
     Extended view for refreshing JWT tokens.
@@ -41,7 +41,7 @@ class TokenRefreshExtensionView(TokenRefreshView):
     pass
 
 
-# @extend_schema_view(**token_verify_schemas)
+@extend_schema_view(**token_verify_schemas)
 class TokenVerifyExtensionView(TokenVerifyView):
     """
     Extended view for verifying JWT tokens.
@@ -53,7 +53,7 @@ class TokenVerifyExtensionView(TokenVerifyView):
     pass
 
 
-# @extend_schema_view(**provider_auth_schemas)
+@extend_schema_view(**provider_auth_schemas)
 class ProviderAuthExtensionView(ProviderAuthView):
     """
     Extended view for handling social authentication provider requests.
