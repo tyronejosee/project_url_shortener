@@ -18,6 +18,8 @@ DEBUG = env.bool("DEBUG")
 
 SECRET_KEY = env.str("SECRET_KEY")
 
+VERIFICATION_CODE = env.str("VERIFICATION_CODE")
+
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 BASE_APPS: list[str] = [
@@ -60,6 +62,7 @@ MIDDLEWARE: list[str] = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.utils.middleware.VerificationCodeMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -142,10 +145,10 @@ REST_FRAMEWORK: dict = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
-    ],
+    # "DEFAULT_THROTTLE_CLASSES": [
+    #     "rest_framework.throttling.AnonRateThrottle",
+    #     "rest_framework.throttling.UserRateThrottle",
+    # ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_CONTENT_LANGUAGE": "en",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -153,11 +156,11 @@ REST_FRAMEWORK: dict = {
         "rest_framework.filters.SearchFilter",
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "3/second",
-        "user": "60/minute",
-        "daily": "1000/day",
-    },
+    # "DEFAULT_THROTTLE_RATES": {
+    #     "anon": "3/second",
+    #     "user": "60/minute",
+    #     "daily": "1000/day",
+    # },
     "NUM_PROXIES": None,
     "PAGE_SIZE": 25,
     "SEARCH_PARAM": "q",
@@ -177,6 +180,19 @@ CORS_ALLOW_METHODS: list[str] = [
     "PUT",
     "PATCH",
     "DELETE",
+]
+
+CORS_ALLOW_HEADERS: list[str] = [
+    "Authorization",
+    "Content-Type",
+    "accept",
+    "accept-encoding",
+    "content-disposition",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "X-Verification-Code",
 ]
 
 DJOSER: dict = {
