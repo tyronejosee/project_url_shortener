@@ -4,6 +4,7 @@ import { IFeedbackForm } from "@/interfaces/feedback.interface";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
+import useFetchData from "@/hooks/useFetchData";
 
 export default function FeedbackPage() {
   const [form, setForm] = useState<IFeedbackForm>({
@@ -12,6 +13,13 @@ export default function FeedbackPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { fetchData, loading } = useFetchData({
+    url: "api/feedback",
+    method: "POST",
+    body: form,
+  });
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -19,13 +27,20 @@ export default function FeedbackPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     if (!form.name || !form.email || !form.message) {
-      alert("Please fill in all required fields.");
+      setError("Please fill in all required fields.");
       return;
     }
-    setSubmitted(true);
+
+    try {
+      await fetchData();
+      setSubmitted(true);
+    } catch {
+      setError("Error submitting feedback. Please try again.");
+    }
   };
 
   return (
@@ -48,6 +63,8 @@ export default function FeedbackPage() {
                 type="text"
                 labelPlacement="outside"
                 placeholder="Joe Doe"
+                name="name"
+                value={form.name}
                 onChange={handleChange}
               />
               <Input
@@ -56,6 +73,8 @@ export default function FeedbackPage() {
                 type="email"
                 labelPlacement="outside"
                 placeholder="you@example.com"
+                name="email"
+                value={form.email}
                 onChange={handleChange}
               />
             </div>
@@ -65,10 +84,18 @@ export default function FeedbackPage() {
               type="textarea"
               labelPlacement="outside"
               placeholder="Your message here..."
+              name="message"
+              value={form.message}
               onChange={handleChange}
             />
-            <Button type="submit" color="primary" className="w-full">
-              Send
+            {error && <p className="text-red-500">{error}</p>}
+            <Button
+              type="submit"
+              color="primary"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send"}
             </Button>
           </form>
         )}
