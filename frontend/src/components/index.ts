@@ -6,3 +6,4 @@ export * from "./ui/sidebar-list/SidebarList";
 
 export * from "./home/pricing-plans/PricingPlans";
 export * from "./dashboard/world-map/WorldMap";
+export * from "./dashboard/group-table/GroupTable";
