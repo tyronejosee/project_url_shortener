@@ -17,6 +17,7 @@
     "@heroui/input": "2.4.13",
     "@heroui/navbar": "2.2.9",
     "@heroui/select": "2.4.13",
+    "@heroui/skeleton": "^2.2.10",
     "@heroui/snippet": "2.2.14",
     "@heroui/system": "2.4.10",
     "@heroui/table": "2.2.12",

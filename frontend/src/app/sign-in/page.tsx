@@ -1,47 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Eye, EyeClosed } from "lucide-react";
 import Cookies from "js-cookie";
+import useFetchData from "@/hooks/useFetchData";
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [triggerFetch, setTriggerFetch] = useState<boolean>(false);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [fetchDataParams, setFetchDataParams] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
+
+  const { data, loading, error: fetchError } = useFetchData<{
+    access: string;
+    refresh: string;
+  }>({
+    url: fetchDataParams ? "api/tokens/create" : "",
+    method: "POST",
+    body: fetchDataParams ? { email, password } : undefined,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:8050/api/tokens/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.detail || "Error logging in");
-        return;
-      }
-
-      const data = await response.json();
-      Cookies.set("access_token", data.access, { expires: 1, secure: true, sameSite: "Strict" });
-      Cookies.set("refresh_token", data.refresh, { expires: 7, secure: true, sameSite: "Strict" });
-      window.location.href = "/dashboard";
-
-    } catch (err) {
-      setError("Error connecting to the server.");
-      console.error(err);
-    }
+    setError(null);
+    setFetchDataParams({ email, password });
+    setTriggerFetch(true);
   };
+
+  useEffect(() => {
+    if (data?.access && data?.refresh) {
+      Cookies.set("access_token", data.access, {
+        expires: 1,
+        secure: true,
+        sameSite: "Strict",
+      });
+      Cookies.set("refresh_token", data.refresh, {
+        expires: 7,
+        secure: true,
+        sameSite: "Strict",
+      });
+      window.location.href = "/dashboard";
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (fetchError) {
+      setError(fetchError);
+    }
+  }, [fetchError]);
 
   return (
     <main className="mx-auto p-4">
@@ -104,8 +121,8 @@ export default function SignIn() {
           </div>
 
           <div className="flex items-center justify-between">
-            <Button type="submit" color="primary" className="w-full">
-              Sign In
+            <Button type="submit" color="primary" className="w-full" disabled={loading}>
+              {loading ? "Signing In..." : "Sign In"}
             </Button>
           </div>
         </form>
