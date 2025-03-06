@@ -6,16 +6,17 @@ from rest_framework.routers import DefaultRouter
 
 from .viewsets import UserExtensionViewSet
 from .views import (
+    ProviderAuthExtensionView,
     TokenObtainPairExtensionView,
     TokenRefreshExtensionView,
     TokenVerifyExtensionView,
-    ProviderAuthExtensionView,
+    LogoutView,
 )
 
 router = DefaultRouter(trailing_slash="")
 router.register(r"users", UserExtensionViewSet, basename="user")
 
-urlpatterns = [
+urlpatterns: list = [
     # Routers urls
     path("api/", include(router.urls)),
     # Djoser socials urls
@@ -39,5 +40,10 @@ urlpatterns = [
         r"^api/tokens/verify/?",
         TokenVerifyExtensionView.as_view(),
         name="jwt-verify",
+    ),
+    # Logout urls
+    path(
+        "api/tokens/logout",
+        LogoutView.as_view(),
     ),
 ]
