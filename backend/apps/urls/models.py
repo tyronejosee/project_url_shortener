@@ -1,11 +1,17 @@
 """Models for Urls App."""
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password, check_password
 from django.db import models
 
 from apps.utils.models import BaseModel
 from .repositories import URLGroupRepository
-from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
+from .choices import (
+    PrivacyChoices,
+    DeviceTypeChoices,
+    BrowserTypeChoices,
+    OSTypeChoices,
+)
 
 User = get_user_model()
 
@@ -25,6 +31,12 @@ class URL(BaseModel):
         blank=True,
         null=True,
     )
+    privacy = models.CharField(
+        max_length=10,
+        choices=PrivacyChoices.choices,
+        default=PrivacyChoices.PUBLIC,
+    )
+    password = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         db_table: str = "urls"
@@ -37,10 +49,18 @@ class URL(BaseModel):
 
         if not self.alias:
             self.alias = URLService.generate_alias()
+        if self.password:
+            self.password = make_password(self.password)
+
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.url} -> {self.alias}"
+
+    def check_password(self, raw_password: str) -> bool:
+        if self.password:
+            return check_password(raw_password, self.password)
+        return False
 
 
 class URLGroup(BaseModel):

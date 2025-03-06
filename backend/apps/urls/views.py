@@ -1,11 +1,7 @@
 """Views for Urls App."""
 
-from django.http import (
-    HttpResponsePermanentRedirect,
-    HttpResponseRedirect,
-    Http404,
-)
-from django.shortcuts import redirect
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.views import APIView
@@ -18,6 +14,7 @@ from drf_spectacular.utils import extend_schema_view
 from apps.users.services import UserService
 from apps.users.permissions import IsFree, IsBasic, IsPremium
 from .models import URL, URLGroup
+from .choices import PrivacyChoices
 from .services import URLService
 from .serializers import (
     URLSerializer,
@@ -67,9 +64,7 @@ class URLRedirectView(APIView):
     - GET /{alias}
     """
 
-    def get(
-        self, request: Request, alias: str
-    ) -> Response | HttpResponseRedirect | HttpResponsePermanentRedirect:
+    def get(self, request: Request, alias: str):
         try:
             url_instance = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
@@ -77,8 +72,49 @@ class URLRedirectView(APIView):
                 {"error": "Short URL not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if url_instance.privacy == PrivacyChoices.PRIVATE:
+            password = request.GET.get("password")
+
+            if not password:
+                return redirect(f"/verify-password/{alias}")
+
+            if not url_instance.check_password(password):
+                return HttpResponse("Incorrect password.", status=403)
+
         URLService.record_click(request, url_instance)
         return redirect(url_instance.url)
+
+
+def verify_password(request, alias: str):
+    """
+    View to verify the password for a private URL.
+
+    Urls:
+    - GET verify-password/{alias}
+    """
+
+    try:
+        url_instance = URL.objects.get(alias=alias)
+    except URL.DoesNotExist:
+        return HttpResponse("Short URL not found.", status=404)
+
+    if url_instance.privacy == PrivacyChoices.PRIVATE:
+        if request.method == "POST":
+            password = request.POST.get("password")
+            if url_instance.check_password(password):
+                return redirect(f"/{alias}?password={password}")
+
+            error_message = "Incorrect password. Please try again."
+            return render(
+                request,
+                "pages/verify_password.html",
+                {
+                    "alias": alias,
+                    "error_message": error_message,
+                },
+            )
+        return render(request, "pages/verify_password.html", {"alias": alias})
+    return redirect(f"/{alias}")
 
 
 @extend_schema_view(**url_delete_schema)

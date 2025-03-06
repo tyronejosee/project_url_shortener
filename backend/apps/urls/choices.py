@@ -3,6 +3,11 @@
 from django.db import models
 
 
+class PrivacyChoices(models.TextChoices):
+    PUBLIC = "public", "Public"
+    PRIVATE = "private", "Private"
+
+
 class DeviceTypeChoices(models.TextChoices):
     MOBILE = "mobile", "Mobile"
     TABLET = "tablet", "Tablet"

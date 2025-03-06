@@ -7,10 +7,10 @@ from .models import URL, URLGroup, Click
 
 @admin.register(URL)
 class URLAdmin(admin.ModelAdmin):
-    list_display: list[str] = ["url", "alias", "created_at", "updated_at"]
+    list_display: list[str] = ["url", "alias", "privacy"]
     search_fields: list[str] = ["url", "alias"]
-    list_filter: list[str] = ["created_at", "updated_at"]
-    readonly_fields: list[str] = ["alias"]
+    list_filter: list[str] = ["privacy"]
+    readonly_fields: list[str] = ["alias", "password"]
 
     def save_model(self, request, obj, form, change) -> None:
         if not obj.alias:

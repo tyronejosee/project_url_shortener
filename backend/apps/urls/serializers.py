@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from django.conf import settings
 from django.db.models import Count
 from django.db.models.functions import TruncDate
 from rest_framework import serializers
@@ -15,7 +16,13 @@ class URLSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = URL
-        fields: list[str] = ["url", "alias"]
+        fields: list[str] = ["url", "alias", "group", "privacy", "password"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        domain = settings.DOMAIN
+        representation["alias"] = f"{domain}/{representation['alias']}"
+        return representation
 
 
 class URLStatsSerializer(serializers.ModelSerializer):

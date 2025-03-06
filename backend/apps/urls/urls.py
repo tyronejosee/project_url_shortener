@@ -10,6 +10,7 @@ from .views import (
     URLStatsView,
     URLGroupListCreateView,
     URLGroupDetailView,
+    verify_password,
 )
 
 
@@ -17,6 +18,10 @@ urlpatterns: list[URLPattern] = [
     path(
         "<str:alias>",
         URLRedirectView.as_view(),
+    ),
+    path(
+        "verify-password/<str:alias>",
+        verify_password,
     ),
     path(
         "api/urls/shorten",
