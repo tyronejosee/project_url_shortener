@@ -10,7 +10,7 @@ from .views import (
     URLStatsView,
     URLGroupListCreateView,
     URLGroupDetailView,
-    verify_password,
+    VerifyPasswordView,
 )
 
 
@@ -21,7 +21,7 @@ urlpatterns: list[URLPattern] = [
     ),
     path(
         "verify-password/<str:alias>",
-        verify_password,
+        VerifyPasswordView.as_view(),
     ),
     path(
         "api/urls/shorten",

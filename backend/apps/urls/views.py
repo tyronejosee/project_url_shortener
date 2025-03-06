@@ -1,8 +1,10 @@
 """Views for Urls App."""
 
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect
+from django.conf import settings
+from django.http import HttpResponse, Http404, HttpRequest
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -85,36 +87,40 @@ class URLRedirectView(APIView):
         return redirect(url_instance.url)
 
 
-def verify_password(request, alias: str):
+class VerifyPasswordView(TemplateView):
     """
     View to verify the password for a private URL.
 
     Urls:
-    - GET verify-password/{alias}
+    POST /verify-password/{alias}
     """
 
-    try:
-        url_instance = URL.objects.get(alias=alias)
-    except URL.DoesNotExist:
-        return HttpResponse("Short URL not found.", status=404)
+    template_name = "pages/verify_password.html"
 
-    if url_instance.privacy == PrivacyChoices.PRIVATE:
-        if request.method == "POST":
-            password = request.POST.get("password")
-            if url_instance.check_password(password):
-                return redirect(f"/{alias}?password={password}")
+    def get_context_data(self, **kwargs) -> dict:
+        alias = self.kwargs.get("alias")
+        context = super().get_context_data(**kwargs)
+        context["alias_url"] = f"{settings.DOMAIN}/{alias}"
+        return context
 
-            error_message = "Incorrect password. Please try again."
-            return render(
-                request,
-                "pages/verify_password.html",
-                {
-                    "alias": alias,
-                    "error_message": error_message,
-                },
+    def post(
+        self,
+        request: HttpRequest,
+        alias: str,
+        *args,
+        **kwargs,
+    ) -> HttpResponse:
+        url_instance = get_object_or_404(URL, alias=alias)
+        password = request.POST.get("password", "")
+
+        if url_instance.check_password(password):
+            return redirect(f"/{alias}?password={password}")
+
+        return self.render_to_response(
+            self.get_context_data(
+                error_message="Incorrect password. Please try again.",
             )
-        return render(request, "pages/verify_password.html", {"alias": alias})
-    return redirect(f"/{alias}")
+        )
 
 
 @extend_schema_view(**url_delete_schema)
