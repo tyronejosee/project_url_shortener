@@ -8,6 +8,7 @@ backend/static/cloudinary
 backend/static/drf_spectacular_sidecar
 backend/static/rest_framework
 backend/static/import_export
+node_modules
 
 # Backend
 
