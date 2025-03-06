@@ -36,6 +36,7 @@ BASE_APPS: list[str] = [
 PROJECT_APPS: list[str] = [
     "apps.communications",
     "apps.domains",
+    "apps.plans",
     "apps.urls",
     "apps.users",
     "apps.utils",

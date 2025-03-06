@@ -4,6 +4,8 @@ import uuid
 
 from django.db import models
 
+from .repositories import BaseRepository
+
 
 class BaseModel(models.Model):
     """Model definition for BaseModel (Base)."""
@@ -12,6 +14,8 @@ class BaseModel(models.Model):
     is_available = models.BooleanField(default=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = BaseRepository()
 
     class Meta:
         abstract = True
