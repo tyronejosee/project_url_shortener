@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
-import { Snippet } from "@heroui/snippet";
+import { Button, Input, Snippet } from "@heroui/react";
 
 export default function Home() {
   return (

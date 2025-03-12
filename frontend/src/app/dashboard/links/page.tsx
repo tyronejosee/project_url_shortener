@@ -8,7 +8,7 @@ import {
   TableBody,
   TableRow,
   TableCell
-} from "@heroui/table";
+} from "@heroui/react";
 import { linksList } from "@/config/constants";
 import { Chip } from "@heroui/chip";
 

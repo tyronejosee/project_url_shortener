@@ -8,8 +8,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table";
-import { Chip } from "@heroui/chip";
+  Chip,
+} from "@heroui/react";
 import { domains } from "@/config/constants";
 
 export default function DomainsPage() {

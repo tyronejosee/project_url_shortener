@@ -1,9 +1,7 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
+import { Input, Textarea, Button } from "@heroui/react";
 import { FeedbackForm } from "@/interfaces/feedback";
-import { Input } from "@heroui/input";
-import { Textarea } from "@heroui/input";
-import { Button } from "@heroui/button";
 import useFetchData from "@/hooks/useFetchData";
 
 export default function FeedbackPage() {

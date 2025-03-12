@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
+import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
 import useRegister from "@/hooks/use-register";
 

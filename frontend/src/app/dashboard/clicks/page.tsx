@@ -8,7 +8,7 @@ import {
   TableBody,
   TableRow,
   TableCell
-} from "@heroui/table";
+} from "@heroui/react";
 import { clicks } from "@/config/constants";
 
 export default function ClicksPage() {

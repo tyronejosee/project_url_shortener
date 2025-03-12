@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { plans } from "@/config/constants";
 
 export default function PricingPlans() {

@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
+import { Button, Input } from "@heroui/react";
 
 export default function DonatePage() {
   const [amount, setAmount] = useState("");

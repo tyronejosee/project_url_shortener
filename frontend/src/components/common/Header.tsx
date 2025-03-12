@@ -1,11 +1,9 @@
 "use client";
 
-import { Button } from "@heroui/button";
-import { Skeleton } from "@heroui/skeleton";
-import { Avatar } from "@heroui/avatar";
-import { getFirstLetter } from "@/utils/getFirstLetter";
+import { Button, Skeleton, Avatar } from "@heroui/react";
 import useLogout from "@/hooks/use-logout";
 import useAuthStore from "@/store/auth";
+import { getFirstLetter } from "@/utils/getFirstLetter";
 
 export default function Header() {
   const { user, isAuthenticated } = useAuthStore();

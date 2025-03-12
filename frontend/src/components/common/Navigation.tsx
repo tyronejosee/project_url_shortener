@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
-import { Button } from "@heroui/button";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import useAuthStore from "@/store/auth";
 
