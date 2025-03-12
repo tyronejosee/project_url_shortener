@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { SidebarList } from "../sidebar-list/SidebarList";
+import { SidebarList } from "@/components/common";
 
-export const Sidebar = () => {
+export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const Sidebar = () => {
 
       <div className="h-20 bg-neutral-50 rounded-xl w-full"></div>
 
-      <SidebarList isOpen={isOpen}/>
+      <SidebarList isOpen={isOpen} />
 
       {/* Footer */}
       {/* <footer className="pb-4 flex items-center">
@@ -61,4 +61,4 @@ export const Sidebar = () => {
       </footer> */}
     </aside>
   );
-};
+}

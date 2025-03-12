@@ -4,7 +4,7 @@ import Link from "next/link";
 import { links } from "@/config/constants";
 import { usePathname } from "next/navigation";
 
-export const Footer = () => {
+export default function Footer() {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
 

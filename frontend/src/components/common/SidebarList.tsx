@@ -67,7 +67,7 @@ const sidebarItems = [
   },
 ];
 
-export const SidebarList = ({ isOpen }: Props) => {
+export default function SidebarList({ isOpen }: Props) {
   const pathname = usePathname();
 
   return (

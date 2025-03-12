@@ -1,39 +1,33 @@
 "use client";
 
-import Cookies from "js-cookie";
 import { Button } from "@heroui/button";
-import { Badge } from "@heroui/badge";
 import { Skeleton } from "@heroui/skeleton";
 import { Avatar } from "@heroui/avatar";
-import useUser from "@/hooks/useUser";
 import { getFirstLetter } from "@/utils/getFirstLetter";
+import useLogout from "@/hooks/use-logout";
+import useAuthStore from "@/store/auth";
 
-export const Header = () => {
-  const { user, loading } = useUser();
-
-  const handleLogout = () => {
-    Cookies.remove("access_token");
-    Cookies.remove("refresh_token");
-    window.location.reload();
-  };
+export default function Header() {
+  const { user, isAuthenticated } = useAuthStore();
+  const { handleLogout } = useLogout();
 
   return (
     <header className="z-30 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
       <div className="ml-8 text-xl font-semibold">URL Shortener</div>
-      {user ? (
+      {user && isAuthenticated ? (
         <div className="flex items-center space-x-4">
           <Button onPress={handleLogout} color="primary">
             Log Out
           </Button>
           <div className="flex text-sm space-x-4">
             <div className="flex flex-col text-right">
-              <span>@{user?.username}</span>
-              <span>{user?.email}</span>
+              <span>@{user.username}</span>
+              <span>{user.plan}</span>
             </div>
             <Avatar
               isBordered
               radius="full"
-              name={getFirstLetter(user?.username || "")}
+              name={getFirstLetter(user.username)}
               className="bg-primary text-white text-xl"
             />
           </div>

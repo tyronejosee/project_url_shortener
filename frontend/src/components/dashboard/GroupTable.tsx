@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Table,
   TableHeader,
@@ -7,15 +9,13 @@ import {
   TableCell,
 } from "@heroui/table";
 import { Chip } from "@heroui/chip";
-import { Skeleton } from "@heroui/skeleton";
-import { groups } from "@/config/constants";
-import { IURLGroup } from "@/interfaces/url-group.interface";
+import { GroupRead } from "@/interfaces/group";
 
 interface Props {
-  groups: IURLGroup[];
+  groups: GroupRead[];
 }
 
-export const GroupTable = ({ groups }: Props) => {
+export default function GroupTable({ groups }: Props) {
   return (
     <Table
       aria-label="Groups Table"
