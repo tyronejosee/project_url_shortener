@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Table,
@@ -8,17 +8,97 @@ import {
   TableRow,
   TableCell,
   Chip,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+  useDisclosure,
+  Textarea,
 } from "@heroui/react";
-import { GroupRead } from "@/interfaces/group";
+import { GroupRead, GroupWrite } from "@/interfaces/group";
+import { useState } from "react";
+import { createGroup, deleteGroup, updateGroup } from "@/services/groupService";
+import { useRouter } from "next/navigation";
+import { formatDate } from "@/utils/formatDate";
 
 interface Props {
   groups: GroupRead[];
 }
 
 export default function GroupTable({ groups }: Props) {
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [newGroup, setNewGroup] = useState({
+    name: "",
+    alias: "",
+    description: "",
+  });
+  const [editingGroup, setEditingGroup] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewGroup({ ...newGroup, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      if (editingGroup) {
+        await updateGroup(editingGroup.id, newGroup as GroupWrite);
+      } else {
+        await createGroup(newGroup as GroupWrite);
+      }
+      onClose();
+      setNewGroup({ name: "", alias: "", description: "" });
+      setEditingGroup(null);
+      router.refresh();
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditClick = (group: GroupRead) => {
+    setEditingGroup(group);
+    setNewGroup({
+      name: group.name,
+      alias: group.alias,
+      description: group.description,
+    });
+    onOpen();
+  };
+
+  const handleAddClick = () => {
+    setEditingGroup(null);
+    setNewGroup({ name: "", alias: "", description: "" });
+    onOpen();
+  };
+
+  const handleDeleteClick = async (id: string) => {
+    if (confirm("¿Estás seguro de que deseas eliminar este grupo?")) {
+      try {
+        await deleteGroup(id);
+        router.refresh();
+      } catch (error) {
+        console.error("Error al eliminar el grupo:", error);
+      }
+    }
+  };
 
   return (
     <div>
+      <Button
+        onPress={handleAddClick}
+        color="primary"
+      >
+        Add Group
+      </Button>
+
       <Table
         aria-label="Groups Table"
         color="primary"
@@ -43,8 +123,8 @@ export default function GroupTable({ groups }: Props) {
                 <TableCell>{group.name}</TableCell>
                 <TableCell>{group.alias}</TableCell>
                 <TableCell>{group.description}</TableCell>
-                <TableCell>{group.created_at}</TableCell>
-                <TableCell>{group.updated_at}</TableCell>
+                <TableCell>{formatDate(group.created_at)}</TableCell>
+                <TableCell>{formatDate(group.updated_at)}</TableCell>
                 <TableCell>
                   <Chip
                     size="sm"
@@ -54,17 +134,21 @@ export default function GroupTable({ groups }: Props) {
                     {group.is_available ? "Active" : "Inactive"}
                   </Chip>
                 </TableCell>
-                <TableCell>
-                  <button
-                    className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded"
+                <TableCell className="space-x-2">
+                  <Button
+                    size="sm"
+                    color="warning"
+                    onPress={() => handleEditClick(group)}
                   >
-                    Actualizar
-                  </button>
-                  <button
-                    className="px-2 py-1 bg-red-500 text-white rounded"
+                    Update
+                  </Button>
+                  <Button
+                    size="sm"
+                    color="danger"
+                    onPress={() => handleDeleteClick(group.id)}
                   >
-                    Eliminar
-                  </button>
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -73,6 +157,48 @@ export default function GroupTable({ groups }: Props) {
           <TableBody emptyContent="No rows to display.">{[]}</TableBody>
         )}
       </Table>
+
+      {/* Modal */}
+      <Modal isOpen={isOpen} onOpenChange={onClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            {editingGroup ? "Update Group" : "Add New Group"}{" "}
+          </ModalHeader>
+          <ModalBody>
+            <Input
+              isRequired
+              label="Name"
+              labelPlacement="outside"
+              type="text"
+              name="name"
+              placeholder="Name group"
+              value={newGroup.name}
+              onChange={handleInputChange}
+            />
+            <Textarea
+              isRequired
+              label="Description"
+              labelPlacement="outside"
+              name="description"
+              value={newGroup.description}
+              onChange={handleInputChange}
+              placeholder="Enter your description"
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Cancel
+            </Button>
+            <Button color="primary" onPress={handleSubmit} disabled={loading}>
+              {loading
+                ? "Loading..."
+                : editingGroup
+                ? "Update"
+                : "Save"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
-};
+}
