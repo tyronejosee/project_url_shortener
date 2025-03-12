@@ -1,15 +1,20 @@
-import { fetchData } from "@/lib/api";
-import { GroupTable } from "@/components";
+"use client"
 
-export default async function GroupsPage() {
-  const groups = await fetchData({
-    endpoint: "api/groups",
-    method: "GET",
-  });
+import { GroupTable } from "@/components/dashboard";
+import useGroup from "@/hooks/useGroup";
+import { useEffect } from "react";
+
+export default function GroupsPage() {
+  const { groups, isLoading, errors, fetchGroups } = useGroup();
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* <GroupTable groups={groups} /> */}
-    </div>
+    <main className="flex flex-col gap-3">
+      {isLoading && <p>Loading groups...</p>}
+      <GroupTable groups={groups} />
+    </main>
   );
 }

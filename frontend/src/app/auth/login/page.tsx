@@ -1,64 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Eye, EyeClosed } from "lucide-react";
-import Cookies from "js-cookie";
-import useFetchData from "@/hooks/useFetchData";
+import useLogin from "@/hooks/use-login";
 
-export default function SignIn() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+export default function LoginPage() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [triggerFetch, setTriggerFetch] = useState<boolean>(false);
-
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const [fetchDataParams, setFetchDataParams] = useState<{
-    email: string;
-    password: string;
-  } | null>(null);
-
-  const { data, loading, error: fetchError } = useFetchData<{
-    access: string;
-    refresh: string;
-  }>({
-    url: fetchDataParams ? "api/tokens/create" : "",
-    method: "POST",
-    body: fetchDataParams ? { email, password } : undefined,
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setFetchDataParams({ email, password });
-    setTriggerFetch(true);
-  };
-
-  useEffect(() => {
-    if (data?.access && data?.refresh) {
-      Cookies.set("access_token", data.access, {
-        expires: 1,
-        secure: true,
-        sameSite: "Strict",
-      });
-      Cookies.set("refresh_token", data.refresh, {
-        expires: 7,
-        secure: true,
-        sameSite: "Strict",
-      });
-      window.location.href = "/dashboard";
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (fetchError) {
-      setError(fetchError);
-    }
-  }, [fetchError]);
+  const { email, password, isLoading, error, onChange, onSubmit } = useLogin();
 
   return (
     <main className="mx-auto p-4">
@@ -70,16 +23,16 @@ export default function SignIn() {
           Sign in to access all the features of the service.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
           <div className="space-y-9">
             <Input
               isRequired
               label="Email"
-              value={email}
               labelPlacement="outside"
               name="email"
               placeholder="you@example.com"
-              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              onChange={onChange}
             />
             <Input
               endContent={
@@ -99,11 +52,11 @@ export default function SignIn() {
               isRequired
               type={isVisible ? "text" : "password"}
               label="Password"
-              value={password}
               labelPlacement="outside"
               name="password"
               placeholder="********"
-              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              onChange={onChange}
             />
           </div>
 
@@ -121,8 +74,13 @@ export default function SignIn() {
           </div>
 
           <div className="flex items-center justify-between">
-            <Button type="submit" color="primary" className="w-full" disabled={loading}>
-              {loading ? "Signing In..." : "Sign In"}
+            <Button
+                type="submit"
+                color="primary"
+                className="w-full"
+                disabled={isLoading}
+            >
+              {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </div>
         </form>
@@ -130,8 +88,8 @@ export default function SignIn() {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/sign-up" className="text-primary hover:underline">
-              Sign Up
+            <Link href="/auth/register" className="text-primary hover:underline">
+              Register
             </Link>
           </p>
         </div>

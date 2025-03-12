@@ -1,6 +1,5 @@
 "use client";
 
-import { WorldMap } from "@/components";
 import {
   BarChart,
   Bar,
@@ -88,11 +87,6 @@ export default function GlobalStatsPage() {
             </ResponsiveContainer>
           </figure>
         ))}
-      </div>
-
-      <div className="border border-neutral-300 rounded-2xl p-6">
-        <h2 className="text-3xl font-bold text-center">World Map Clicks</h2>
-        <WorldMap />
       </div>
     </div>
   );

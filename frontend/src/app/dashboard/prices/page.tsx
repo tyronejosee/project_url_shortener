@@ -1,4 +1,4 @@
-import PricingPlans from "@/components/home/pricing-plans/PricingPlans";
+import { PricingPlans } from "@/components/branding";
 
 export default function PricesSPage() {
   return <PricingPlans />;

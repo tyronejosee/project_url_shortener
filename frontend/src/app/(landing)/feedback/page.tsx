@@ -1,13 +1,13 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { IFeedbackForm } from "@/interfaces/feedback.interface";
+import { FeedbackForm } from "@/interfaces/feedback";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import useFetchData from "@/hooks/useFetchData";
 
 export default function FeedbackPage() {
-  const [form, setForm] = useState<IFeedbackForm>({
+  const [form, setForm] = useState<FeedbackForm>({
     name: "",
     email: "",
     message: "",
