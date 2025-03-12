@@ -16,6 +16,7 @@ environ.Env.read_env("backend/.env")
 
 # Project
 
+SITE_NAME = "URL Shortener"
 DOMAIN = env.str("DOMAIN")
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env.str("SECRET_KEY")
@@ -231,15 +232,6 @@ AUTHENTICATION_BACKENDS: list[str] = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# Cookies
-
-AUTH_COOKIE = "access"
-AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
-AUTH_COOKIE_SECURE = env.bool("AUTH_COOKIE_SECURE")
-AUTH_COOKIE_HTTP_ONLY = True
-AUTH_COOKIE_PATH = "/"
-AUTH_COOKIE_SAMESITE = "None"
-
 # Oauth
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env.str("GOOGLE_AUTH_KEY")
@@ -256,6 +248,15 @@ SOCIAL_AUTH_FACEBOOK_SCOPE: list[str] = ["email"]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS: dict[str, str] = {
     "fields": "email, first_name, last_name",
 }
+
+# Cookies
+
+AUTH_COOKIE = "access"
+AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
+AUTH_COOKIE_SECURE = env.bool("AUTH_COOKIE_SECURE")
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_PATH = "/"
+AUTH_COOKIE_SAMESITE = "Lax"  # None in Prod.
 
 # HTTPs
 
