@@ -1,4 +1,4 @@
-export interface IURLGroup {
+export interface GroupRead {
   id: string;
   name: string;
   alias: string;
@@ -6,4 +6,9 @@ export interface IURLGroup {
   created_at: string;
   updated_at: string;
   is_available: boolean;
+}
+
+export interface GroupWrite {
+  name: string;
+  description: string;
 }
