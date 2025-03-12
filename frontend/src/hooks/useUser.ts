@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import useFetchData from "./useFetchData";
 
 type User = {
