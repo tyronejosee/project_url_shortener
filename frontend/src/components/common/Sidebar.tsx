@@ -26,7 +26,7 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "relative z-40 transition-all duration-300 ease-in-out bg-white border-r border-neutral-300 p-5 flex flex-col h-screen",
+        "relative z-20 transition-all duration-300 ease-in-out bg-white border-r border-neutral-300 p-5 flex flex-col h-screen",
         isOpen ? "w-56" : "w-20"
       )}
     >

@@ -3,7 +3,8 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/store/auth";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { addToast } from "@heroui/react";
 
 export default function useLogin() {
   const router = useRouter();
@@ -24,7 +25,10 @@ export default function useLogin() {
     try {
       const { success, error } = await login(formData.email, formData.password);
       if (success) {
-        toast.success("Logged in");
+        addToast({
+          title: "Welcome back!",
+          description: "You have successfully logged in.",
+        });
         router.push("/dashboard");
       } else {
         setError(error);

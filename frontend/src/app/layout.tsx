@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Outfit, Roboto_Mono } from "next/font/google";
-import { HeroUIProvider } from "@heroui/system";
+// import { HeroUIProvider } from "@heroui/system";
 import "../styles/globals.css";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer } from "react-toastify";
 import { Footer, Navigation } from "@/components/common";
+import Providers from "./providers";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,12 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} ${robotoMono.variable} antialiased`}>
-        <HeroUIProvider>
-          <ToastContainer />
+        <Providers>
           <Navigation />
           {children}
           <Footer />
-        </HeroUIProvider>
+        </Providers>
       </body>
     </html>
   );
