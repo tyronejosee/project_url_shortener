@@ -18,10 +18,14 @@ class URLSerializer(serializers.ModelSerializer):
         model = URL
         fields: list[str] = ["url", "alias", "group", "privacy", "password"]
 
-    def to_representation(self, instance):
+    def to_representation(self, instance) -> dict:
         representation = super().to_representation(instance)
         domain = settings.DOMAIN
+        representation["id"] = instance.id
         representation["alias"] = f"{domain}/{representation['alias']}"
+        representation["created_at"] = instance.created_at
+        representation["updated_at"] = instance.updated_at
+        representation.pop("password", None)
         return representation
 
 

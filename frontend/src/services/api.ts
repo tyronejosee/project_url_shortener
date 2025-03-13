@@ -27,11 +27,15 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
     }
 
     if (response.status === 201 && options.method === "POST") {
-      return { success: true };
+      return await response.json();
     }
 
     if (response.status === 204 && options.method === "DELETE") {
       return { success: true };
+    }
+
+    if (response.status === 400 && options.method === "POST") {
+      return await response.json();
     }
 
     let errorMessage = `HTTP ${response.status}`;
