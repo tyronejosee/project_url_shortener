@@ -2,12 +2,10 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import useAuthStore from "@/store/auth";
-import { toast } from "react-toastify";
+import { addToast } from "@heroui/react";
 
 export default function useRegister() {
   const router = useRouter();
-  const { login } = useAuthStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -36,7 +34,10 @@ export default function useRegister() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Please check your email to verify your account");
+        addToast({
+          title: "Verify your account.",
+          description: "Please check your email to verify your account.",
+        });
         router.push("/auth/login");
       } else {
         if (data.email) {

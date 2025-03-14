@@ -6,7 +6,7 @@ import { createShorten } from "@/services/urlService";
 
 export function useURLShortenerForm() {
   const [form, setForm] = useState<URLWriteMinimal>({url: ""});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

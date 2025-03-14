@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { toast } from 'react-toastify';
+import { useState, ChangeEvent, FormEvent } from "react";
+import { addToast } from "@heroui/react";
 
 export default function useResetPassword() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -16,19 +17,26 @@ export default function useResetPassword() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/users/reset_password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_HOST}/api/users/reset_password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       if (res.ok) {
-        toast.success('Check your email for the reset link');
-      } else {
-        toast.error('Failed to send reset request');
+        addToast({
+          title: "Reset link sent.",
+          description:
+            "Please check your email inbox for the password reset link and follow the instructions to reset your password.",
+        });
       }
-    } catch {
-      toast.error('Something went wrong');
+
+    } catch (error) {
+      setError(`Error ${error}`);
+
     } finally {
       setIsLoading(false);
     }

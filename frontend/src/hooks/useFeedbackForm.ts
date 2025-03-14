@@ -2,7 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { addToast } from "@heroui/react";
 import { createFeedback } from "@/services/feedbackService";
 import { FeedbackForm } from "@/interfaces/feedback";
 
@@ -36,10 +36,16 @@ export function useFeedbackForm() {
     setLoading(true);
     try {
       await createFeedback(form);
-      toast.success("Thanks for your feedback!");
+      addToast({
+        title: "Thank you for your feedback!",
+        description:
+          "We appreciate your feedback and will use it to continuously improve. Your opinion is valuable to us.",
+      });
       router.push("/");
+
     } catch (error) {
-      setError("Something went wrong. Please try again.");
+      setError(`Error ${error}`);
+
     } finally {
       setLoading(false);
     }

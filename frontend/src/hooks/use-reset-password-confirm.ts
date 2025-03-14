@@ -2,7 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { addToast } from "@heroui/react";
 
 export default function useResetPasswordConfirm(uid: string, token: string) {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
     re_new_password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -31,13 +32,16 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
       );
 
       if (res.ok) {
-        toast.success("Password reset successful");
+        addToast({
+          title: "Password reset successful",
+          description: "Your password has been successfully changed.",
+        });
         router.push("/auth/login");
-      } else {
-        toast.error("Password reset failed");
       }
-    } catch {
-      toast.error("Something went wrong");
+
+    } catch (error) {
+      setError(`Error ${error}`);
+
     } finally {
       setIsLoading(false);
     }

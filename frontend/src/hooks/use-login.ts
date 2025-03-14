@@ -3,7 +3,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/store/auth";
-// import { toast } from "react-toastify";
 import { addToast } from "@heroui/react";
 
 export default function useLogin() {
@@ -23,18 +22,18 @@ export default function useLogin() {
     setError(null);
 
     try {
-      const { success, error } = await login(formData.email, formData.password);
+      const { success } = await login(formData.email, formData.password);
       if (success) {
         addToast({
           title: "Welcome back!",
           description: "You have successfully logged in.",
         });
         router.push("/dashboard");
-      } else {
-        setError(error);
       }
-    } catch {
-      setError("Something went wrong");
+
+    } catch (error) {
+      setError(`Error ${error}`);
+
     } finally {
       setIsLoading(false);
     }

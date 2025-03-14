@@ -53,8 +53,10 @@ export default function useGroup() {
     try {
       const newGroup = await createGroup(data);
       setGroups([...groups, newGroup]);
+
     } catch (error: any) {
       setErrors([error.message]);
+
     } finally {
       setIsLoading(false);
     }
@@ -71,8 +73,10 @@ export default function useGroup() {
       setGroups(
         groups.map((group) => (group.id === id ? updatedGroup : group))
       );
+
     } catch (error: any) {
       setErrors([error.message]);
+
     } finally {
       setIsLoading(false);
     }
@@ -84,8 +88,10 @@ export default function useGroup() {
     try {
       await deleteGroup(id);
       setGroups(groups.filter((group) => group.id !== id));
+
     } catch (error: any) {
       setErrors([error.message]);
+
     } finally {
       setIsLoading(false);
     }

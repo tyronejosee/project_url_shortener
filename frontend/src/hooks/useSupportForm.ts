@@ -2,15 +2,17 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { addToast } from "@heroui/react";
 import { createSupport } from "@/services/supportService";
 import { FeedbackForm } from "@/interfaces/feedback";
+import useAuthStore from "@/store/auth";
 
 export function useSupportForm() {
+  const { user } = useAuthStore();
   const router = useRouter();
   const [form, setForm] = useState<FeedbackForm>({
-    name: "",
-    email: "",
+    name: user?.username || "",
+    email: user?.email || "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -36,10 +38,17 @@ export function useSupportForm() {
     setLoading(true);
     try {
       await createSupport(form);
-      toast.success("Thanks for your support!");
+      addToast({
+        title: "Thank you for your support!",
+        description:
+          "We appreciate your support and will use it to continuously improve. Your opinion is valuable to us.",
+      });
+      setForm((prev) => ({ ...prev, message: "" }));
       router.push("/dashboard");
+
     } catch (error) {
       setError(`Error ${error}`);
+
     } finally {
       setLoading(false);
     }
