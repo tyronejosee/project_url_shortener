@@ -108,9 +108,7 @@ class ClickService:
         # Group by date
         clicks_by_date = (
             click_data.values("date")
-            .annotate(
-                click_count=Count("id"),
-            )
+            .annotate(click_count=Count("id"))
             .order_by("date")
         )
 
@@ -127,35 +125,60 @@ class ClickService:
         )
         clicks_by_os = (
             click_data.values("os")
-            .annotate(
-                os_count=Count("id"),
-            )
+            .annotate(os_count=Count("id"))
             .order_by("os")
         )
 
-        # Get the possible types
-        all_devices = [device[0] for device in DeviceTypeChoices.choices]
-        all_browsers = [browser[0] for browser in BrowserTypeChoices.choices]
-        all_os = [os[0] for os in OSTypeChoices.choices]
-
-        devices = {device: 0 for device in all_devices}
-        browsers = {browser: 0 for browser in all_browsers}
-        os_types = {os: 0 for os in all_os}
-
-        # Count clicks by type
-        for item in clicks_by_device:
-            devices[item["device"]] = item["device_count"]
-        for item in clicks_by_browser:
-            browsers[item["browser"]] = item["browser_count"]
-        for item in clicks_by_os:
-            os_types[item["os"]] = item["os_count"]
-
-        clicks_by_date_dict = {
-            str(item["date"]): item["click_count"] for item in clicks_by_date
+        # Mapping dictionaries for readable labels
+        device_labels = {
+            choice.value: choice.label
+            for choice in DeviceTypeChoices
         }
+        browser_labels = {
+            choice.value: choice.label
+            for choice in BrowserTypeChoices
+        }
+        os_labels = {
+            choice.value: choice.label
+            for choice in OSTypeChoices
+        }
+
+        # Initialize counts with labels
+        devices = {device_labels[device]: 0 for device in device_labels}
+        browsers = {browser_labels[browser]: 0 for browser in browser_labels}
+        os_types = {os_labels[os]: 0 for os in os_labels}
+
+        # Count clicks by type using labels
+        for item in clicks_by_device:
+            device_name = device_labels.get(item["device"], item["device"])
+            devices[device_name] = item["device_count"]
+
+        for item in clicks_by_browser:
+            browser_name = browser_labels.get(item["browser"], item["browser"])
+            browsers[browser_name] = item["browser_count"]
+
+        for item in clicks_by_os:
+            os_name = os_labels.get(item["os"], item["os"])
+            os_types[os_name] = item["os_count"]
+
+        # Create list of click data
+        clicks_by_date_list = [
+            {"date": str(item["date"]), "clicks": item["click_count"]}
+            for item in clicks_by_date
+        ]
+
         return {
-            "clicks": clicks_by_date_dict,
-            "device": devices,
-            "browser": browsers,
-            "os": os_types,
+            "clicks": clicks_by_date_list,
+            "device": [
+                {"name": name, "value": count}
+                for name, count in devices.items()
+            ],
+            "browser": [
+                {"name": name, "value": count}
+                for name, count in browsers.items()
+            ],
+            "os": [
+                {"name": name, "value": count}
+                for name, count in os_types.items()
+            ],
         }

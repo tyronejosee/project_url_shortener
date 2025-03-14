@@ -1,12 +1,18 @@
 """Schemas for Urls App."""
 
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiResponse,
+    OpenApiTypes,
+    OpenApiExample,
+)
 
 from .serializers import (
     URLSerializer,
     URLStatsSerializer,
     URLGroupReadSerializer,
     URLGroupWriteSerializer,
+    ClickReadSerializer,
 )
 
 url_create_schema: dict = {
@@ -190,5 +196,65 @@ url_group_detail_schema: dict = {
             ),
         },
         tags=["groups"],
+    ),
+}
+
+click_list_schema: dict = {
+    "get": extend_schema(
+        summary="Retrieve all clicks for the authenticated user's URLs.",
+        description=(
+            "This endpoint returns a list of clicks for all URLs "
+            "belonging to the authenticated user. "
+            "If no URLs are found for the user, it returns a 404 error. "
+            "If URLs exist but have no clicks, it returns a 204 response."
+        ),
+        responses={
+            200: OpenApiResponse(
+                ClickReadSerializer(many=True),
+                description="List of clicks retrieved successfully.",
+            ),
+            204: OpenApiResponse(
+                description="No clicks found for the provided URLs.",
+            ),
+            404: OpenApiResponse(description="No URLs found for user."),
+        },
+        tags=["clicks"],
+    ),
+}
+
+clicks_summary_schema: dict = {
+    "get": extend_schema(
+        summary="Retrieve a summary of clicks.",
+        description=(
+            "Returns aggregated data about clicks for the authenticated "
+            "user's URLs, grouped by date, device, browser and os."
+        ),
+        responses={
+            200: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                description="Click summary data retrieved successfully.",
+                examples=[
+                    OpenApiExample(
+                        "Click Summary Example",
+                        value={
+                            "clicks": [
+                                {"date": "0000-00-00", "clicks": 0},
+                            ],
+                            "device": [
+                                {"name": "<type>", "value": 0},
+                            ],
+                            "browser": [
+                                {"name": "<type>", "value": 0},
+                            ],
+                            "os": [
+                                {"name": "<type>", "value": 0},
+                            ],
+                        },
+                        response_only=True
+                    )
+                ],
+            ),
+        },
+        tags=["clicks"],
     ),
 }

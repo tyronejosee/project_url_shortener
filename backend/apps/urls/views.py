@@ -1,12 +1,9 @@
 """Views for Urls App."""
 
-from typing import Any
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
-from django.db.models import Count
-from django.db.models.functions import TruncDate
 from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.views import APIView
@@ -19,12 +16,7 @@ from drf_spectacular.utils import extend_schema_view
 from apps.users.services import UserService
 from apps.users.permissions import IsFree, IsBasic, IsPremium
 from .models import URL, URLGroup, Click
-from .choices import (
-    PrivacyChoices,
-    DeviceTypeChoices,
-    BrowserTypeChoices,
-    OSTypeChoices,
-)
+from .choices import PrivacyChoices
 from .services import URLService, ClickService
 from .serializers import (
     URLSerializer,
@@ -33,7 +25,6 @@ from .serializers import (
     URLGroupWriteSerializer,
     ClickReadSerializer,
 )
-
 from .schemas import (
     url_create_schema,
     url_redirect_schema,
@@ -41,6 +32,8 @@ from .schemas import (
     url_stats_schema,
     url_group_list_create_schema,
     url_group_detail_schema,
+    click_list_schema,
+    clicks_summary_schema,
 )
 
 User = get_user_model()
@@ -239,6 +232,7 @@ class URLGroupDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema_view(**click_list_schema)
 class ClickListView(APIView):
     """
     View to retrieve all clicks for URLs belonging to the auth user.
@@ -266,6 +260,7 @@ class ClickListView(APIView):
         )
 
 
+@extend_schema_view(**clicks_summary_schema)
 class ClicksSummaryView(APIView):
     """
     View to retrieve a summary of clicks for the logged-in user's URLs.
@@ -273,6 +268,8 @@ class ClicksSummaryView(APIView):
     Endpoints:
     - GET /api/clicks/summary
     """
+
+    permission_classes: list = [IsFree | IsBasic | IsPremium]
 
     def get(self, request: Request, *args, **kwargs) -> Response:
         data = ClickService.get_clicks_summary(request.user)
