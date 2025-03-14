@@ -9,3 +9,11 @@ export async function createShorten(data: URLWriteMinimal) {
   });
   return response;
 }
+
+export async function getClicksSummary() {
+  const response = await apiFetch("api/clicks/summary", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  return response;
+}

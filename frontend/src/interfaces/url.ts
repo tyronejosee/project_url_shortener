@@ -18,3 +18,13 @@ export interface URLWrite {
 export interface URLWriteMinimal {
   url: string;
 }
+
+export interface ClickDate {
+  date: string;
+  clicks: number;
+}
+
+export interface ClickType {
+  name: string;
+  clicks: number;
+}
