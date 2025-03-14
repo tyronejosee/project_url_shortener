@@ -12,6 +12,7 @@ from .views import (
     URLGroupDetailView,
     VerifyPasswordView,
     ClickListView,
+    ClicksSummaryView,
 )
 
 
@@ -47,5 +48,9 @@ urlpatterns: list[URLPattern] = [
     path(
         "api/clicks",
         ClickListView.as_view(),
+    ),
+    path(
+        "api/clicks/summary",
+        ClicksSummaryView.as_view(),
     ),
 ]

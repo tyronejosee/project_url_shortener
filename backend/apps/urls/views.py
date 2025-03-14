@@ -1,9 +1,12 @@
 """Views for Urls App."""
 
+from typing import Any
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.views import APIView
@@ -16,8 +19,13 @@ from drf_spectacular.utils import extend_schema_view
 from apps.users.services import UserService
 from apps.users.permissions import IsFree, IsBasic, IsPremium
 from .models import URL, URLGroup, Click
-from .choices import PrivacyChoices
-from .services import URLService
+from .choices import (
+    PrivacyChoices,
+    DeviceTypeChoices,
+    BrowserTypeChoices,
+    OSTypeChoices,
+)
+from .services import URLService, ClickService
 from .serializers import (
     URLSerializer,
     URLStatsSerializer,
@@ -248,9 +256,6 @@ class ClickListView(APIView):
                 {"detail": "No URLs found for user."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        from icecream import ic
-
-        ic(type(user_urls))
         clicks = Click.objects.get_clicks_by_urls(user_urls)
         if clicks.exists():
             serializer = ClickReadSerializer(clicks, many=True)
@@ -259,3 +264,16 @@ class ClickListView(APIView):
             {"detail": "No clicks found for the provided URLs."},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+class ClicksSummaryView(APIView):
+    """
+    View to retrieve a summary of clicks for the logged-in user's URLs.
+
+    Endpoints:
+    - GET /api/clicks/summary
+    """
+
+    def get(self, request: Request, *args, **kwargs) -> Response:
+        data = ClickService.get_clicks_summary(request.user)
+        return Response(data)

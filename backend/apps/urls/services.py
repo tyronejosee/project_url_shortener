@@ -3,10 +3,13 @@
 import random
 import string
 
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 from rest_framework.request import Request
 from user_agents import parse
 from user_agents.parsers import UserAgent
 
+from apps.users.models import User
 from .models import URL, Click
 from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
 
@@ -85,3 +88,74 @@ class URLService:
             os=os,
             device=device,
         )
+
+
+class ClickService:
+    """
+    Service for Click model.
+    """
+
+    @staticmethod
+    def get_clicks_summary(user: User) -> dict:
+        """
+        Retrieves a summary of clicks for the given user.
+        """
+        clicks = Click.objects.filter(url__user=user)
+
+        # Group the clicks by date (day)
+        click_data = clicks.annotate(date=TruncDate("created_at"))
+
+        # Group by date
+        clicks_by_date = (
+            click_data.values("date")
+            .annotate(
+                click_count=Count("id"),
+            )
+            .order_by("date")
+        )
+
+        # Group by device, browser, and operating system
+        clicks_by_device = (
+            click_data.values("device")
+            .annotate(device_count=Count("id"))
+            .order_by("device")
+        )
+        clicks_by_browser = (
+            click_data.values("browser")
+            .annotate(browser_count=Count("id"))
+            .order_by("browser")
+        )
+        clicks_by_os = (
+            click_data.values("os")
+            .annotate(
+                os_count=Count("id"),
+            )
+            .order_by("os")
+        )
+
+        # Get the possible types
+        all_devices = [device[0] for device in DeviceTypeChoices.choices]
+        all_browsers = [browser[0] for browser in BrowserTypeChoices.choices]
+        all_os = [os[0] for os in OSTypeChoices.choices]
+
+        devices = {device: 0 for device in all_devices}
+        browsers = {browser: 0 for browser in all_browsers}
+        os_types = {os: 0 for os in all_os}
+
+        # Count clicks by type
+        for item in clicks_by_device:
+            devices[item["device"]] = item["device_count"]
+        for item in clicks_by_browser:
+            browsers[item["browser"]] = item["browser_count"]
+        for item in clicks_by_os:
+            os_types[item["os"]] = item["os_count"]
+
+        clicks_by_date_dict = {
+            str(item["date"]): item["click_count"] for item in clicks_by_date
+        }
+        return {
+            "clicks": clicks_by_date_dict,
+            "device": devices,
+            "browser": browsers,
+            "os": os_types,
+        }

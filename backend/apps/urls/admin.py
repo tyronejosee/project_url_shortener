@@ -7,7 +7,7 @@ from .models import URL, URLGroup, Click
 
 @admin.register(URL)
 class URLAdmin(admin.ModelAdmin):
-    list_display: list[str] = ["url", "alias", "privacy"]
+    list_display: list[str] = ["url", "alias", "user__username", "privacy"]
     search_fields: list[str] = ["url", "alias"]
     list_filter: list[str] = ["privacy"]
     readonly_fields: list[str] = ["alias", "password"]
