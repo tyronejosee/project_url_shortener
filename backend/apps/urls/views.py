@@ -15,7 +15,7 @@ from drf_spectacular.utils import extend_schema_view
 
 from apps.users.services import UserService
 from apps.users.permissions import IsFree, IsBasic, IsPremium
-from .models import URL, URLGroup
+from .models import URL, URLGroup, Click
 from .choices import PrivacyChoices
 from .services import URLService
 from .serializers import (
@@ -23,6 +23,7 @@ from .serializers import (
     URLStatsSerializer,
     URLGroupReadSerializer,
     URLGroupWriteSerializer,
+    ClickReadSerializer,
 )
 
 from .schemas import (
@@ -71,7 +72,7 @@ class URLRedirectView(APIView):
             url_instance = URL.objects.get(alias=alias)
         except URL.DoesNotExist:
             return Response(
-                {"error": "Short URL not found."},
+                {"detail": "Short URL not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         if url_instance.privacy == PrivacyChoices.PRIVATE:
@@ -139,7 +140,7 @@ class URLDeleteView(APIView):
             raise NotFound("Short URL not found.")
         url_instance.delete()
         return Response(
-            {"message": "URL deleted."},
+            {"detail": "URL deleted."},
             status=status.HTTP_204_NO_CONTENT,
         )
 
@@ -228,3 +229,33 @@ class URLGroupDetailView(APIView):
         group = self.get_object(group_id)
         group.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ClickListView(APIView):
+    """
+    View to retrieve all clicks for URLs belonging to the auth user.
+
+    Endpoints:
+    - GET /api/clicks
+    """
+
+    permission_classes: list = [IsFree | IsBasic | IsPremium]
+
+    def get(self, request: Request) -> Response:
+        user_urls = URL.objects.get_urls_by_user(request.user)
+        if not user_urls.exists():
+            return Response(
+                {"detail": "No URLs found for user."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        from icecream import ic
+
+        ic(type(user_urls))
+        clicks = Click.objects.get_clicks_by_urls(user_urls)
+        if clicks.exists():
+            serializer = ClickReadSerializer(clicks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "No clicks found for the provided URLs."},
+            status=status.HTTP_204_NO_CONTENT,
+        )

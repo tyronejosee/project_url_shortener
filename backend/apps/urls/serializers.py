@@ -7,8 +7,13 @@ from django.db.models import Count
 from django.db.models.functions import TruncDate
 from rest_framework import serializers
 
-from .models import URL, URLGroup
-from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
+from .models import URL, URLGroup, Click
+from .choices import (
+    PrivacyChoices,
+    DeviceTypeChoices,
+    BrowserTypeChoices,
+    OSTypeChoices,
+)
 
 
 class URLSerializer(serializers.ModelSerializer):
@@ -17,6 +22,15 @@ class URLSerializer(serializers.ModelSerializer):
     class Meta:
         model = URL
         fields: list[str] = ["url", "alias", "group", "privacy", "password"]
+
+    def validate(self, data):
+        privacy = data.get("privacy")
+        password = data.get("password")
+        if privacy == PrivacyChoices.PRIVATE and not password:
+            raise serializers.ValidationError(
+                {"password": "This field is required for private privacy."},
+            )
+        return data
 
     def to_representation(self, instance) -> dict:
         representation = super().to_representation(instance)
@@ -88,7 +102,7 @@ class URLStatsSerializer(serializers.ModelSerializer):
         return browser_counts
 
     def get_oss(self, obj) -> dict[OSTypeChoices, int]:
-        os_counts: dict[OSTypeChoices, int] = {os[0]: 0 for os in OSTypeChoices.choices}
+        os_counts = {os[0]: 0 for os in OSTypeChoices.choices}
         db_counts = obj.clicks.values("os").annotate(
             count=Count("os"),
         )
@@ -134,3 +148,27 @@ class URLGroupWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = URLGroup
         fields: list[str] = ["name", "description"]
+
+
+class ClickReadSerializer(serializers.ModelSerializer):
+    """Serializer for Click model (List/retrieve)."""
+
+    url = serializers.SerializerMethodField()
+    device = serializers.CharField(source="get_device_display")
+    browser = serializers.CharField(source="get_browser_display")
+    os = serializers.CharField(source="get_os_display")
+
+    class Meta:
+        model = Click
+        fields: list[str] = [
+            "id",
+            "url",
+            "ip_address",
+            "device",
+            "browser",
+            "os",
+            "created_at",
+        ]
+
+    def get_url(self, obj) -> str:
+        return obj.url.url

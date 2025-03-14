@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.db import models
 
 from apps.utils.models import BaseModel
-from .repositories import URLGroupRepository
+from .repositories import URLRepository, URLGroupRepository, ClickRepository
 from .choices import (
     PrivacyChoices,
     DeviceTypeChoices,
@@ -37,6 +37,8 @@ class URL(BaseModel):
         default=PrivacyChoices.PUBLIC,
     )
     password = models.CharField(max_length=255, blank=True, null=True)
+
+    objects: URLRepository = URLRepository()
 
     class Meta:
         db_table: str = "urls"
@@ -118,6 +120,8 @@ class Click(BaseModel):
         choices=OSTypeChoices.choices,
         default=OSTypeChoices.UNKNOWN,
     )
+
+    objects: ClickRepository = ClickRepository()
 
     class Meta:
         db_table: str = "clicks"
