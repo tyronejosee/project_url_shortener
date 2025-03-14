@@ -236,6 +236,22 @@ token_verify_schemas: dict = {
     ),
 }
 
+logout_schema: dict = {
+    "post": extend_schema(
+        summary="Log out the user by deleting authentication cookies.",
+        description=(
+            "This endpoint logs out the user by removing auth cookies "
+            "('access' and 'refresh'). It does not return any content."
+        ),
+        responses={
+            204: OpenApiResponse(
+                description="Authentication cookies deleted.",
+            ),
+        },
+        tags=["tokens"],
+    ),
+}
+
 provider_auth_schemas: dict = {
     "get": extend_schema(
         summary="Get Authorization URL",

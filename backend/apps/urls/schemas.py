@@ -94,6 +94,7 @@ url_stats_schema: dict = {
 
 url_group_list_create_schema: dict = {
     "get": extend_schema(
+        operation_id="list_url_groups",
         summary="Retrieve a list of URL groups.",
         description=(
             "This endpoint returns all URL groups associated "
@@ -136,6 +137,7 @@ url_group_list_create_schema: dict = {
 
 url_group_detail_schema: dict = {
     "get": extend_schema(
+        operation_id="retrieve_url_groups",
         summary="Retrieve details of a URL group.",
         description=(
             "This endpoint returns the details of a specific URL group "

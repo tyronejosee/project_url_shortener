@@ -307,7 +307,8 @@ SPECTACULAR_SETTINGS: dict = {
     "TAGS": [
         {"name": "urls", "description": "Operations related to urls"},
         {"name": "groups", "description": "Operations related to groups"},
-        {"name": "comm.", "description": "Operations related to comm."},
+        {"name": "plans", "description": "Operations related to plans."},
+        {"name": "communications", "description": "Operations related to comm."},
         {"name": "users", "description": "Operations related to users"},
         {"name": "socials", "description": "Operations related to socials"},
         {"name": "tokens", "description": "Operations related to tokens"},

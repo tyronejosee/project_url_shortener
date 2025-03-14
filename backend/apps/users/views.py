@@ -17,6 +17,7 @@ from .schemas import (
     token_obtain_pair_schemas,
     token_refresh_schemas,
     token_verify_schemas,
+    logout_schema,
 )
 
 
@@ -146,10 +147,13 @@ class TokenVerifyExtensionView(TokenVerifyView):
         return super().post(request, *args, **kwargs)
 
 
+@extend_schema_view(**logout_schema)
 class LogoutView(APIView):
     """
     View to handle user logout by deleting authentication cookies.
     """
+
+    serializer_class = None
 
     def post(self, request, *args, **kwargs) -> Response:
         response = Response(status=status.HTTP_204_NO_CONTENT)

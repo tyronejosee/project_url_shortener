@@ -5,11 +5,14 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema_view
 
 from .models import Plan
 from .serializers import PlanSerializer
+from .schemas import plan_list_schema
 
 
+@extend_schema_view(**plan_list_schema)
 class PlanListView(APIView):
     """
     View to retrieve the list of plans with their features.
