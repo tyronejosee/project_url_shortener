@@ -1,8 +1,11 @@
 """Views for Users App."""
 
+import logging
+
 from django.conf import settings
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from djoser.social.views import ProviderAuthView
 from rest_framework_simplejwt.views import (
@@ -10,8 +13,10 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema_view
 
+from core.logging import setup_logging
 from .schemas import (
     provider_auth_schemas,
     token_obtain_pair_schemas,
@@ -19,6 +24,9 @@ from .schemas import (
     token_verify_schemas,
     logout_schema,
 )
+
+setup_logging()
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 @extend_schema_view(**provider_auth_schemas)
@@ -40,7 +48,7 @@ class ProviderAuthExtensionView(ProviderAuthView):
             response.set_cookie(
                 "access",
                 access_token,
-                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
@@ -49,7 +57,7 @@ class ProviderAuthExtensionView(ProviderAuthView):
             response.set_cookie(
                 "refresh",
                 refresh_token,
-                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
@@ -79,7 +87,7 @@ class TokenObtainPairExtensionView(TokenObtainPairView):
             response.set_cookie(
                 "access",
                 access_token,
-                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
@@ -88,7 +96,7 @@ class TokenObtainPairExtensionView(TokenObtainPairView):
             response.set_cookie(
                 "refresh",
                 refresh_token,
-                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
@@ -121,7 +129,7 @@ class TokenRefreshExtensionView(TokenRefreshView):
             response.set_cookie(
                 "access",
                 access_token,
-                max_age=settings.AUTH_COOKIE_MAX_AGE,
+                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
@@ -153,9 +161,19 @@ class LogoutView(APIView):
     View to handle user logout by deleting authentication cookies.
     """
 
+    permission_classes = [IsAuthenticated]
     serializer_class = None
 
     def post(self, request, *args, **kwargs) -> Response:
+        refresh_token = request.COOKIES.get("refresh")
+
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except Exception as e:
+                logger.error(e)
+
         response = Response(status=status.HTTP_204_NO_CONTENT)
         response.delete_cookie("access")
         response.delete_cookie("refresh")

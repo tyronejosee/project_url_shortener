@@ -205,10 +205,6 @@ DJOSER: dict = {
     "USERNAME_RESET_CONFIRM_URL": "email/reset/{uid}/{token}",
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": env.list("REDIRECT_URLS"),
-    # "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
-    #     "http://localhost:8000/google",
-    #     "http://localhost:8000/facebook",
-    # ],
     "SERIALIZERS": {
         "user_create": "apps.users.serializers.UserWriteSerializer",
         "user": "apps.users.serializers.UserReadSerializer",
@@ -218,12 +214,37 @@ DJOSER: dict = {
 }
 
 SIMPLE_JWT: dict = {
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-    "ROTATE_REFRESFH_TOKENS": True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),  # 10080 (7 days)
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2),  # days=30
+    "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+    "JTI_CLAIM": "jti",
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
 AUTHENTICATION_BACKENDS: list[str] = [
@@ -252,7 +273,8 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS: dict[str, str] = {
 # Cookies
 
 AUTH_COOKIE = "access"
-AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
+AUTH_ACCESS_COOKIE_MAX_AGE = SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
+AUTH_REFRESH_COOKIE_MAX_AGE = SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
 AUTH_COOKIE_SECURE = env.bool("AUTH_COOKIE_SECURE")
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = "/"
