@@ -9,7 +9,7 @@ export default function useLogin() {
   const router = useRouter();
   const { login } = useAuthStore();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,25 +18,18 @@ export default function useLogin() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { success } = await login(formData.email, formData.password);
-      if (success) {
-        addToast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
-        router.push("/dashboard");
-      }
-
-    } catch (error) {
-      setError(`Error ${error}`);
-
-    } finally {
-      setIsLoading(false);
+    const { success, error } = await login(formData.email, formData.password);
+    if (error) {
+      setError(error);
     }
+    if (success) {
+      addToast({
+        title: "Welcome back!",
+        description: "You have successfully logged in.",
+      });
+      router.push("/dashboard");
+    }
+    setIsLoading(false);
   };
 
   return { ...formData, isLoading, error, onChange, onSubmit };

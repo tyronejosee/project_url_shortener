@@ -12,7 +12,7 @@ export default function useRegister() {
     password: "",
     re_password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,6 @@ export default function useRegister() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
     setErrors({});
 
     try {

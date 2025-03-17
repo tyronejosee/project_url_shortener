@@ -10,7 +10,7 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
     new_password: "",
     re_new_password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,11 +19,10 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_HOST}/api/users/reset_password_confirm`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/users/reset_password_confirm`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
