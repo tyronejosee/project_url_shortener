@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import {
@@ -20,10 +20,8 @@ export default function useGroup() {
     setErrors([]);
     try {
       const data = await getGroups();
-      console.log(data)
       setGroups(data);
     } catch (error: any) {
-      console.log(error)
       setErrors([error.message]);
     } finally {
       setIsLoading(false);
@@ -53,19 +51,14 @@ export default function useGroup() {
     try {
       const newGroup = await createGroup(data);
       setGroups([...groups, newGroup]);
-
     } catch (error: any) {
       setErrors([error.message]);
-
     } finally {
       setIsLoading(false);
     }
   };
 
-  const editGroup = async (
-    id: string,
-    data: GroupWrite
-  ) => {
+  const editGroup = async (id: string, data: GroupWrite) => {
     setIsLoading(true);
     setErrors([]);
     try {
@@ -73,10 +66,8 @@ export default function useGroup() {
       setGroups(
         groups.map((group) => (group.id === id ? updatedGroup : group))
       );
-
     } catch (error: any) {
       setErrors([error.message]);
-
     } finally {
       setIsLoading(false);
     }
@@ -88,10 +79,8 @@ export default function useGroup() {
     try {
       await deleteGroup(id);
       setGroups(groups.filter((group) => group.id !== id));
-
     } catch (error: any) {
       setErrors([error.message]);
-
     } finally {
       setIsLoading(false);
     }

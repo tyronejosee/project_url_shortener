@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
-  const isDashboard = pathname.startsWith("/dashboard");
-
-  if (isDashboard) return null;
+  const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
+  const isIgnoredRoute = ignoredRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+  if (isIgnoredRoute) return null;
 
   return (
     <footer className="mt-auto py-8 border-t border-t-neutral-300">
@@ -35,4 +37,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-};
+}

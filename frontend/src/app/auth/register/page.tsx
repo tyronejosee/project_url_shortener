@@ -5,9 +5,19 @@ import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
 import useRegister from "@/hooks/use-register";
+import { SocialButtons } from "@/components/common";
 
 export default function SignUp() {
-  const { username, email, password, re_password, isLoading, errors, onChange, onSubmit } = useRegister();
+  const {
+    username,
+    email,
+    password,
+    re_password,
+    isLoading,
+    errors,
+    onChange,
+    onSubmit,
+  } = useRegister();
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -34,7 +44,9 @@ export default function SignUp() {
               color={errors.username ? "danger" : "default"}
             />
             {errors.username && (
-              <p className="text-red-500 text-sm">{errors.username.join(", ")}</p>
+              <p className="text-red-500 text-sm">
+                {errors.username.join(", ")}
+              </p>
             )}
 
             <Input
@@ -78,7 +90,9 @@ export default function SignUp() {
               color={errors.password ? "danger" : "default"}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.join(", ")}</p>
+              <p className="text-red-500 text-sm">
+                {errors.password.join(", ")}
+              </p>
             )}
 
             <Input
@@ -107,7 +121,9 @@ export default function SignUp() {
               color={errors.re_password ? "danger" : "default"}
             />
             {errors.re_password && (
-              <p className="text-red-500 text-sm">{errors.re_password.join(", ")}</p>
+              <p className="text-red-500 text-sm">
+                {errors.re_password.join(", ")}
+              </p>
             )}
           </div>
 
@@ -123,12 +139,17 @@ export default function SignUp() {
           )}
 
           <div className="flex items-center justify-between">
-            <Button type="submit" color="primary" className="w-full" disabled={isLoading}>
+            <Button
+              type="submit"
+              size="lg"
+              color="primary"
+              className="w-full"
+              disabled={isLoading}
+            >
               {isLoading ? "Registering..." : "Register"}
             </Button>
           </div>
         </form>
-
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
@@ -137,6 +158,7 @@ export default function SignUp() {
             </Link>
           </p>
         </div>
+        <SocialButtons />
       </section>
     </main>
   );

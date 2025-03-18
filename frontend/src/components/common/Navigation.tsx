@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@heroui/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+} from "@heroui/react";
 import { usePathname } from "next/navigation";
 import useAuthStore from "@/store/auth";
 
@@ -20,10 +26,13 @@ export const AcmeLogo = () => {
 
 export default function Navigation() {
   const { isAuthenticated } = useAuthStore((state) => state);
-  const pathname = usePathname();
-  const isDashboard = pathname.startsWith("/dashboard");
 
-  if (isDashboard) return null;
+  const pathname = usePathname();
+  const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
+  const isIgnoredRoute = ignoredRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+  if (isIgnoredRoute) return null;
 
   return (
     <Navbar isBordered>
@@ -40,7 +49,12 @@ export default function Navigation() {
         {isAuthenticated ? (
           <>
             <NavbarItem className="hidden lg:flex">
-            <Button as={Link} color="primary" href="/dashboard" variant="solid">
+              <Button
+                as={Link}
+                color="primary"
+                href="/dashboard"
+                variant="solid"
+              >
                 Dashboard
               </Button>
             </NavbarItem>
@@ -51,7 +65,12 @@ export default function Navigation() {
               <Link href="/auth/login">Login</Link>
             </NavbarItem>
             <NavbarItem>
-              <Button as={Link} color="primary" href="/auth/register" variant="solid">
+              <Button
+                as={Link}
+                color="primary"
+                href="/auth/register"
+                variant="solid"
+              >
                 Register
               </Button>
             </NavbarItem>
@@ -60,4 +79,4 @@ export default function Navigation() {
       </NavbarContent>
     </Navbar>
   );
-};
+}

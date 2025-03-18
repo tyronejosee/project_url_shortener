@@ -8,7 +8,6 @@ import {
   Button,
   Skeleton,
   Avatar,
-  addToast,
 } from "@heroui/react";
 import useLogout from "@/hooks/use-logout";
 import useAuthStore from "@/store/auth";
@@ -21,16 +20,6 @@ export default function Header() {
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
       <div className="ml-8 text-xl font-semibold">URL Shortener</div>
-      <Button
-        onPress={() => {
-          addToast({
-            title: "Welcome back!",
-            description: "You have successfully logged in.",
-          });
-        }}
-      >
-        Show Toast
-      </Button>
       {user && isAuthenticated ? (
         <Dropdown>
           <DropdownTrigger>

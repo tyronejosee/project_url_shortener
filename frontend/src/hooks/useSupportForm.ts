@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -15,15 +15,18 @@ export function useSupportForm() {
     email: user?.email || "",
     message: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     setError(null);
 
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
@@ -45,10 +48,8 @@ export function useSupportForm() {
       });
       setForm((prev) => ({ ...prev, message: "" }));
       router.push("/dashboard");
-
     } catch (error) {
       setError(`Error ${error}`);
-
     } finally {
       setLoading(false);
     }
