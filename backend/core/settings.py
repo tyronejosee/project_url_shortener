@@ -214,8 +214,8 @@ DJOSER: dict = {
 }
 
 SIMPLE_JWT: dict = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),  # 10080 (7 days)
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2),  # days=30
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
