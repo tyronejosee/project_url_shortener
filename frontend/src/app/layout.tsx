@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit, Roboto_Mono } from "next/font/google";
-// import { HeroUIProvider } from "@heroui/system";
-import "../styles/globals.css";
-import "react-toastify/dist/ReactToastify.css";
-// import { ToastContainer } from "react-toastify";
-import { Footer, Navigation } from "@/components/common";
 import Providers from "./providers";
+import { Footer, Navigation } from "@/components/common";
+import "../styles/globals.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",
