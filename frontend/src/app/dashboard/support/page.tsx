@@ -42,11 +42,7 @@ export default function SupportPage() {
           onChange={handleChange}
         />
         {error && <p className="text-red-500">{error}</p>}
-        <Button
-          type="submit"
-          color="primary"
-          disabled={loading}
-        >
+        <Button type="submit" color="primary" disabled={loading}>
           {loading ? "Sending..." : "Send"}
         </Button>
       </form>

@@ -55,9 +55,17 @@ async function handleError(response: Response) {
   return { success: false, error: errorMessage };
 }
 
-export async function apiFetch(url: string, options: RequestInit = {}, retry = true) {
+export async function apiFetch(
+  url: string,
+  options: RequestInit = {},
+  retry = true
+) {
   try {
     const headers = await getAuthHeaders();
+
+    if (!headers.has("Content-Type") && options.body) {
+      headers.set("Content-Type", "application/json");
+    }
 
     const response = await fetch(`${BASE_URL}${url}`, {
       ...options,
