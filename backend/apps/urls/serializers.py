@@ -8,8 +8,8 @@ from django.db.models.functions import TruncDate
 from rest_framework import serializers
 
 from .models import URL, URLGroup, Click
+from .services import URLService
 from .choices import (
-    PrivacyChoices,
     DeviceTypeChoices,
     BrowserTypeChoices,
     OSTypeChoices,
@@ -23,13 +23,14 @@ class URLSerializer(serializers.ModelSerializer):
         model = URL
         fields: list[str] = ["url", "alias", "group", "privacy", "password"]
 
-    def validate(self, data):
-        privacy = data.get("privacy")
-        password = data.get("password")
-        if privacy == PrivacyChoices.PRIVATE and not password:
-            raise serializers.ValidationError(
-                {"password": "This field is required for private privacy."},
+    def validate(self, data: dict) -> dict:
+        try:
+            data = URLService.validate_password_protection(
+                self.context["user"],
+                data,
             )
+        except ValueError as e:
+            raise serializers.ValidationError({"password": str(e)})
         return data
 
     def to_representation(self, instance) -> dict:

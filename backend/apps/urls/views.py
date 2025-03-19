@@ -52,7 +52,17 @@ class URLCreateView(APIView):
 
     def post(self, request: Request) -> Response:
         user = UserService.get_or_create_user(request)
-        serializer = URLSerializer(data=request.data)
+
+        if URLService.check_url_limit(user):
+            return Response(
+                {"detail": "You have reached the allowed url limit."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        serializer = URLSerializer(
+            data=request.data,
+            context={"user": user},
+        )
         if serializer.is_valid():
             serializer.save(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -10,14 +10,47 @@ from user_agents import parse
 from user_agents.parsers import UserAgent
 
 from apps.users.models import User
+from apps.users.strategies.context import PlanContext
 from .models import URL, Click
-from .choices import DeviceTypeChoices, BrowserTypeChoices, OSTypeChoices
+from .choices import (
+    PrivacyChoices,
+    DeviceTypeChoices,
+    BrowserTypeChoices,
+    OSTypeChoices,
+)
 
 
 class URLService:
     """
     Service for URL model.
     """
+
+    @staticmethod
+    def check_url_limit(user) -> bool:
+        """
+        Check if the user has reached the maximum number
+        of links allowed in their plan.
+        """
+        plan_context = PlanContext(user)
+        link_created = URL.objects.count_links_this_month(user)
+        return link_created >= plan_context.get_max_links_per_month()
+
+    @staticmethod
+    def validate_password_protection(user, data: dict) -> dict:
+        plan_context = PlanContext(user)
+
+        privacy = data.get("privacy")
+        password = data.get("password")
+
+        if privacy == PrivacyChoices.PRIVATE and not password:
+            message = "This field is required for private privacy."
+            raise ValueError(message)
+
+        if password and not plan_context.can_use_password_protection():
+            message = "Your plan doesn't allow password protection for URLs."
+            raise ValueError(message)
+
+        return data
 
     @staticmethod
     def generate_alias() -> str:

@@ -1,6 +1,7 @@
 """Services for Urls App."""
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from rest_framework.request import Request
 
 from apps.utils.helpers import generate_email, generate_username
@@ -27,9 +28,12 @@ class UserService:
         user_ip = request.META.get("REMOTE_ADDR")
         user = User.objects.filter(ip_address=user_ip).first()
         if not user:
+            default_password = "temporaryPassword123"
+            hashed_password = make_password(default_password)
             user = User.objects.create(
                 email=generate_email(),
                 username=generate_username(),
                 ip_address=user_ip,
+                password=hashed_password,
             )
         return user
