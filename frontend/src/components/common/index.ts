@@ -3,3 +3,6 @@ export { default as Header } from "./Header";
 export { default as Navigation } from "./Navigation";
 export { default as Sidebar } from "./Sidebar";
 export { default as SidebarList } from "./SidebarList";
+export { default as SocialButton } from "./SocialButton";
+export { default as SocialButtons } from "./SocialButtons";
+export { default as HR } from "./HR";

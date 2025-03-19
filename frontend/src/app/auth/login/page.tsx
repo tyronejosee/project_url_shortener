@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
 import useLogin from "@/hooks/use-login";
+import { SocialButtons } from "@/components/common";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -71,27 +72,30 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
-
           <div className="flex items-center justify-between">
             <Button
-                type="submit"
-                color="primary"
-                className="w-full"
-                disabled={isLoading}
+              type="submit"
+              size="lg"
+              color="primary"
+              className="w-full"
+              disabled={isLoading}
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </div>
         </form>
-
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/register" className="text-primary hover:underline">
+            <Link
+              href="/auth/register"
+              className="text-primary hover:underline"
+            >
               Register
             </Link>
           </p>
         </div>
+        <SocialButtons />
       </section>
     </main>
   );
