@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/react";
 import { createFeedback } from "@/services/feedbackService";
-import { FeedbackForm } from "@/interfaces/feedback";
+import { FeedbackForm } from "@/types";
 
 export function useFeedbackForm() {
   const router = useRouter();
@@ -16,7 +16,9 @@ export function useFeedbackForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -42,10 +44,8 @@ export function useFeedbackForm() {
           "We appreciate your feedback and will use it to continuously improve. Your opinion is valuable to us.",
       });
       router.push("/");
-
     } catch (error) {
       setError(`Error ${error}`);
-
     } finally {
       setLoading(false);
     }

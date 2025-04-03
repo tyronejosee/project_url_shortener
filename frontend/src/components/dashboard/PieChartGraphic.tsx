@@ -1,6 +1,5 @@
 "use client";
 
-import { ClickType } from "@/interfaces/url";
 import {
   Tooltip,
   Legend,
@@ -9,13 +8,14 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { ClickType } from "@/types";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#B9A0BB"];
 
-interface Props {
+type Props = {
   title: string;
   types: ClickType[];
-}
+};
 
 export default function PieChartGraphic({ title, types }: Props) {
   return (

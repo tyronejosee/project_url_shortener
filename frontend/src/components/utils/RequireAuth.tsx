@@ -4,16 +4,16 @@ import { useEffect } from "react";
 import { redirect } from "next/navigation";
 import useAuthStore from "@/store/auth";
 
-interface Props {
+type Props = {
   children: React.ReactNode;
-}
+};
 
 export default function RequireAuth({ children }: Props) {
   const { isAuthenticated, isLoading, verify } = useAuthStore();
 
   useEffect(() => {
     verify();
-  }, []);
+  }, [verify]);
 
   if (isLoading) {
     return (

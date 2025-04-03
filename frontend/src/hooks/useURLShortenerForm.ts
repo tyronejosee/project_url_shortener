@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
-import { URLWriteMinimal } from "@/interfaces/url";
 import { createShorten } from "@/services/urlService";
+import { URLWriteMinimal } from "@/types";
 
 export function useURLShortenerForm() {
   const [form, setForm] = useState<URLWriteMinimal>({ url: "" });

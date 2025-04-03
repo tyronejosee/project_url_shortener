@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableHeader,
@@ -18,15 +20,13 @@ import {
   useDisclosure,
   Textarea,
 } from "@heroui/react";
-import { GroupRead, GroupWrite } from "@/interfaces/group";
-import { useState } from "react";
 import { createGroup, deleteGroup, updateGroup } from "@/services/groupService";
-import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
+import { GroupRead, GroupWrite } from "@/types";
 
-interface Props {
+type Props = {
   groups: GroupRead[];
-}
+};
 
 export default function GroupTable({ groups }: Props) {
   const router = useRouter();
@@ -92,10 +92,7 @@ export default function GroupTable({ groups }: Props) {
 
   return (
     <div>
-      <Button
-        onPress={handleAddClick}
-        color="primary"
-      >
+      <Button onPress={handleAddClick} color="primary">
         Add Group
       </Button>
 
@@ -190,11 +187,7 @@ export default function GroupTable({ groups }: Props) {
               Cancel
             </Button>
             <Button color="primary" onPress={handleSubmit} disabled={loading}>
-              {loading
-                ? "Loading..."
-                : editingGroup
-                ? "Update"
-                : "Save"}
+              {loading ? "Loading..." : editingGroup ? "Update" : "Save"}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { URLWriteMinimal } from "@/interfaces/url";
+import { URLWriteMinimal } from "@/types";
 
 export async function createShorten(data: URLWriteMinimal) {
   const response = await apiFetch("api/urls/shorten", {

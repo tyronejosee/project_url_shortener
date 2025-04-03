@@ -1,6 +1,5 @@
 "use client";
 
-import { ClickDate } from "@/interfaces/url";
 import {
   BarChart,
   Bar,
@@ -11,10 +10,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { ClickDate } from "@/types";
 
-interface Props {
+type Props = {
   clicks: ClickDate[];
-}
+};
 
 export default function BarChartGraphic({ clicks }: Props) {
   return (

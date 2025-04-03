@@ -4,9 +4,9 @@ import { SessionProvider } from "next-auth/react";
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { UserRound } from "lucide-react";
 
-interface Props {
+type Props = {
   children: React.ReactNode;
-}
+};
 
 export default function Providers({ children }: Props) {
   return (

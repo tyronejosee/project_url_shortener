@@ -2,10 +2,10 @@
 
 import { Button } from "@heroui/react";
 
-interface Props {
+type Props = {
   children: React.ReactNode;
   onPress?: () => Promise<void>;
-}
+};
 
 export default function SocialButton({ children, onPress }: Props) {
   return (

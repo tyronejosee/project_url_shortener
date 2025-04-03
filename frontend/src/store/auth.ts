@@ -1,25 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { User } from "@/types";
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  slug: string;
-  plan: string;
-  is_active: boolean;
-  is_staff: boolean;
-}
-
-interface AuthState {
+type AuthState = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error: string | null }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error: string | null }>;
   logout: () => Promise<void>;
   verify: () => Promise<void>;
   getUser: () => Promise<void>;
-}
+};
 
 const useAuthStore = create<AuthState>()(
   persist(
@@ -48,7 +42,10 @@ const useAuthStore = create<AuthState>()(
             return { success: true, error: null };
           } else {
             set({ isAuthenticated: false });
-            return { success: false, error: data.detail || "Invalid credentials" };
+            return {
+              success: false,
+              error: data.detail || "Invalid credentials",
+            };
           }
         } catch {
           set({ isAuthenticated: false });
@@ -86,10 +83,13 @@ const useAuthStore = create<AuthState>()(
 
       getUser: async () => {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/me`, {
-            method: "GET",
-            credentials: "include",
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}api/users/me`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
 
           if (res.ok) {
             const userData = await res.json();

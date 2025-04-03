@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { HeroSection, Sponsors, UrlList } from "@/components/branding";
 import { URLShortenerForm } from "@/components/forms";
 import { AnimatedContent } from "@/components/animated";
-import { URLRead } from "@/interfaces/url";
+import { URLRead } from "@/types";
 
 export default function Home() {
   const [urls, setUrls] = useState<URLRead[]>([]);

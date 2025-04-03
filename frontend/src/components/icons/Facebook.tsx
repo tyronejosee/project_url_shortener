@@ -1,6 +1,6 @@
-interface Props {
+type Props = {
   size: string;
-}
+};
 
 export default function Facebook({ size }: Props) {
   return (

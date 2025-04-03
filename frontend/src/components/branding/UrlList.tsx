@@ -1,13 +1,13 @@
 "use client";
 
-import { URLRead } from "@/interfaces/url";
+import { URLRead } from "@/types";
 import { Button, Snippet } from "@heroui/react";
 
-interface Props {
+type Props = {
   urls: URLRead[];
   loading: boolean;
   setUrls: React.Dispatch<React.SetStateAction<URLRead[]>>;
-}
+};
 
 export default function UrlList({ urls, setUrls }: Props) {
   const handleClearUrls = () => {

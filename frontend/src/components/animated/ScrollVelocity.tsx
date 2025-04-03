@@ -11,12 +11,12 @@ import {
   useAnimationFrame,
 } from "framer-motion";
 
-interface VelocityMapping {
+type VelocityMapping = {
   input: [number, number];
   output: [number, number];
-}
+};
 
-interface ScrollVelocityIconsProps {
+type Props = {
   icons: React.ComponentType<React.SVGProps<SVGSVGElement>>[];
   velocity?: number;
   className?: string;
@@ -29,7 +29,7 @@ interface ScrollVelocityIconsProps {
   scrollerClassName?: string;
   parallaxStyle?: React.CSSProperties;
   scrollerStyle?: React.CSSProperties;
-}
+};
 
 export default function ScrollVelocity({
   icons = [],
@@ -44,7 +44,7 @@ export default function ScrollVelocity({
   scrollerClassName,
   parallaxStyle,
   scrollerStyle,
-}: ScrollVelocityIconsProps) {
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [currentDirection, setCurrentDirection] = useState(direction);

@@ -8,7 +8,7 @@ import {
   updateGroup,
   deleteGroup,
 } from "@/services/groupService";
-import { GroupRead, GroupWrite } from "@/interfaces/group";
+import { GroupRead, GroupWrite } from "@/types";
 
 export default function useGroup() {
   const [groups, setGroups] = useState<GroupRead[]>([]);

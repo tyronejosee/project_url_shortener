@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, ReactNode } from "react";
 import { useSpring, animated, SpringConfig } from "@react-spring/web";
 
-interface AnimatedContentProps {
+type Props = {
   children: ReactNode;
   distance?: number;
   direction?: "vertical" | "horizontal";
@@ -14,7 +14,7 @@ interface AnimatedContentProps {
   scale?: number;
   threshold?: number;
   delay?: number;
-}
+};
 
 export default function AnimatedContent({
   children,
@@ -27,7 +27,7 @@ export default function AnimatedContent({
   scale = 1,
   threshold = 0.1,
   delay = 0,
-}: AnimatedContentProps) {
+}: Props) {
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -74,6 +74,7 @@ export default function AnimatedContent({
   });
 
   return (
+    // ! TODO: Fix this
     <animated.div ref={ref} style={springProps}>
       {children}
     </animated.div>

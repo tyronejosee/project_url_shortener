@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { FeedbackForm } from "@/interfaces/feedback";
+import { FeedbackForm } from "@/types";
 
 export async function createFeedback(data: FeedbackForm) {
   const response = await apiFetch("api/feedback", {

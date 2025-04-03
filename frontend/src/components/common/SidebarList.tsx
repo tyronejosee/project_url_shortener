@@ -15,9 +15,9 @@ import {
   MousePointer2,
 } from "lucide-react";
 
-interface Props {
+type Props = {
   isOpen: boolean;
-}
+};
 
 const sidebarItems = [
   {
@@ -99,4 +99,4 @@ export default function SidebarList({ isOpen }: Props) {
       })}
     </ul>
   );
-};
+}

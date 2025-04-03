@@ -4,8 +4,8 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/react";
 import { createSupport } from "@/services/supportService";
-import { FeedbackForm } from "@/interfaces/feedback";
 import useAuthStore from "@/store/auth";
+import { FeedbackForm } from "@/types";
 
 export function useSupportForm() {
   const { user } = useAuthStore();

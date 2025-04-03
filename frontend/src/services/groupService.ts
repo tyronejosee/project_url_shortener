@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { GroupWrite } from "@/interfaces/group";
+import { GroupWrite } from "@/types";
 
 export async function getGroups() {
   return apiFetch("api/groups", { method: "GET" });
@@ -29,7 +29,7 @@ export async function updateGroup(id: string, data: GroupWrite) {
 
 export async function deleteGroup(id: string) {
   const response = await apiFetch(`api/groups/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
   return response;
 }

@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { SupportForm } from "@/interfaces/support";
+import { SupportForm } from "@/types";
 
 export async function createSupport(data: SupportForm) {
   const response = await apiFetch("api/support", {
