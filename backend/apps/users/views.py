@@ -165,7 +165,9 @@ class LogoutView(APIView):
     serializer_class = None
 
     def post(self, request, *args, **kwargs) -> Response:
-        refresh_token = request.COOKIES.get("refresh")
+        refresh_token = request.COOKIES.get(
+            "refresh",
+        ) or request.data.get("refresh")
 
         if refresh_token:
             try:
