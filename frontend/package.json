@@ -12,6 +12,7 @@
     "@heroui/react": "^2.7.5",
     "@heroui/system": "2.4.10",
     "@heroui/theme": "2.4.6",
+    "@hookform/resolvers": "^5.0.1",
     "@react-spring/web": "^9.7.5",
     "@types/d3-scale": "4.0.9",
     "clsx": "2.1.1",
@@ -20,11 +21,14 @@
     "geojson-world-map": "0.0.2",
     "js-cookie": "3.0.5",
     "lucide-react": "0.475.0",
-    "next": "15.1.7",
+    "next": "^15.2.4",
+    "next-auth": "^5.0.0-beta.25",
     "ogl": "^1.0.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.55.0",
     "recharts": "2.15.1",
+    "zod": "^3.24.2",
     "zustand": "5.0.3"
   },
   "devDependencies": {
