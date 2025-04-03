@@ -1,8 +1,22 @@
 import { BarChartGraphic, PieChartGraphic } from "@/components/dashboard";
-import { getClicksSummary } from "@/services/urlService";
+import { auth } from "@/auth";
 
 export default async function GlobalStatsPage() {
-  const data = await getClicksSummary();
+  const session = await auth();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/clicks/summary`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (!res.ok) return <p>Something went wrong</p>;
+  const data = await res.json();
+  console.log("Stats hereee", data);
 
   return (
     <div className="space-y-6">

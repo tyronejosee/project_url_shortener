@@ -13,7 +13,6 @@ export default function DonatePage() {
         <Image
           src="/img/donate.webp"
           alt="Donate"
-          layout="responsive"
           width={480}
           height={640}
           className="pointer-events-none select-none"
