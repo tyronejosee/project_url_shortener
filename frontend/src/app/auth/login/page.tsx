@@ -2,16 +2,53 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
-import useLogin from "@/hooks/use-login";
 import { SocialButtons } from "@/components/common";
+import { loginAction } from "@/actions/auth-action";
+import { loginSchema } from "@/lib/zod";
+import { LoginValues } from "@/types/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const { email, password, isLoading, error, onChange, onSubmit } = useLogin();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit: SubmitHandler<LoginValues> = async (data) => {
+    setError(null);
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+
+    const response = await loginAction({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (response.error) {
+      setError(response.error);
+      setIsLoading(false);
+    } else {
+      setError(null);
+      router.push("/dashboard");
+    }
+  };
 
   return (
     <main className="mx-auto p-4">
@@ -22,18 +59,16 @@ export default function LoginPage() {
         <p className="text-center text-gray-500 mb-12">
           Sign in to access all the features of the service.
         </p>
-
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-9">
             <Input
               isRequired
               label="Email"
               labelPlacement="outside"
-              name="email"
               placeholder="you@example.com"
-              value={email}
-              onChange={onChange}
+              {...register("email", { required: true })}
             />
+            {errors.email?.message && <div>* {errors.email?.message}</div>}
             <Input
               endContent={
                 <button
@@ -53,11 +88,12 @@ export default function LoginPage() {
               type={isVisible ? "text" : "password"}
               label="Password"
               labelPlacement="outside"
-              name="password"
               placeholder="********"
-              value={password}
-              onChange={onChange}
+              {...register("password", { required: true })}
             />
+            {errors.password?.message && (
+              <div>* {errors.password?.message}</div>
+            )}
           </div>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
