@@ -4,6 +4,7 @@ from django.urls import path
 from django.urls.resolvers import URLPattern
 
 from .views import (
+    URLListView,
     URLCreateView,
     URLRedirectView,
     URLDeleteView,
@@ -17,6 +18,10 @@ from .views import (
 
 
 urlpatterns: list[URLPattern] = [
+    path(
+        "api/urls",
+        URLListView.as_view(),
+    ),
     path(
         "<str:alias>",
         URLRedirectView.as_view(),

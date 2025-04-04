@@ -31,9 +31,9 @@ export default function UrlList({ urls, setUrls }: Props) {
         </div>
       ) : (
         <ul className="mt-6 divide-y-2 divide-dashed divide-neutral-300">
-          {urls.map((url) => (
+          {urls.map((url, index) => (
             <li
-              key={url.id}
+              key={url.id || index}
               className="flex items-center justify-between py-2 pl-6 pr-1"
             >
               <a

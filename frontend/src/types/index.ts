@@ -4,6 +4,10 @@ export type LoginForm = {
   password: string;
 };
 
+export type URLForm = {
+  url: string;
+};
+
 export type FeedbackForm = {
   name: string;
   email: string;

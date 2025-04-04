@@ -39,6 +39,23 @@ from .schemas import (
 User = get_user_model()
 
 
+# @extend_schema_view(**url_list_schema)
+class URLListView(APIView):
+    """
+    View for shortening URLs.
+
+    Endpoints:
+    - POST /api/urls
+    """
+
+    permission_classes: list = [IsFree | IsBasic | IsPremium]
+
+    def get(self, request: Request) -> Response:
+        urls = URL.objects.filter(user=request.user)
+        serializer = URLSerializer(urls, many=True)
+        return Response(serializer.data)
+
+
 @extend_schema_view(**url_create_schema)
 class URLCreateView(APIView):
     """
