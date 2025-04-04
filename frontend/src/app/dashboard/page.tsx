@@ -16,7 +16,6 @@ export default async function GlobalStatsPage() {
   );
   if (!res.ok) return <p>Something went wrong</p>;
   const data = await res.json();
-  console.log("Stats hereee", data);
 
   return (
     <div className="space-y-6">

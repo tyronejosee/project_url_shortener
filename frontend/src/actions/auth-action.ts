@@ -15,9 +15,9 @@ export const loginAction = async (values: z.infer<typeof loginSchema>) => {
     return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
-      return { error: error.cause?.err?.message };
+      return { error: error.cause?.err?.message || "Invalid credentials" };
     }
-    return { error: "Error 500" };
+    return { error: "Internal Server Error" };
   }
 };
 

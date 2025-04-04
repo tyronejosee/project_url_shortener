@@ -1,3 +1,6 @@
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
 export const links = [
   { name: "Feedback", href: "/feedback" },
   { name: "Prices", href: "/prices" },
@@ -249,131 +252,6 @@ export const clicks = [
     device: "Mobile",
     os: "Android",
     browser: "Samsung Internet",
-  },
-];
-
-export const groups = [
-  {
-    id: "62559e0c-3881-44e8-b0e9-17d00a26e14a",
-    name: "Marketing Team",
-    description: "Handles advertising, branding, and outreach strategies.",
-    links: 9,
-    is_active: true,
-  },
-  {
-    id: "8c4e3415-aace-4d43-af2a-707c03fc2c2c",
-    name: "Development Team",
-    description: "Responsible for software development and maintenance.",
-    links: 3,
-    is_active: true,
-  },
-  {
-    id: "3f18bf96-620a-4682-ae91-b0ab7f18bdd5",
-    name: "Sales Team",
-    description: "Focuses on customer acquisition and revenue growth.",
-    links: 6,
-    is_active: false,
-  },
-  {
-    id: "00ebd592-9616-4848-858e-f0dac193e634",
-    name: "Support Team",
-    description: "Provides assistance and troubleshooting to customers.",
-    links: 9,
-    is_active: true,
-  },
-  {
-    id: "935e75db-6941-4ceb-8acf-a2404af72845",
-    name: "Design Team",
-    description: "Creates visual assets and user experience designs.",
-    links: 6,
-    is_active: false,
-  },
-  {
-    id: "a1dbbc40-fd32-469b-af59-98c86aacbb39",
-    name: "HR Team",
-    description: "Manages employee relations, hiring, and benefits.",
-    links: 12,
-    is_active: true,
-  },
-  {
-    id: "0b635750-3a0b-45c4-8768-4a7611b7509a",
-    name: "Finance Team",
-    description: "Handles budgeting, payroll, and financial planning.",
-    links: 3,
-    is_active: true,
-  },
-];
-
-export const linksList = [
-  {
-    id: "04f51932-96e2-4404-9578-13e9e20544e4",
-    url: "https://example.com",
-    transitions: 5,
-    date: "2025-02-21",
-    deactivation_date: "2025-03-21",
-    group: "Marketing Team",
-    type: "public",
-    password: false,
-  },
-  {
-    id: "b4f2c675-0781-4f97-b17b-5a3edaedcb2d",
-    url: "https://dev.example.com",
-    transitions: 2,
-    date: "2025-02-18",
-    deactivation_date: null,
-    group: "Development Team",
-    type: "private",
-    password: true,
-  },
-  {
-    id: "e6f9e4a8-fa93-4000-b96a-561c733a9d74",
-    url: "https://shop.example.com",
-    transitions: 15,
-    date: "2025-02-15",
-    deactivation_date: "2025-04-15",
-    group: "Sales Team",
-    type: "public",
-    password: false,
-  },
-  {
-    id: "3268fbc8-8712-425f-bd92-8e3a5ebbfcc0",
-    url: "https://support.example.com",
-    transitions: 30,
-    date: "2025-02-10",
-    deactivation_date: null,
-    group: "Support Team",
-    type: "private",
-    password: true,
-  },
-  {
-    id: "ab52db45-d996-4730-a12a-739794688716",
-    url: "https://blog.example.com",
-    transitions: 7,
-    date: "2025-02-12",
-    deactivation_date: "2025-03-12",
-    group: "Design Team",
-    type: "public",
-    password: false,
-  },
-  {
-    id: "e5739484-b666-4ef5-a4c6-085904b7024a",
-    url: "https://hr.example.com",
-    transitions: 0,
-    date: "2025-02-07",
-    deactivation_date: null,
-    group: "HR Team",
-    type: "private",
-    password: true,
-  },
-  {
-    id: "6d3b552a-a49f-4f1d-8db3-e02453bdd073",
-    url: "https://finance.example.com",
-    transitions: 3,
-    date: "2025-02-05",
-    deactivation_date: "2025-03-05",
-    group: "Finance Team",
-    type: "public",
-    password: false,
   },
 ];
 

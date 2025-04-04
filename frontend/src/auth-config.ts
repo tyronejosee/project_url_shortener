@@ -2,6 +2,7 @@ import { loginSchema } from "@/lib/zod";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { ZodError } from "zod";
+import { API_URL } from "./config/constants";
 
 export default {
   providers: [
@@ -16,32 +17,26 @@ export default {
           const { data, success } = loginSchema.safeParse(credentials);
           if (!success) throw new Error("Invalid credentials");
 
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/tokens/create`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: data.email,
-                password: data.password,
-              }),
-            }
-          );
+          const res = await fetch(`${API_URL}api/tokens/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: data.email,
+              password: data.password,
+            }),
+          });
 
           if (!res.ok) throw new Error("Invalid credentials");
           const apiData = await res.json();
 
-          const userRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/users/me`,
-            {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                Authorization: `Bearer ${apiData.access}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const userRes = await fetch(`${API_URL}api/users/me`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${apiData.access}`,
+              "Content-Type": "application/json",
+            },
+          });
           if (!userRes.ok) throw new Error("Invalid credentials");
           const user = await userRes.json();
 

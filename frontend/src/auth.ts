@@ -1,16 +1,14 @@
 import NextAuth from "next-auth";
 import authConfig from "@/auth-config";
+import { API_URL } from "./config/constants";
 
 async function refreshAccessToken(token: { refreshToken: string }) {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/tokens/refresh`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh: token.refreshToken }),
-      }
-    );
+    const res = await fetch(`${API_URL}api/tokens/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh: token.refreshToken }),
+    });
 
     if (!res.ok) throw new Error("Refresh token failed");
     const apiData = await res.json();
@@ -18,7 +16,7 @@ async function refreshAccessToken(token: { refreshToken: string }) {
     return {
       accessToken: apiData.access,
       refreshToken: apiData.refresh ?? token.refreshToken,
-      expiresAt: Date.now() + 1000 * 60 * 15,
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24, // 24 hours
     };
   } catch (error) {
     console.error("Refresh access token failed", error);
@@ -40,10 +38,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.is_staff = user.is_staff || false;
         token.accessToken = user.accessToken || "";
         token.refreshToken = user.refreshToken || "";
-        token.expiresAt = Date.now() + 1000 * 60 * 15;
+        token.expiresAt = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
       }
 
-      if (Date.now() > token.expiresAt || 0) {
+      if (Date.now() > token.expiresAt) {
         const refreshedTokens = await refreshAccessToken(token);
         if (refreshedTokens) {
           return {

@@ -12,7 +12,6 @@ type AuthState = {
   ) => Promise<{ success: boolean; error: string | null }>;
   logout: () => Promise<void>;
   verify: () => Promise<void>;
-  getUser: () => Promise<void>;
 };
 
 const useAuthStore = create<AuthState>()(
@@ -38,7 +37,6 @@ const useAuthStore = create<AuthState>()(
 
           if (res.ok) {
             set({ isAuthenticated: true });
-            await useAuthStore.getState().getUser();
             return { success: true, error: null };
           } else {
             set({ isAuthenticated: false });
@@ -73,32 +71,10 @@ const useAuthStore = create<AuthState>()(
           );
 
           set({ isAuthenticated: res.ok });
-          if (res.ok) await useAuthStore.getState().getUser();
         } catch {
           set({ isAuthenticated: false, user: null });
         } finally {
           set({ isLoading: false });
-        }
-      },
-
-      getUser: async () => {
-        try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/users/me`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
-          );
-
-          if (res.ok) {
-            const userData = await res.json();
-            set({ user: userData });
-          } else {
-            set({ user: null });
-          }
-        } catch {
-          set({ user: null });
         }
       },
     }),
