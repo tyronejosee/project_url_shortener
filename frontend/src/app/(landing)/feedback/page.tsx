@@ -1,10 +1,54 @@
 "use client";
 
-import { Input, Textarea, Button } from "@heroui/react";
-import { useFeedbackForm } from "@/hooks/useFeedbackForm";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input, Textarea, Button, addToast } from "@heroui/react";
+import { useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { feedbackSchema } from "@/lib/zod";
+import { API_URL } from "@/config/constants";
+import { FeedbackForm } from "@/types";
 
 export default function FeedbackPage() {
-  const { form, loading, error, handleChange, handleSubmit } = useFeedbackForm();
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FeedbackForm>({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: {
+      name: session?.user?.username || "",
+      email: session?.user?.email || "",
+      message: "",
+    },
+  });
+
+  const onSubmit = async (data: FeedbackForm) => {
+    try {
+      await fetch(`${API_URL}api/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      addToast({
+        title: "Thank you for your feedback!",
+        description:
+          "We appreciate your feedback and will use it to continuously improve. Your opinion is valuable to us.",
+      });
+
+      reset();
+      router.push("/");
+    } catch (error) {
+      setApiError(`${error}`);
+    }
+  };
 
   return (
     <div className="mx-auto p-4">
@@ -15,7 +59,7 @@ export default function FeedbackPage() {
         <p className="text-center mb-8 text-neutral-500">
           Have a question? We will be happy to help you.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-10">
             <Input
               isRequired
@@ -23,9 +67,10 @@ export default function FeedbackPage() {
               type="text"
               labelPlacement="outside"
               placeholder="Joe Doe"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
+              isInvalid={!!errors.name?.message}
+              color={errors.name?.message ? "danger" : "default"}
+              errorMessage={errors.name?.message}
+              {...register("name")}
             />
             <Input
               isRequired
@@ -33,9 +78,10 @@ export default function FeedbackPage() {
               type="email"
               labelPlacement="outside"
               placeholder="you@example.com"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
+              isInvalid={!!errors.email?.message}
+              color={errors.email?.message ? "danger" : "default"}
+              errorMessage={errors.email?.message}
+              {...register("email")}
             />
           </div>
           <Textarea
@@ -44,18 +90,19 @@ export default function FeedbackPage() {
             type="textarea"
             labelPlacement="outside"
             placeholder="Your message here..."
-            name="message"
-            value={form.message}
-            onChange={handleChange}
+            isInvalid={!!errors.message?.message}
+            color={errors.message?.message ? "danger" : "default"}
+            errorMessage={errors.message?.message}
+            {...register("message")}
           />
-          {error && <p className="text-red-500">{error}</p>}
+          {apiError && <p className="text-red-500">{apiError}</p>}
           <Button
             type="submit"
             color="primary"
             className="w-full"
-            disabled={loading}
+            disabled={isSubmitting}
           >
-            {loading ? "Sending..." : "Send"}
+            {isSubmitting ? "Sending..." : "Send"}
           </Button>
         </form>
       </section>
