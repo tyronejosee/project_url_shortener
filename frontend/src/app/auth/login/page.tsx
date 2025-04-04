@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
 import { SocialButtons } from "@/components/common";
 import { loginAction } from "@/actions/auth-action";
 import { loginSchema } from "@/lib/zod";
-import { LoginValues } from "@/types/auth";
+import { LoginForm } from "@/types";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,11 +24,11 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginValues>({
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginValues> = async (data) => {
+  const onSubmit = async (data: LoginForm) => {
     setError(null);
     setIsLoading(true);
 
@@ -62,13 +62,14 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-9">
             <Input
-              isRequired
               label="Email"
               labelPlacement="outside"
               placeholder="you@example.com"
+              isInvalid={!!errors.email?.message}
+              color={errors.email?.message ? "danger" : "default"}
+              errorMessage={errors.email?.message}
               {...register("email", { required: true })}
             />
-            {errors.email?.message && <div>* {errors.email?.message}</div>}
             <Input
               endContent={
                 <button
@@ -84,16 +85,15 @@ export default function LoginPage() {
                   )}
                 </button>
               }
-              isRequired
               type={isVisible ? "text" : "password"}
               label="Password"
               labelPlacement="outside"
               placeholder="********"
+              isInvalid={!!errors.password?.message}
+              color={errors.password?.message ? "danger" : "default"}
+              errorMessage={errors.password?.message}
               {...register("password", { required: true })}
             />
-            {errors.password?.message && (
-              <div>* {errors.password?.message}</div>
-            )}
           </div>
 
           {error && <p className="text-red-500 text-center">{error}</p>}

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Navbar,
   NavbarBrand,
@@ -8,8 +10,6 @@ import {
   NavbarItem,
   Button,
 } from "@heroui/react";
-import { usePathname } from "next/navigation";
-import useAuthStore from "@/store/auth";
 
 export const AcmeLogo = () => {
   return (
@@ -25,7 +25,7 @@ export const AcmeLogo = () => {
 };
 
 export default function Navigation() {
-  const { isAuthenticated } = useAuthStore((state) => state);
+  const { data: session } = useSession();
 
   const pathname = usePathname();
   const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
@@ -46,9 +46,10 @@ export default function Navigation() {
           <Link href="/prices">Prices</Link>
         </NavbarItem>
 
-        {isAuthenticated ? (
+        {session?.user ? (
           <>
             <NavbarItem className="hidden lg:flex">
+              <span>Hi {session?.user?.username}</span>
               <Button
                 as={Link}
                 color="primary"

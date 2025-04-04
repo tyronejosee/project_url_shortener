@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -14,15 +15,29 @@ import useLogout from "@/hooks/use-logout";
 import { getFirstLetter } from "@/utils/getFirstLetter";
 
 export default function Header() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const { handleLogout } = useLogout();
+  const isLoading = status === "loading";
 
-  if (status === "loading") return <p>Loading...</p>;
+  useEffect(() => {
+    update();
+  }, []);
 
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
       <div className="ml-8 text-xl font-semibold">URL Shortener</div>
-      {session?.user ? (
+      {isLoading ? (
+        <div className="flex items-center space-x-4">
+          <div className="flex space-x-4">
+            <div className="flex flex-col gap-1 justify-center">
+              <Skeleton className="flex rounded-full w-36 h-4" />
+              <Skeleton className="flex rounded-full w-36 h-4" />
+            </div>
+            <Button onPress={handleLogout}>Log out</Button>
+            <Skeleton className="flex rounded-full w-10 h-10" />
+          </div>
+        </div>
+      ) : (
         <Dropdown>
           <DropdownTrigger>
             <Button variant="bordered" size="lg" className="px-4">
@@ -35,7 +50,7 @@ export default function Header() {
               <Avatar
                 size="sm"
                 radius="full"
-                name={getFirstLetter(session?.user?.username)}
+                name={getFirstLetter(session?.user?.username || "User")}
                 className="bg-primary text-white text-xl"
               />
             </Button>
@@ -49,17 +64,6 @@ export default function Header() {
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-      ) : (
-        <div className="flex items-center space-x-4">
-          <div className="flex space-x-4">
-            <div className="flex flex-col gap-1 justify-center">
-              <Skeleton className="flex rounded-full w-36 h-4" />
-              <Skeleton className="flex rounded-full w-36 h-4" />
-            </div>
-            <Button onPress={handleLogout}>Log out</Button>
-            <Skeleton className="flex rounded-full w-10 h-10" />
-          </div>
-        </div>
       )}
     </header>
   );
