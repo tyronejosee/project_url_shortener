@@ -28,7 +28,7 @@ type Props = {
   groups: GroupRead[];
 };
 
-export default function GroupTable({ groups }: Props) {
+export default function GroupsContainer({ groups }: Props) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [newGroup, setNewGroup] = useState({
@@ -36,8 +36,8 @@ export default function GroupTable({ groups }: Props) {
     alias: "",
     description: "",
   });
-  const [editingGroup, setEditingGroup] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<GroupRead | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,12 +80,12 @@ export default function GroupTable({ groups }: Props) {
   };
 
   const handleDeleteClick = async (id: string) => {
-    if (confirm("¿Estás seguro de que deseas eliminar este grupo?")) {
+    if (confirm("Are you sure you want to delete this group?")) {
       try {
         await deleteGroup(id);
         router.refresh();
       } catch (error) {
-        console.error("Error al eliminar el grupo:", error);
+        console.error("Error deleting group:", error);
       }
     }
   };

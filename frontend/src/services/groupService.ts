@@ -1,10 +1,6 @@
 import { apiFetch } from "./api";
 import { GroupWrite } from "@/types";
 
-export async function getGroups() {
-  return apiFetch("api/groups", { method: "GET" });
-}
-
 export async function getGroupById(id: string) {
   return apiFetch(`api/groups/${id}`, { method: "GET" });
 }
