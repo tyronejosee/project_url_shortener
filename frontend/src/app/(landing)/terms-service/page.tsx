@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { COMPANY_NAME } from "@/config/constants";
+
+export const metadata: Metadata = {
+  title: `Terms Service - ${COMPANY_NAME}`,
+  description: "Learn about our privacy policy and how we protect your data.",
+};
 
 export default function TermsServicePage() {
   return (
-    <main className="max-w-screen-lg mx-auto p-6">
+    <main className="flex-1 max-w-screen-lg mx-auto p-6">
       <div className="space-y-6">
         <h1 className="text-4xl font-extrabold text-center">Terms Service</h1>
         <p className="text-gray-500 text-center">

@@ -30,24 +30,22 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      <div className="relative isolate overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
-        <HeroSection />
-        <URLShortenerForm />
-        <AnimatedContent
-          distance={100}
-          direction="vertical"
-          reverse={false}
-          config={{ tension: 80, friction: 20 }}
-          initialOpacity={0.0}
-          animateOpacity
-          scale={1.0}
-          threshold={0.2}
-        >
-          <UrlList urls={urls} loading={loading} setUrls={setUrls} />
-        </AnimatedContent>
-        <Sponsors />
-      </div>
-    </>
+    <main className="flex-1 relative isolate overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
+      <HeroSection />
+      <URLShortenerForm />
+      <AnimatedContent
+        distance={100}
+        direction="vertical"
+        reverse={false}
+        config={{ tension: 80, friction: 20 }}
+        initialOpacity={0.0}
+        animateOpacity
+        scale={1.0}
+        threshold={0.2}
+      >
+        <UrlList urls={urls} loading={loading} setUrls={setUrls} />
+      </AnimatedContent>
+      <Sponsors />
+    </main>
   );
 }

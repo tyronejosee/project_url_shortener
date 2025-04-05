@@ -12,10 +12,14 @@ import {
 } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import useLogout from "@/hooks/use-logout";
-import { getFirstLetter } from "@/utils/getFirstLetter";
+import { getFirstLetter } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const { data: session, status, update } = useSession();
+  const pathname = usePathname();
+  const lastSegment = pathname.split("/").filter(Boolean).pop();
+
   const { handleLogout } = useLogout();
   const isLoading = status === "loading";
 
@@ -25,7 +29,11 @@ export default function Header() {
 
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
-      <div className="ml-8 text-xl font-semibold">URL Shortener</div>
+      <div className="ml-8 text-3xl font-bold">
+        {lastSegment
+          ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)
+          : "Home"}
+      </div>
       {isLoading ? (
         <div className="flex items-center space-x-4">
           <div className="flex space-x-4">

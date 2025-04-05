@@ -8,7 +8,7 @@ export default function DonatePage() {
   const [amount, setAmount] = useState("");
 
   return (
-    <div className="max-w-screen-lg mx-auto py-6 px-6 grid grid-col-1 md:grid-cols-2 gap-4">
+    <main className="max-w-screen-lg mx-auto py-6 px-6 grid grid-col-1 md:grid-cols-2 gap-4">
       <figure className="hidden md:block overflow-hidden rounded-2xl border border-neutral-300">
         <Image
           src="/img/donate.webp"
@@ -41,6 +41,6 @@ export default function DonatePage() {
           </Button>
         </form>
       </section>
-    </div>
+    </main>
   );
 }
