@@ -12,9 +12,9 @@ export default function CutterContainer({ groups }: Props) {
   return (
     <form className="space-y-6">
       <Input
-        isRequired
         label="URL"
         labelPlacement="outside"
+        size="lg"
         name="username"
         placeholder="https://www.example.com"
       />
@@ -22,11 +22,13 @@ export default function CutterContainer({ groups }: Props) {
         <Input
           type="password"
           label="Password"
+          size="lg"
           labelPlacement="outside"
           name="password"
           placeholder="********"
         />
         <Select
+          size="lg"
           items={privacyItems}
           label="Privacy"
           labelPlacement="outside"
@@ -39,6 +41,7 @@ export default function CutterContainer({ groups }: Props) {
       <div className="flex space-x-6">
         <Select
           // isDisabled
+          size="lg"
           items={domains}
           label="Domain"
           labelPlacement="outside"
@@ -48,6 +51,7 @@ export default function CutterContainer({ groups }: Props) {
         </Select>
         <Select
           // isDisabled
+          size="lg"
           items={groups}
           label="Group"
           labelPlacement="outside"
@@ -56,7 +60,11 @@ export default function CutterContainer({ groups }: Props) {
           {(group) => <SelectItem key={group.id}>{group.name}</SelectItem>}
         </Select>
       </div>
-      <Button color="primary">Cut</Button>
+      <div className="flex justify-end">
+        <Button size="lg" color="primary">
+          Cut
+        </Button>
+      </div>
     </form>
   );
 }

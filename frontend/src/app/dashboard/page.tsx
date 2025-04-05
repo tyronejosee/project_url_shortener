@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { BarChartGraphic, PieChartGraphic } from "@/components/dashboard";
 import { auth } from "@/auth";
+import { COMPANY_NAME } from "@/config/constants";
 
-export default async function GlobalStatsPage() {
+export const metadata: Metadata = {
+  title: `Dashboard - ${COMPANY_NAME}`,
+  description: "Dashboard to monitor your URLs and track your clicks.",
+};
+
+export default async function DashboardPage() {
   const session = await auth();
 
   const res = await fetch(
@@ -18,7 +25,7 @@ export default async function GlobalStatsPage() {
   const data = await res.json();
 
   return (
-    <div className="space-y-6">
+    <main className="space-y-6">
       <h1 className="text-4xl font-bold text-center">
         Global Click Statistics
       </h1>
@@ -28,6 +35,6 @@ export default async function GlobalStatsPage() {
         <PieChartGraphic title="Browsers" types={data.browser} />
         <PieChartGraphic title="OSs" types={data.os} />
       </div>
-    </div>
+    </main>
   );
 }
