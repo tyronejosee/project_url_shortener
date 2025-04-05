@@ -9,7 +9,7 @@ import {
   TableCell,
 } from "@heroui/react";
 import { Lock } from "lucide-react";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/lib/dates";
 import { URLRead } from "@/types";
 
 type Props = {

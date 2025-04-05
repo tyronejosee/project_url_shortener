@@ -1,50 +1,34 @@
-"use client";
+import type { Metadata } from "next";
+import { auth } from "@/auth";
+import { API_URL, COMPANY_NAME } from "@/config/constants";
+import ClicksContainer from "./container";
 
-import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell
-} from "@heroui/react";
-import { clicks } from "@/config/constants";
+export const dynamic = "force-dynamic";
 
-export default function ClicksPage() {
+export const metadata: Metadata = {
+  title: `Clicks - ${COMPANY_NAME}`,
+  description: "Clicks on your URLs.",
+};
+
+export default async function ClicksPage() {
+  const session = await auth();
+
+  const res = await fetch(`${API_URL}api/clicks`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${session?.accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) throw new Error("Error fetching clicks");
+  const clicks = await res.json();
+
   return (
-    <div className="flex flex-col gap-3">
-      <Table
-        aria-label="Clicks Table"
-        color="primary"
-        selectionMode="single"
-        radius="lg"
-        shadow="none"
-        className="border border-neutral-300 rounded-xl"
-      >
-        <TableHeader>
-          <TableColumn>URL</TableColumn>
-          <TableColumn>Date</TableColumn>
-          <TableColumn>Country</TableColumn>
-          <TableColumn>IP</TableColumn>
-          <TableColumn>Device</TableColumn>
-          <TableColumn>OS</TableColumn>
-          <TableColumn>Browser</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {clicks.map((click) => (
-            <TableRow key={click.id}>
-              <TableCell>{click.url}</TableCell>
-              <TableCell>{click.date}</TableCell>
-              <TableCell>{click.country}</TableCell>
-              <TableCell>{click.ip}</TableCell>
-              <TableCell>{click.device}</TableCell>
-              <TableCell>{click.os}</TableCell>
-              <TableCell>{click.browser}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <main className="flex flex-col gap-3">
+      <div className="flex justify-between items-center">
+        <span>Total {clicks.length} Clicks</span>
+      </div>
+      <ClicksContainer clicks={clicks} />
+    </main>
   );
 }

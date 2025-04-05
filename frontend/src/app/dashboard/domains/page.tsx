@@ -14,7 +14,7 @@ import { domains } from "@/config/constants";
 
 export default function DomainsPage() {
   return (
-    <div className="flex flex-col gap-3">
+    <main className="flex flex-col gap-3">
       <Table
         aria-label="Domains Table"
         color="primary"
@@ -56,6 +56,6 @@ export default function DomainsPage() {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </main>
   );
 }
