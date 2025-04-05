@@ -1,8 +1,13 @@
+import { z } from "zod";
+import { groupSchema } from "@/lib/zod";
+
 // Form types
 export type LoginForm = {
   email: string;
   password: string;
 };
+
+export type GroupForm = z.infer<typeof groupSchema>;
 
 export type URLForm = {
   url: string;
@@ -65,6 +70,16 @@ export type URLWrite = {
 
 export type URLWriteMinimal = {
   url: string;
+};
+
+export type ClickResponse = {
+  id: number;
+  url: string;
+  ip_address: string;
+  device: string;
+  browser: string;
+  os: string;
+  created_at: string;
 };
 
 export type ClickDate = {

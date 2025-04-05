@@ -1,6 +1,6 @@
 "use client";
 
-import { continueWithFacebook, continueWithGoogle } from "@/utils";
+import { continueWithFacebook, continueWithGoogle } from "@/actions";
 import { SocialButton, HR } from "@/components/common";
 import { Facebook, Google } from "@/components/icons";
 

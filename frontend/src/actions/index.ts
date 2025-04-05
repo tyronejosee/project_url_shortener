@@ -1,4 +1,4 @@
-import continueWithSocialAuth from "./continueWithSocialAuth";
+import continueWithSocialAuth from "../actions/continueWithSocialAuth";
 
 export const continueWithGoogle = () =>
   continueWithSocialAuth("google-oauth2", "google");
