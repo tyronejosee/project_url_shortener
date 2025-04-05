@@ -50,6 +50,16 @@ export const urlshortenerSchema = object({
     .max(1000, "URL must be less than 1000 characters"),
 });
 
+export const groupSchema = object({
+  name: string()
+    .min(1, "Name is required")
+    .max(50, "Name must be less than 50 characters"),
+  alias: string().max(10, "Alias must be less than 10 characters").optional(),
+  description: string()
+    .max(1000, "Description must be less than 1000 characters")
+    .optional(),
+});
+
 export const supportSchema = object({
   name: string({ required_error: "Password is required" })
     .min(2, { message: "Name must be at least 2 characters long." })

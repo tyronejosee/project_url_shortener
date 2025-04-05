@@ -19,10 +19,20 @@ import {
   Input,
   useDisclosure,
   Textarea,
+  addToast,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@heroui/react";
-import { createGroup, deleteGroup, updateGroup } from "@/services/groupService";
-import { formatDate } from "@/utils/formatDate";
-import { GroupRead, GroupWrite } from "@/types";
+import { formatDate } from "@/lib/dates";
+import { GroupForm, GroupRead } from "@/types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { groupSchema } from "@/lib/zod";
+import { useSession } from "next-auth/react";
+import { API_URL } from "@/config/constants";
+import { EllipsisVertical, Plus, SquarePenIcon, Trash2 } from "lucide-react";
 
 type Props = {
   groups: GroupRead[];
@@ -31,41 +41,27 @@ type Props = {
 export default function GroupsContainer({ groups }: Props) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [newGroup, setNewGroup] = useState({
-    name: "",
-    alias: "",
-    description: "",
-  });
   const [editingGroup, setEditingGroup] = useState<GroupRead | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { data: session } = useSession();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewGroup({ ...newGroup, [name]: value });
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<GroupForm>({
+    resolver: zodResolver(groupSchema),
+    defaultValues: {
+      name: "",
+      alias: "",
+      description: "",
+    },
+  });
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      if (editingGroup) {
-        await updateGroup(editingGroup.id, newGroup as GroupWrite);
-      } else {
-        await createGroup(newGroup as GroupWrite);
-      }
-      onClose();
-      setNewGroup({ name: "", alias: "", description: "" });
-      setEditingGroup(null);
-      router.refresh();
-    } catch (error) {
-      console.error("An error occurred:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEditClick = (group: GroupRead) => {
+  const openEditModal = (group: GroupRead) => {
     setEditingGroup(group);
-    setNewGroup({
+    reset({
       name: group.name,
       alias: group.alias,
       description: group.description,
@@ -73,35 +69,89 @@ export default function GroupsContainer({ groups }: Props) {
     onOpen();
   };
 
-  const handleAddClick = () => {
+  const openAddModal = () => {
     setEditingGroup(null);
-    setNewGroup({ name: "", alias: "", description: "" });
+    reset({ name: "", alias: "", description: "" });
     onOpen();
+  };
+
+  const onSubmit = async (data: GroupForm) => {
+    setLoading(true);
+    try {
+      if (editingGroup) {
+        await fetch(`${API_URL}api/groups/${editingGroup.id}`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      } else {
+        await fetch(`${API_URL}api/groups`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      }
+      onClose();
+      setEditingGroup(null);
+      router.refresh();
+    } catch (error) {
+      console.error("Submit error:", error);
+      addToast({
+        title: "Error",
+        description: "An error occurred while submitting the form.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteClick = async (id: string) => {
     if (confirm("Are you sure you want to delete this group?")) {
       try {
-        await deleteGroup(id);
+        await fetch(`${API_URL}api/groups/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
         router.refresh();
       } catch (error) {
         console.error("Error deleting group:", error);
+        addToast({
+          title: "Error",
+          description: "An error occurred while deleting the group.",
+        });
       }
     }
   };
 
   return (
-    <div>
-      <Button onPress={handleAddClick} color="primary">
-        Add Group
-      </Button>
+    <div className="flex flex-col gap-4">
+      <header className="flex items-center justify-between">
+        <p className="text-sm font-medium text-neutral-500">
+          Total {groups.length} groups
+        </p>
+        <Button
+          onPress={openAddModal}
+          color="primary"
+          endContent={<Plus size={18} />}
+        >
+          Add Group
+        </Button>
+      </header>
 
       <Table
         aria-label="Groups Table"
-        color="primary"
-        selectionMode="single"
         radius="lg"
+        color="primary"
         shadow="none"
+        selectionMode="multiple"
         className="border border-neutral-300 rounded-xl"
       >
         <TableHeader>
@@ -132,20 +182,33 @@ export default function GroupsContainer({ groups }: Props) {
                   </Chip>
                 </TableCell>
                 <TableCell className="space-x-2">
-                  <Button
-                    size="sm"
-                    color="warning"
-                    onPress={() => handleEditClick(group)}
-                  >
-                    Update
-                  </Button>
-                  <Button
-                    size="sm"
-                    color="danger"
-                    onPress={() => handleDeleteClick(group.id)}
-                  >
-                    Delete
-                  </Button>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button isIconOnly variant="light">
+                        <EllipsisVertical size={18} />
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Group actions">
+                      <DropdownItem
+                        key="update"
+                        shortcut="⌘U"
+                        startContent={<SquarePenIcon size={18} />}
+                        onPress={() => openEditModal(group)}
+                      >
+                        Update group
+                      </DropdownItem>
+                      <DropdownItem
+                        key="delete"
+                        className="text-danger"
+                        color="danger"
+                        shortcut="⌘D"
+                        startContent={<Trash2 size={18} />}
+                        onPress={() => handleDeleteClick(group.id)}
+                      >
+                        Delete group
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                 </TableCell>
               </TableRow>
             ))}
@@ -161,35 +224,44 @@ export default function GroupsContainer({ groups }: Props) {
           <ModalHeader className="flex flex-col gap-1">
             {editingGroup ? "Update Group" : "Add New Group"}{" "}
           </ModalHeader>
-          <ModalBody>
-            <Input
-              isRequired
-              label="Name"
-              labelPlacement="outside"
-              type="text"
-              name="name"
-              placeholder="Name group"
-              value={newGroup.name}
-              onChange={handleInputChange}
-            />
-            <Textarea
-              isRequired
-              label="Description"
-              labelPlacement="outside"
-              name="description"
-              value={newGroup.description}
-              onChange={handleInputChange}
-              placeholder="Enter your description"
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
-              Cancel
-            </Button>
-            <Button color="primary" onPress={handleSubmit} disabled={loading}>
-              {loading ? "Loading..." : editingGroup ? "Update" : "Save"}
-            </Button>
-          </ModalFooter>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalBody>
+              <Input
+                label="Name"
+                labelPlacement="outside"
+                type="text"
+                placeholder="Name group"
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message}
+                {...register("name")}
+              />
+              <Textarea
+                label="Description"
+                labelPlacement="outside"
+                type="textarea"
+                placeholder="Enter your description"
+                isInvalid={!!errors.description}
+                errorMessage={errors.description?.message}
+                {...register("description")}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                color="primary"
+                disabled={loading || isSubmitting}
+              >
+                {loading || isSubmitting
+                  ? "Saving..."
+                  : editingGroup
+                  ? "Update"
+                  : "Save"}
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </div>
