@@ -1,0 +1,94 @@
+// import NextAuth from "next-auth";
+// import authConfig from "@/auth.config";
+// import { API_URL } from "./config/constants";
+// import { jwtDecode } from "jwt-decode";
+
+// async function refreshAccessToken(token) {
+//   console.log("\n\n🔄 INICIANDO REFRESH TOKEN...");
+//   console.log("\n\n🔄 TOKEN QUE REFRESCA...", token.refreshToken);
+
+//   try {
+//     const res = await fetch(`${API_URL}api/tokens/refresh`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ refresh: token.refreshToken }),
+//     });
+
+//     if (!res.ok) {
+//       throw new Error("Refresh token failed");
+//     }
+//     const apiData = await res.json();
+
+//     const decodedToken = jwtDecode(apiData.access);
+//     const newAccessTokenExpires = decodedToken?.exp * 1000;
+
+//     return {
+//       ...token,
+//       accessToken: apiData.access,
+//       refreshToken: apiData.refresh || token.refreshToken,
+//       accessTokenExpires: newAccessTokenExpires,
+//     };
+//   } catch (error) {
+//     console.error(error);
+//     return {
+//       ...token,
+//       error: "RefreshAccessTokenError",
+//     };
+//   }
+// }
+
+// export const { handlers, signIn, signOut, auth } = NextAuth({
+//   ...authConfig,
+//   session: {
+//     strategy: "jwt",
+//     maxAge: 30 * 24 * 60 * 60,
+//   },
+//   callbacks: {
+//     async jwt({ token, account, user }) {
+//       if (account && user) {
+//         const decodedToken = jwtDecode(user.accessToken);
+//         const accessTokenExpires = decodedToken?.exp * 1000;
+
+//         return {
+//           ...token,
+//           id: user.id || "",
+//           email: user.email || "",
+//           username: user.username || "",
+//           slug: user.slug,
+//           plan: user.plan,
+//           is_active: user.is_active,
+//           is_staff: user.is_staff,
+//           accessToken: user.accessToken,
+//           refreshToken: user.refreshToken,
+//           accessTokenExpires,
+//         };
+//       }
+
+//       if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
+//         return token;
+//       }
+//       return refreshAccessToken(token);
+//     },
+//     async session({ session, token }) {
+//       if (token?.error === "RefreshAccessTokenError") {
+//         return null;
+//       }
+
+//       if (token) {
+//         session.user.id = token.id;
+//         session.user.email = token.email;
+//         session.user.username = token.username;
+//         session.user.slug = token.slug;
+//         session.user.plan = token.plan;
+//         session.user.is_active = token.is_active;
+//         session.user.is_staff = token.is_staff;
+//         session.accessToken = token.accessToken;
+//         session.refreshToken = token.refreshToken;
+//       }
+//       return session;
+//     },
+//   },
+//   pages: {
+//     signIn: "/auth/login",
+//   },
+// });
