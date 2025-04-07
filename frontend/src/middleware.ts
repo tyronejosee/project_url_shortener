@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import NextAuth from "next-auth";
-import authConfig from "@/auth-config";
+import authConfig from "@/auth.config";
 
 const { auth } = NextAuth(authConfig);
 
@@ -51,3 +51,17 @@ export default auth((req) => {
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
+
+// import { NextResponse } from "next/server";
+// import NextAuth from "next-auth";
+// import authConfig from "@/auth.config";
+
+// const { auth } = NextAuth(authConfig);
+
+// export default auth(() => {
+//   return NextResponse.next();
+// });
+
+// export const config = {
+//   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+// };
