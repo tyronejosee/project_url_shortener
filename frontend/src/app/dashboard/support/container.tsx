@@ -8,10 +8,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Textarea, Button, addToast } from "@heroui/react";
 import { supportSchema } from "@/lib/zod";
+import { useFetch } from "@/hooks/use-fetch";
 import { API_URL } from "@/config/constants";
 import { SupportForm } from "@/types";
 
 export default function SupportContainer() {
+  const fetchClient = useFetch();
   const { data: session } = useSession();
   const router = useRouter();
   const [apiError, setApiError] = useState<string | null>(null);
@@ -32,7 +34,7 @@ export default function SupportContainer() {
 
   const onSubmit = async (data: SupportForm) => {
     try {
-      await fetch(`${API_URL}api/support`, {
+      await fetchClient(`${API_URL}api/support`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

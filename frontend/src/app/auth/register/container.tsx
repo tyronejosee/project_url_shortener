@@ -2,61 +2,100 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeClosed } from "lucide-react";
-import useRegister from "@/hooks/use-register";
+import { registerAction } from "@/actions/auth-action";
 import { SocialButtons } from "@/components/common";
+import { registerSchema } from "@/lib/zod";
+import { RegisterForm } from "@/types";
 
 export default function RegisterContainer() {
-  const {
-    username,
-    email,
-    password,
-    re_password,
-    isLoading,
-    errors,
-    onChange,
-    onSubmit,
-  } = useRegister();
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data: RegisterForm) => {
+    setApiError(null);
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("password", data.password);
+
+    const response = await registerAction({
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      re_password: data.re_password,
+    });
+
+    if (response.error) {
+      setApiError(response.error);
+      setIsLoading(false);
+      return;
+    }
+
+    if (response.errors) {
+      Object.entries(response.errors).forEach(([field, messages]) => {
+        if (Array.isArray(messages)) {
+          setError(field as keyof RegisterForm, {
+            type: "server",
+            message: messages[0],
+          });
+        }
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    setApiError(null);
+    router.push("/dashboard");
+  };
+
   return (
     <>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-12">
           <Input
             type="text"
             size="lg"
-            name="username"
             label="Username"
             labelPlacement="outside"
             placeholder="Joe Doe"
             color={errors.username ? "danger" : "default"}
-            value={username}
-            onChange={onChange}
+            isInvalid={!!errors.username?.message}
+            errorMessage={errors.username?.message}
+            {...register("username", { required: true })}
           />
-          {errors.username && (
-            <p className="text-red-500 text-sm">{errors.username.join(", ")}</p>
-          )}
 
           <Input
             type="email"
             size="lg"
-            name="email"
             label="Email"
             labelPlacement="outside"
             placeholder="you@example.com"
-            onChange={onChange}
+            isInvalid={!!errors.email?.message}
             color={errors.email ? "danger" : "default"}
-            errorMessage={errors.email ? errors.email.join(", ") : ""}
-            value={email}
+            errorMessage={errors.email?.message}
+            {...register("email", { required: true })}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.join(", ")}</p>
-          )}
-
           <Input
             type={isVisible ? "text" : "password"}
             size="lg"
@@ -77,14 +116,11 @@ export default function RegisterContainer() {
                 )}
               </button>
             }
+            isInvalid={!!errors.password?.message}
             color={errors.password ? "danger" : "default"}
-            value={password}
-            name="password"
-            onChange={onChange}
+            errorMessage={errors.password?.message}
+            {...register("password", { required: true })}
           />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.join(", ")}</p>
-          )}
 
           <Input
             type={isVisible ? "text" : "password"}
@@ -92,7 +128,6 @@ export default function RegisterContainer() {
             label="Confirm Password"
             labelPlacement="outside"
             placeholder="********"
-            value={re_password}
             endContent={
               <button
                 aria-label="toggle password visibility"
@@ -107,27 +142,14 @@ export default function RegisterContainer() {
                 )}
               </button>
             }
+            isInvalid={!!errors.re_password?.message}
             color={errors.re_password ? "danger" : "default"}
-            name="re_password"
-            onChange={onChange}
+            errorMessage={errors.re_password?.message}
+            {...register("re_password", { required: true })}
           />
-          {errors.re_password && (
-            <p className="text-red-500 text-sm">
-              {errors.re_password.join(", ")}
-            </p>
-          )}
         </div>
 
-        {errors.non_field_errors && (
-          <div className="text-red-500 text-sm">
-            {errors.non_field_errors.join(", ")}
-          </div>
-        )}
-        {errors.general && (
-          <div className="text-red-500 text-sm">
-            {errors.general.join(", ")}
-          </div>
-        )}
+        {apiError && <p className="text-red-500 text-center">{apiError}</p>}
 
         <div className="flex items-center justify-between">
           <Button

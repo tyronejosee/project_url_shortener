@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { addToast } from "@heroui/react";
-import useAuthStore from "@/store/auth";
+import { API_URL } from "@/config/constants";
+// import { signIn } from "next-auth/react";
 
 export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
-  const { verify } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -19,20 +19,22 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
     const authenticate = async () => {
       try {
         const res = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_API_URL
-          }api/socials/o/${provider}/?state=${encodeURIComponent(
+          `${API_URL}api/socials/o/${provider}/?state=${encodeURIComponent(
             state
           )}&code=${encodeURIComponent(code)}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            credentials: "include",
           }
         );
+        // const data = await res.json();
 
         if (res.status == 201) {
-          verify();
+          // await signIn("OAuth2 Credentials", {
+          //   accessToken: data.access,
+          //   refreshToken: data.refresh,
+          //   redirect: false,
+          // });
           addToast({
             title: "Logged in!",
             description: "You have successfully logged in.",
@@ -42,11 +44,11 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
           throw new Error("Failed to log in");
         }
       } catch (error) {
-        console.error(error.message || "Something went wrong");
-        router.push("/auth/login");
+        console.error(`Something went wrong: ${error}`);
+        // router.push("/auth/login");
       }
     };
 
     authenticate();
-  }, [searchParams, provider, verify, router]);
+  }, [searchParams, provider, router]);
 }

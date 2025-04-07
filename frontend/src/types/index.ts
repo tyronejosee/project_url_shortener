@@ -1,17 +1,19 @@
 import { z } from "zod";
-import { groupSchema } from "@/lib/zod";
+import {
+  groupSchema,
+  loginSchema,
+  registerSchema,
+  urlshortenerSchema,
+} from "@/lib/zod";
 
 // Form types
-export type LoginForm = {
-  email: string;
-  password: string;
-};
+export type LoginForm = z.infer<typeof loginSchema>;
+
+export type RegisterForm = z.infer<typeof registerSchema>;
 
 export type GroupForm = z.infer<typeof groupSchema>;
 
-export type URLForm = {
-  url: string;
-};
+export type URLForm = z.infer<typeof urlshortenerSchema>;
 
 export type FeedbackForm = {
   name: string;

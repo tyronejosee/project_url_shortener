@@ -1,5 +1,6 @@
 "use client";
 
+import { API_URL } from "@/config/constants";
 import { addToast } from "@heroui/react";
 
 export default async function continueWithSocialAuth(
@@ -7,9 +8,7 @@ export default async function continueWithSocialAuth(
   redirect: string
 ) {
   try {
-    const url = `${
-      process.env.NEXT_PUBLIC_API_URL
-    }api/socials/o/${provider}/?redirect_uri=${
+    const url = `${API_URL}api/socials/o/${provider}/?redirect_uri=${
       process.env.NODE_ENV === "production"
         ? process.env.NEXT_PUBLIC_REDIRECT_URL
         : "http://localhost:3000"
@@ -18,9 +17,9 @@ export default async function continueWithSocialAuth(
     const res = await fetch(url, {
       method: "GET",
       headers: {
-        Accept: "application/json",
+        // Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      credentials: "include",
     });
     const data = await res.json();
 

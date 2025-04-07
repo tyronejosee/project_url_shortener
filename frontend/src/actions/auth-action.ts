@@ -4,6 +4,7 @@ import { AuthError } from "next-auth";
 import { loginSchema, registerSchema } from "@/lib/zod";
 import { z } from "zod";
 import { signIn } from "@/auth";
+import { API_URL } from "@/config/constants";
 
 export const loginAction = async (values: z.infer<typeof loginSchema>) => {
   try {
@@ -33,28 +34,34 @@ export const registerAction = async (
       };
     }
 
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     credentials: "include",
-    //     body: JSON.stringify({ email: data.email, password: data.password }),
-    //   });
-    //   const apiData = await res.json();
+    const res = await fetch(`${API_URL}api/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        re_password: data.re_password,
+      }),
+    });
+    const apiData = await res.json();
 
-    // Validate if the user already exists
-    // Error handling for duplicate user creation
+    if (!res.ok) {
+      return {
+        errors: apiData,
+      };
+    }
 
     await signIn("credentials", {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-
     return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
       return { error: error.cause?.err?.message };
     }
-    return { error: "Error 500" };
+    return { error: "Internal Server Error" };
   }
 };

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BarChartGraphic, PieChartGraphic } from "@/components/dashboard";
-import { auth } from "@/auth";
-import { COMPANY_NAME } from "@/config/constants";
+import { fetcher } from "@/lib/fetcher";
+import { API_URL, COMPANY_NAME } from "@/config/constants";
 
 export const metadata: Metadata = {
   title: `Dashboard - ${COMPANY_NAME}`,
@@ -9,18 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const session = await auth();
+  const res = await fetcher(`${API_URL}api/clicks/summary`, {
+    method: "GET",
+  });
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/clicks/summary`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
   if (!res.ok) return <p>Something went wrong</p>;
   const data = await res.json();
 
