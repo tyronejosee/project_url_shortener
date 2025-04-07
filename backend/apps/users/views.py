@@ -2,10 +2,9 @@
 
 import logging
 
-from django.conf import settings
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from djoser.social.views import ProviderAuthView
 from rest_framework_simplejwt.views import (
@@ -38,33 +37,33 @@ class ProviderAuthExtensionView(ProviderAuthView):
     to include custom schema documentation using drf-spectacular.
     """
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+    # def post(self, request, *args, **kwargs):
+    #     response = super().post(request, *args, **kwargs)
 
-        if response.status_code == 201:
-            access_token = response.data.get("access")
-            refresh_token = response.data.get("refresh")
+    #     if response.status_code == 201:
+    #         access_token = response.data.get("access")
+    #         refresh_token = response.data.get("refresh")
 
-            response.set_cookie(
-                "access",
-                access_token,
-                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
-                path=settings.AUTH_COOKIE_PATH,
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-            )
-            response.set_cookie(
-                "refresh",
-                refresh_token,
-                max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
-                path=settings.AUTH_COOKIE_PATH,
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-            )
+    #         response.set_cookie(
+    #             "access",
+    #             access_token,
+    #             max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
+    #             path=settings.AUTH_COOKIE_PATH,
+    #             secure=settings.AUTH_COOKIE_SECURE,
+    #             httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+    #             samesite=settings.AUTH_COOKIE_SAMESITE,
+    #         )
+    #         response.set_cookie(
+    #             "refresh",
+    #             refresh_token,
+    #             max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
+    #             path=settings.AUTH_COOKIE_PATH,
+    #             secure=settings.AUTH_COOKIE_SECURE,
+    #             httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+    #             samesite=settings.AUTH_COOKIE_SAMESITE,
+    #         )
 
-        return response
+    #     return response
 
 
 @extend_schema_view(**token_obtain_pair_schemas)
@@ -77,33 +76,33 @@ class TokenObtainPairExtensionView(TokenObtainPairView):
     custom schema documentation using drf-spectacular.
     """
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+    # def post(self, request, *args, **kwargs):
+    #     response = super().post(request, *args, **kwargs)
 
-        if response.status_code == 200:
-            access_token = response.data.get("access")
-            refresh_token = response.data.get("refresh")
+    #     if response.status_code == 200:
+    #         access_token = response.data.get("access")
+    #         refresh_token = response.data.get("refresh")
 
-            response.set_cookie(
-                "access",
-                access_token,
-                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
-                path=settings.AUTH_COOKIE_PATH,
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-            )
-            response.set_cookie(
-                "refresh",
-                refresh_token,
-                max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
-                path=settings.AUTH_COOKIE_PATH,
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-            )
+    #         response.set_cookie(
+    #             "access",
+    #             access_token,
+    #             max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
+    #             path=settings.AUTH_COOKIE_PATH,
+    #             secure=settings.AUTH_COOKIE_SECURE,
+    #             httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+    #             samesite=settings.AUTH_COOKIE_SAMESITE,
+    #         )
+    #         response.set_cookie(
+    #             "refresh",
+    #             refresh_token,
+    #             max_age=settings.AUTH_REFRESH_COOKIE_MAX_AGE,
+    #             path=settings.AUTH_COOKIE_PATH,
+    #             secure=settings.AUTH_COOKIE_SECURE,
+    #             httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+    #             samesite=settings.AUTH_COOKIE_SAMESITE,
+    #         )
 
-        return response
+    #     return response
 
 
 @extend_schema_view(**token_refresh_schemas)
@@ -115,28 +114,28 @@ class TokenRefreshExtensionView(TokenRefreshView):
     to include custom schema documentation using drf-spectacular.
     """
 
-    def post(self, request, *args, **kwargs):
-        refresh_token = request.COOKIES.get("refresh")
+    # def post(self, request, *args, **kwargs):
+    #     refresh_token = request.COOKIES.get("refresh")
 
-        if refresh_token:
-            request.data["refresh"] = refresh_token
+    #     if refresh_token:
+    #         request.data["refresh"] = refresh_token
 
-        response = super().post(request, *args, **kwargs)
+    #     response = super().post(request, *args, **kwargs)
 
-        if response.status_code == 200:
-            access_token = response.data.get("access")
+    #     if response.status_code == 200:
+    #         access_token = response.data.get("access")
 
-            response.set_cookie(
-                "access",
-                access_token,
-                max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
-                path=settings.AUTH_COOKIE_PATH,
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-            )
+    #         response.set_cookie(
+    #             "access",
+    #             access_token,
+    #             max_age=settings.AUTH_ACCESS_COOKIE_MAX_AGE,
+    #             path=settings.AUTH_COOKIE_PATH,
+    #             secure=settings.AUTH_COOKIE_SECURE,
+    #             httponly=settings.AUTH_COOKIE_HTTP_ONLY,
+    #             samesite=settings.AUTH_COOKIE_SAMESITE,
+    #         )
 
-        return response
+    #     return response
 
 
 @extend_schema_view(**token_verify_schemas)
@@ -148,11 +147,11 @@ class TokenVerifyExtensionView(TokenVerifyView):
     to include custom schema documentation using drf-spectacular.
     """
 
-    def post(self, request, *args, **kwargs):
-        access_token = request.COOKIES.get("access")
-        if access_token:
-            request.data["token"] = access_token
-        return super().post(request, *args, **kwargs)
+    # def post(self, request, *args, **kwargs):
+    #     access_token = request.COOKIES.get("access")
+    #     if access_token:
+    #         request.data["token"] = access_token
+    #     return super().post(request, *args, **kwargs)
 
 
 @extend_schema_view(**logout_schema)
@@ -161,13 +160,11 @@ class LogoutView(APIView):
     View to handle user logout by deleting authentication cookies.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes: list = [AllowAny]
     serializer_class = None
 
     def post(self, request, *args, **kwargs) -> Response:
-        refresh_token = request.COOKIES.get(
-            "refresh",
-        ) or request.data.get("refresh")
+        refresh_token = request.data.get("refresh")
 
         if refresh_token:
             try:
@@ -177,6 +174,21 @@ class LogoutView(APIView):
                 logger.error(e)
 
         response = Response(status=status.HTTP_204_NO_CONTENT)
-        response.delete_cookie("access")
-        response.delete_cookie("refresh")
         return response
+
+    # def post(self, request, *args, **kwargs) -> Response:
+    #     refresh_token = request.COOKIES.get(
+    #         "refresh",
+    #     ) or request.data.get("refresh")
+
+    #     if refresh_token:
+    #         try:
+    #             token = RefreshToken(refresh_token)
+    #             token.blacklist()
+    #         except Exception as e:
+    #             logger.error(e)
+
+    #     response = Response(status=status.HTTP_204_NO_CONTENT)
+    #     response.delete_cookie("access")
+    #     response.delete_cookie("refresh")
+    #     return response
