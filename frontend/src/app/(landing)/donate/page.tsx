@@ -1,46 +1,26 @@
-"use client";
+import type { Metadata } from "next";
+import { KoFiWidget } from "@/components/branding";
+import { COMPANY_NAME } from "@/config/constants";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Button, Input } from "@heroui/react";
+export const metadata: Metadata = {
+  title: `Donate - ${COMPANY_NAME}`,
+  description:
+    "Donate to support the development of this project and help us grow.",
+};
 
 export default function DonatePage() {
-  const [amount, setAmount] = useState("");
-
   return (
-    <main className="max-w-screen-lg mx-auto py-6 px-6 grid grid-col-1 md:grid-cols-2 gap-4">
-      <figure className="hidden md:block overflow-hidden rounded-2xl border border-neutral-300">
-        <Image
-          src="/img/donate.webp"
-          alt="Donate"
-          width={480}
-          height={640}
-          className="pointer-events-none select-none"
-        />
-      </figure>
-      <section className="rounded-2xl p-6 w-full text-center border border-neutral-300">
-        <h1 className="text-4xl font-bold text-center">Donate</h1>
-        <p className="text-gray-600 mb-6">
-          Every donation helps us move forward.
+    <main className="flex-1 max-w-screen-lg mx-auto p-6 w-full">
+      <section className="max-w-lg mx-auto p-6">
+        <h1 className="text-4xl font-bold text-center text-gray-800 mb-2">
+          Donate
+        </h1>
+        <p className="text-center text-gray-500 mb-12">
+          Your support is greatly appreciated and helps us to continue
+          developing and improving this project.
         </p>
-        <form className="space-y-4">
-          <Input
-            isRequired
-            label="Amount (USD)"
-            type="Number"
-            variant="bordered"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <Button
-            color="primary"
-            className="w-full"
-            // onClick={handleDonate}
-          >
-            Donate
-          </Button>
-        </form>
       </section>
+      <KoFiWidget />
     </main>
   );
 }
