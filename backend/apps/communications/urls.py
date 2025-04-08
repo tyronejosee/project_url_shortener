@@ -3,7 +3,7 @@
 from django.urls import path
 from django.urls.resolvers import URLPattern
 
-from .views import SupportView, FeedbackView
+from .views import SupportView, FeedbackView, KoFiWebhookView
 
 
 urlpatterns: list[URLPattern] = [
@@ -14,5 +14,9 @@ urlpatterns: list[URLPattern] = [
     path(
         "api/feedback",
         FeedbackView.as_view(),
+    ),
+    path(
+        "api/donate/kofi",
+        KoFiWebhookView.as_view(),
     ),
 ]

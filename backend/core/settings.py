@@ -234,7 +234,6 @@ SIMPLE_JWT: dict = {
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
     "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
     "JTI_CLAIM": "jti",
@@ -294,9 +293,14 @@ AUTH_COOKIE_SAMESITE = "Lax"  # None in Prod.
 # Notifications
 
 DISCORD_WEBHOOKS: dict = {
-    "support": env("DISCORD_SUPPORT_WEBHOOK"),
-    "feedback": env("DISCORD_FEEDBACK_WEBHOOK"),
+    "support": env.str("DISCORD_SUPPORT_WEBHOOK"),
+    "feedback": env.str("DISCORD_FEEDBACK_WEBHOOK"),
+    "donation": env.str("DISCORD_DONATION_WEBHOOK"),
 }
+
+# Platforms
+
+KOFI_SECRET_KEY = env.str("KOFI_SECRET_KEY")
 
 # Documentation
 

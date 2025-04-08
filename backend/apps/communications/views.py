@@ -4,10 +4,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import ValidationError
 from drf_spectacular.utils import extend_schema_view
 
 from .serializers import NotificationSerializer
-from .services import NotificationService
+from .services import NotificationService, DonationService
 from .schemas import support_schema, feedback_schema
 
 
@@ -15,6 +16,7 @@ class BaseNotifierView(APIView):
     permission_classes: list = [AllowAny]
     webhook_key: str
     success_message: str
+    category: str
 
     def post(self, request) -> Response:
         serializer = NotificationSerializer(data=request.data)
@@ -22,6 +24,7 @@ class BaseNotifierView(APIView):
             if isinstance(serializer.validated_data, dict):
                 NotificationService(self.webhook_key).send_notification(
                     serializer.validated_data,
+                    self.category,
                 )
             return Response(
                 {"message": self.success_message},
@@ -41,6 +44,7 @@ class SupportView(BaseNotifierView):
 
     webhook_key = "support"
     success_message = "Support sent"
+    category = "support"
 
 
 @extend_schema_view(**feedback_schema)
@@ -54,3 +58,40 @@ class FeedbackView(BaseNotifierView):
 
     webhook_key = "feedback"
     success_message = "Feedback sent"
+    category = "feedback"
+
+
+class KoFiWebhookView(APIView):
+    """
+    View to handle Ko-Fi webhooks.
+
+    Endpoints:
+    - POST /api/donate/kofi
+    """
+
+    permission_classes: list = [AllowAny]
+    webhook_key: str = "donation"
+    category: str = "donation"
+
+    def post(self, request) -> Response:
+        service = DonationService(request.data)
+
+        try:
+            parsed_data: dict = service.parse_data()
+            service.validate_webhook(parsed_data)
+            service.process_donation(
+                parsed_data,
+                self.webhook_key,
+                self.category,
+            )
+
+        except ValidationError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {"detail": "Webhook received"},
+            status=status.HTTP_200_OK,
+        )

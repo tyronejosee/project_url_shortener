@@ -11,7 +11,7 @@ class Notifier:
         """Adds a new observer to the list."""
         self.observers.append(observer)
 
-    def notify_all(self, data: dict) -> None:
+    def notify_all(self, data: dict, category: str) -> None:
         """Notifies all registered observers."""
         for observer in self.observers:
-            observer.notify(data)
+            observer.notify(data, category)

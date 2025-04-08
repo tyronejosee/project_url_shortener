@@ -6,5 +6,5 @@ from abc import ABC, abstractmethod
 class Observer(ABC):
 
     @abstractmethod
-    def notify(self, data: dict) -> None:
+    def notify(self, data: dict, category: str) -> None:
         pass

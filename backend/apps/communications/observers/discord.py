@@ -1,8 +1,8 @@
 """Discord Notifier for Observer pattern."""
 
 import logging
-
 import requests
+
 from requests.exceptions import Timeout, RequestException, HTTPError
 
 from core.logging import setup_logging
@@ -22,11 +22,21 @@ class DiscordNotifier(Observer):
             raise ValueError("Webhook URL cannot be empty.")
         self.webhook_url: str = webhook_url
 
-    def notify(self, data: dict) -> None:
-        name: str = f"# {data['name']}\n\n"
-        email: str = f"- Email: `{data['email']}`\n"
-        message: str = f"- Message: `{data['message']}`"
-        payload: dict[str, str] = {"content": f"{name}{email}{message}"}
+    def notify(self, data: dict, category: str) -> None:
+
+        if category in ["support", "feedback"]:
+            name: str = f"# {data['name']}\n\n"
+            email: str = f"- Email: `{data['email']}`\n"
+            message: str = f"- Message: `{data['message']}`"
+            payload: dict[str, str] = {"content": f"{name}{email}{message}"}
+        elif category == "donation":
+            title: str = f"# {data['from_name']} ({data['email']})\n\n"
+            amount: str = f"- Amount: `${data['amount']} {data['currency']}`\n"
+            message: str = f"- Message: `{data['message']}\n`"
+            date: str = f"- Date: `{data['timestamp']}`"
+            payload: dict[str, str] = {
+                "content": f"{title}{amount}{message}{date}",
+            }
 
         try:
             response: requests.Response = requests.post(
