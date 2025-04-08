@@ -23,7 +23,7 @@ export const loginAction = async (values: z.infer<typeof loginSchema>) => {
 };
 
 export const registerAction = async (
-  values: z.infer<typeof registerSchema>
+  values: z.infer<typeof registerSchema>,
 ) => {
   try {
     const { data, success } = registerSchema.safeParse(values);

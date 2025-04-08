@@ -8,7 +8,7 @@ type AuthState = {
   isLoading: boolean;
   login: (
     email: string,
-    password: string
+    password: string,
   ) => Promise<{ success: boolean; error: string | null }>;
   logout: () => Promise<void>;
   verify: () => Promise<void>;
@@ -30,7 +30,7 @@ const useAuthStore = create<AuthState>()(
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email, password }),
               credentials: "include",
-            }
+            },
           );
 
           const data = await res.json();
@@ -67,7 +67,7 @@ const useAuthStore = create<AuthState>()(
             {
               method: "POST",
               credentials: "include",
-            }
+            },
           );
 
           set({ isAuthenticated: res.ok });
@@ -78,8 +78,8 @@ const useAuthStore = create<AuthState>()(
         }
       },
     }),
-    { name: "auth-storage" }
-  )
+    { name: "auth-storage" },
+  ),
 );
 
 export default useAuthStore;

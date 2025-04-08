@@ -27,7 +27,7 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ uid, token, ...formData }),
-        }
+        },
       );
 
       if (res.ok) {
@@ -37,10 +37,8 @@ export default function useResetPasswordConfirm(uid: string, token: string) {
         });
         router.push("/auth/login");
       }
-
     } catch (error) {
       setError(`Error ${error}`);
-
     } finally {
       setIsLoading(false);
     }

@@ -4,6 +4,7 @@ import Providers from "./providers";
 import { Footer, Navigation } from "@/components/common";
 import "../styles/globals.css";
 import { Aurora } from "@/components/animated";
+import { COMPANY_NAME } from "@/config/constants";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -18,8 +19,8 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "URL Shortener",
-  description: "URL Shortener",
+  title: `Home - ${COMPANY_NAME}`,
+  description: "URL Shortener is a URL shortener service.",
 };
 
 export default function RootLayout({

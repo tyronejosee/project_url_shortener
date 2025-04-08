@@ -20,12 +20,12 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
       try {
         const res = await fetch(
           `${API_URL}api/socials/o/${provider}/?state=${encodeURIComponent(
-            state
+            state,
           )}&code=${encodeURIComponent(code)}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // const data = await res.json();
 

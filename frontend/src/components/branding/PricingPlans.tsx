@@ -30,8 +30,8 @@ export default function PricingPlans() {
                   {value === true
                     ? "✅"
                     : value === false
-                    ? "❌"
-                    : `✅ ${value}`}
+                      ? "❌"
+                      : `✅ ${value}`}
                   <span>{key}</span>
                 </li>
               ))}

@@ -44,7 +44,7 @@ export default function AnimatedContent({
           }, delay);
         }
       },
-      { threshold }
+      { threshold },
     );
 
     observer.observe(element);

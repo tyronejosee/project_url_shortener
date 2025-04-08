@@ -257,8 +257,8 @@ export default function GroupsContainer({ groups }: Props) {
                 {loading || isSubmitting
                   ? "Saving..."
                   : editingGroup
-                  ? "Update"
-                  : "Save"}
+                    ? "Update"
+                    : "Save"}
               </Button>
             </ModalFooter>
           </form>

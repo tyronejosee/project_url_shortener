@@ -81,14 +81,14 @@ export default function SidebarList({ isOpen }: Props) {
               href={item.href}
               className={clsx(
                 "flex items-center p-2 rounded-xl relative",
-                isActive ? "bg-primary text-white" : "hover:bg-gray-100"
+                isActive ? "bg-primary text-white" : "hover:bg-gray-100",
               )}
             >
               <div className="w-6 flex-shrink-0">{item.icon}</div>
               <span
                 className={clsx(
                   "ml-3 overflow-hidden",
-                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0",
                 )}
               >
                 {item.label}

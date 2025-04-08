@@ -30,7 +30,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
   const isIgnoredRoute = ignoredRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
   if (isIgnoredRoute) return null;
 

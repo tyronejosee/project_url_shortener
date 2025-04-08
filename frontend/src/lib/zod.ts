@@ -10,7 +10,7 @@ export const loginSchema = object({
     .max(32, "Password must be less than 32 characters")
     .regex(
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
-      "Password must contain at least one uppercase letter, one number, and one special character"
+      "Password must contain at least one uppercase letter, one number, and one special character",
     ),
 });
 
@@ -20,7 +20,7 @@ export const registerSchema = object({
     .max(32, "Username must be less than 32 characters")
     .regex(
       /^[a-z_]+$/,
-      "Username must be lowercase and can only contain underscores"
+      "Username must be lowercase and can only contain underscores",
     ),
   email: string({ required_error: "Email is required" })
     .min(1, "Email is required")
@@ -31,7 +31,7 @@ export const registerSchema = object({
     .max(32, "Password must be less than 32 characters")
     .regex(
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
-      "Password must contain at least one uppercase letter, one number, and one special character"
+      "Password must contain at least one uppercase letter, one number, and one special character",
     ),
   re_password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
@@ -39,7 +39,7 @@ export const registerSchema = object({
     .max(32, "Password must be less than 32 characters")
     .regex(
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
-      "Password must contain at least one uppercase letter, one number, and one special character"
+      "Password must contain at least one uppercase letter, one number, and one special character",
     ),
 });
 

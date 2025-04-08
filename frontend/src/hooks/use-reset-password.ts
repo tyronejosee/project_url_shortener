@@ -23,7 +23,7 @@ export default function useResetPassword() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
-        }
+        },
       );
 
       if (res.ok) {
@@ -33,10 +33,8 @@ export default function useResetPassword() {
             "Please check your email inbox for the password reset link and follow the instructions to reset your password.",
         });
       }
-
     } catch (error) {
       setError(`Error ${error}`);
-
     } finally {
       setIsLoading(false);
     }

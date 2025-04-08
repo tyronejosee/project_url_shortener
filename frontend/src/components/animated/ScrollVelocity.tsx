@@ -74,7 +74,7 @@ export default function ScrollVelocity({
     smoothVelocity,
     velocityMapping.input,
     velocityMapping.output,
-    { clamp: false }
+    { clamp: false },
   );
 
   useAnimationFrame((t, delta) => {

@@ -5,7 +5,7 @@ import { addToast } from "@heroui/react";
 
 export default async function continueWithSocialAuth(
   provider: string,
-  redirect: string
+  redirect: string,
 ) {
   try {
     const url = `${API_URL}api/socials/o/${provider}/?redirect_uri=${

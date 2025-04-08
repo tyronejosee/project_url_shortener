@@ -107,7 +107,7 @@ class URLService:
         Extracts user metadata such as IP, browser, OS, and device type.
         """
         ip_address: str = request.META.get("REMOTE_ADDR", "0.0.0.0")
-        user_agent_string: str = request.META.get("HTTP_USER_AGENT", "")
+        user_agent_string: str = request.headers.get("user-agent", "")
 
         user_agent: UserAgent = parse(user_agent_string)
         browser: str = URLService.get_browser_info(user_agent)

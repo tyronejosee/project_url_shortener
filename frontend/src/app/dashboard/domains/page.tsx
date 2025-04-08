@@ -42,10 +42,10 @@ export default function DomainsPage() {
                     item.verification_status === "Pending"
                       ? "default"
                       : item.verification_status === "Failed"
-                      ? "danger"
-                      : item.verification_status === "Verified"
-                      ? "success"
-                      : "default"
+                        ? "danger"
+                        : item.verification_status === "Verified"
+                          ? "success"
+                          : "default"
                   }
                   variant="flat"
                 >

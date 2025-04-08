@@ -1,1 +1,1 @@
-from .extensions import CustomJWTAuthenticationScheme
+from .extensions import CustomJWTAuthenticationScheme  # noqa: F401
