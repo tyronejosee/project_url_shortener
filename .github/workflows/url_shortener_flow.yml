@@ -1,0 +1,73 @@
+name: URL Shortener Flow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.7"
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with Ruff
+        run: |
+          cd backend
+          pip install ruff
+          ruff check .
+
+      # - name: Django testing
+      #   run: |
+      #     python manage.py test
+      #   env:
+      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+      # TODO: Add deployment steps
+
+  frontend:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run frontend lint
+        run: |
+          cd frontend
+          npm run lint
+
+      # - name: Run frontend build
+      #   run: |
+      #     cd frontend
+      #     npm run build
+
+      # TODO: Add deployment steps
