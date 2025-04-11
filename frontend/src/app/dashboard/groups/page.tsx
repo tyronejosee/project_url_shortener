@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { fetcher } from "@/lib/fetcher";
 import { API_URL, COMPANY_NAME } from "@/config/constants";
 import GroupsContainer from "./container";
@@ -9,16 +11,28 @@ export const metadata: Metadata = {
 };
 
 export default async function GroupsPage() {
-  const res = await fetcher(`${API_URL}api/groups`, {
-    method: "GET",
-  });
+  const session = await auth();
+  if (
+    !session ||
+    !["Basic Plan", "Premium Plan"].includes(session.user.plan || "")
+  ) {
+    redirect("/dashboard");
+  }
 
-  if (!res.ok) throw new Error("Error fetching urls");
-  const groups = await res.json();
+  try {
+    const res = await fetcher(`${API_URL}api/groups`, {
+      method: "GET",
+    });
 
-  return (
-    <main className="flex flex-col gap-3">
-      <GroupsContainer groups={groups} />
-    </main>
-  );
+    if (!res.ok) throw new Error("Error fetching groups");
+    const groups = await res.json();
+
+    return (
+      <main className="flex flex-col gap-3">
+        <GroupsContainer groups={groups} />
+      </main>
+    );
+  } catch (error) {
+    throw error;
+  }
 }

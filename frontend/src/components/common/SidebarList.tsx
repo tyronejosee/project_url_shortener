@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import clsx from "clsx";
 import {
   ChartNoAxesColumn,
@@ -11,7 +12,6 @@ import {
   Folder,
   Gem,
   HeartHandshake,
-  LogOut,
   MousePointer2,
 } from "lucide-react";
 
@@ -44,11 +44,13 @@ const sidebarItems = [
     href: "/dashboard/domains",
     label: "Domains",
     icon: <Globe size={20} className="flex-shrink-0" />,
+    restrictedPlans: ["Basic Plan", "Premium Plan"],
   },
   {
     href: "/dashboard/groups",
     label: "Groups",
     icon: <Folder size={20} className="flex-shrink-0" />,
+    restrictedPlans: ["Basic Plan", "Premium Plan"],
   },
   {
     href: "/dashboard/prices",
@@ -60,19 +62,19 @@ const sidebarItems = [
     label: "Support",
     icon: <HeartHandshake size={20} className="flex-shrink-0" />,
   },
-  {
-    href: "/dashboard/logout",
-    label: "Logout",
-    icon: <LogOut size={20} className="flex-shrink-0" />,
-  },
 ];
 
 export default function SidebarList({ isOpen }: Props) {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <ul className="flex-1 mt-4 space-y-2">
       {sidebarItems.map((item, index) => {
+        const isPlanAllowed = item.restrictedPlans
+          ? item.restrictedPlans.includes(session?.user?.plan || "")
+          : true;
+
         const isActive = pathname === item.href;
 
         return (
@@ -82,6 +84,8 @@ export default function SidebarList({ isOpen }: Props) {
               className={clsx(
                 "flex items-center p-2 rounded-xl relative",
                 isActive ? "bg-primary text-white" : "hover:bg-gray-100",
+                !isPlanAllowed && "text-gray-500 cursor-not-allowed",
+                !isPlanAllowed && "pointer-events-none",
               )}
             >
               <div className="w-6 flex-shrink-0">{item.icon}</div>

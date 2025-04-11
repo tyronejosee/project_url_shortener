@@ -1,68 +1,170 @@
 "use client";
 
-import { Button, Input, Select, SelectItem } from "@heroui/react";
-import { domains, privacyItems } from "@/config/constants";
-import { GroupRead } from "@/types";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import {
+  addToast,
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  Tooltip,
+} from "@heroui/react";
+import { Eye, EyeClosed } from "lucide-react";
+import { urlSchema } from "@/lib/zod";
+import { API_URL, privacyItems } from "@/config/constants";
+import { GroupResponse, URLRequest } from "@/types";
+import { useFetch } from "@/hooks/use-fetch";
 
 type Props = {
-  groups: GroupRead[];
+  groups: GroupResponse[];
 };
 
 export default function CutterContainer({ groups }: Props) {
+  const fetchClient = useFetch();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const { data: session } = useSession();
+  const plan = session?.user?.plan;
+  const isPlanAllowed = plan === "Basic Plan" || plan === "Premium Plan";
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<URLRequest>({
+    resolver: zodResolver(urlSchema),
+    defaultValues: {
+      url: "",
+      group: "",
+      privacy: "public",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: URLRequest) => {
+    setLoading(true);
+    try {
+      await fetchClient(`${API_URL}api/urls/shorten`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      reset();
+      addToast({
+        title: "Success",
+        description: "URL created successfully.",
+      });
+    } catch (error) {
+      console.error("Submit error:", error);
+      addToast({
+        title: "Error",
+        description: "An error occurred while submitting the form.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <form className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Input
         label="URL"
         labelPlacement="outside"
         size="lg"
-        name="username"
         placeholder="https://www.example.com"
+        isInvalid={!!errors.url}
+        errorMessage={errors.url?.message}
+        {...register("url")}
       />
       <div className="flex space-x-6">
-        <Input
-          type="password"
-          label="Password"
-          size="lg"
-          labelPlacement="outside"
-          name="password"
-          placeholder="********"
+        <Tooltip content="Not available for this plan.">
+          <div
+            className={
+              isPlanAllowed ? "" : "w-full pointer-events-none opacity-60"
+            }
+          >
+            <Input
+              type={isVisible ? "text" : "password"}
+              size="lg"
+              label={isPlanAllowed ? "Password" : "Password (*)"}
+              labelPlacement="outside"
+              placeholder="********"
+              endContent={
+                <button
+                  aria-label="toggle password visibility"
+                  className="focus:outline-none"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <Eye className="text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeClosed className="text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              isInvalid={!!errors.password}
+              errorMessage={errors.password?.message}
+              {...register("password")}
+            />
+          </div>
+        </Tooltip>
+        <Controller
+          name="privacy"
+          control={control}
+          render={({ field }) => (
+            <Select
+              isDisabled={!isPlanAllowed}
+              size="lg"
+              label={isPlanAllowed ? "Privacy" : "Privacy (*)"}
+              labelPlacement="outside"
+              placeholder="Select a Privacy"
+              selectedKeys={field.value ? new Set([field.value]) : new Set()}
+              onSelectionChange={(keys) => field.onChange(Array.from(keys)[0])}
+              items={privacyItems}
+              isInvalid={!!errors.privacy}
+              errorMessage={errors.privacy?.message}
+            >
+              {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+            </Select>
+          )}
         />
-        <Select
-          size="lg"
-          items={privacyItems}
-          label="Privacy"
-          labelPlacement="outside"
-          placeholder="Select a Domain"
-          defaultSelectedKeys={["public"]}
-        >
-          {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
-        </Select>
       </div>
       <div className="flex space-x-6">
-        <Select
-          // isDisabled
-          size="lg"
-          items={domains}
-          label="Domain"
-          labelPlacement="outside"
-          placeholder="Select a Domain"
-        >
-          {(domain) => <SelectItem key={domain.id}>{domain.domain}</SelectItem>}
-        </Select>
-        <Select
-          // isDisabled
-          size="lg"
-          items={groups}
-          label="Group"
-          labelPlacement="outside"
-          placeholder="Select a Group"
-        >
-          {(group) => <SelectItem key={group.id}>{group.name}</SelectItem>}
-        </Select>
+        <Controller
+          name="group"
+          control={control}
+          render={({ field }) => (
+            <Select
+              isDisabled={!isPlanAllowed}
+              size="lg"
+              label={isPlanAllowed ? "Group" : "Group (*)"}
+              labelPlacement="outside"
+              placeholder="Select a Group"
+              selectedKeys={field.value ? new Set([field.value]) : new Set()}
+              onSelectionChange={(keys) => field.onChange(Array.from(keys)[0])}
+              items={groups}
+              isInvalid={!!errors.group}
+              errorMessage={errors.group?.message}
+            >
+              {(group) => <SelectItem key={group.id}>{group.name}</SelectItem>}
+            </Select>
+          )}
+        />
       </div>
-      <div className="flex justify-end">
-        <Button size="lg" color="primary">
-          Cut
+      <div className="flex justify-start">
+        <Button size="lg" color="primary" type="submit">
+          {loading || isSubmitting ? "Saving..." : "Save"}
         </Button>
       </div>
     </form>
