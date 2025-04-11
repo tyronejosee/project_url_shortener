@@ -1,61 +1,38 @@
-"use client";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { fetcher } from "@/lib/fetcher";
+import { API_URL, COMPANY_NAME } from "@/config/constants";
+import DomainsContainer from "./container";
 
-import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Chip,
-} from "@heroui/react";
-import { domains } from "@/config/constants";
+export const metadata: Metadata = {
+  title: `Domains - ${COMPANY_NAME}`,
+  description: "Manage your URL domains.",
+};
 
-export default function DomainsPage() {
-  return (
-    <main className="flex flex-col gap-3">
-      <Table
-        aria-label="Domains Table"
-        color="primary"
-        selectionMode="single"
-        radius="lg"
-        shadow="none"
-        className="border border-neutral-300 rounded-xl"
-      >
-        <TableHeader>
-          <TableColumn>Domain</TableColumn>
-          <TableColumn>Links</TableColumn>
-          <TableColumn>Clicks</TableColumn>
-          <TableColumn>Verification Status</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {domains.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.domain}</TableCell>
-              <TableCell>{item.links}</TableCell>
-              <TableCell>{item.clicks}</TableCell>
-              <TableCell>
-                <Chip
-                  size="sm"
-                  color={
-                    item.verification_status === "Pending"
-                      ? "default"
-                      : item.verification_status === "Failed"
-                        ? "danger"
-                        : item.verification_status === "Verified"
-                          ? "success"
-                          : "default"
-                  }
-                  variant="flat"
-                >
-                  {item.verification_status}
-                </Chip>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </main>
-  );
+export default async function DomainsPage() {
+  const session = await auth();
+  if (
+    !session ||
+    !["Basic Plan", "Premium Plan"].includes(session.user.plan || "")
+  ) {
+    redirect("/dashboard");
+  }
+
+  try {
+    const res = await fetcher(`${API_URL}api/domains`, {
+      method: "GET",
+    });
+
+    if (!res.ok) throw new Error("Error fetching domains");
+    const domains = await res.json();
+
+    return (
+      <main className="flex flex-col gap-3">
+        <DomainsContainer domains={domains} />
+      </main>
+    );
+  } catch (error) {
+    throw error;
+  }
 }

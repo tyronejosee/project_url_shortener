@@ -1,8 +1,18 @@
+// Project
 export const COMPANY_NAME = "URL Shortener";
+export const COMPANY_DESCRIPTION = "Pending.";
 
+// API
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
+// Selects
+export const privacyItems = [
+  { key: "public", label: "Public" },
+  { key: "private", label: "Private" },
+];
+
+// UI Items
 export const links = [
   { name: "Feedback", href: "/feedback" },
   { name: "Prices", href: "/prices" },
@@ -11,154 +21,7 @@ export const links = [
   { name: "Donate", href: "/donate" },
 ];
 
-export const domains = [
-  {
-    id: "240b91df-8c9e-4e41-a0e9-4632c61461ea",
-    domain: "example.com",
-    links: 5,
-    clicks: 150,
-    verification_status: "Verified",
-  },
-  {
-    id: "ea863227-7547-4498-949f-6c320fc1009e",
-    domain: "example.org",
-    links: 3,
-    clicks: 100,
-    verification_status: "Pending",
-  },
-  {
-    id: "b7ba6e21-fa81-4d52-9b62-f11af49f3f22",
-    domain: "example.net",
-    links: 7,
-    clicks: 200,
-    verification_status: "Verified",
-  },
-  {
-    id: "05eff0d4-063c-44d8-b308-efd0175a9567",
-    domain: "example.edu",
-    links: 4,
-    clicks: 120,
-    verification_status: "Failed",
-  },
-  {
-    id: "f54dde68-0ba7-454d-92dd-bbed4103ee83",
-    domain: "techhub.io",
-    links: 12,
-    clicks: 500,
-    verification_status: "Verified",
-  },
-  {
-    id: "e5ab866d-1f0b-4dc1-8a77-b2c82a93ea23",
-    domain: "startuplabs.ai",
-    links: 8,
-    clicks: 320,
-    verification_status: "Pending",
-  },
-  {
-    id: "6e25325b-b44e-4491-ba0e-045a6dfb36ee",
-    domain: "devcommunity.dev",
-    links: 15,
-    clicks: 650,
-    verification_status: "Verified",
-  },
-  {
-    id: "f634c454-6ed0-49e5-b0cd-e0d1a582e0f7",
-    domain: "codefactory.xyz",
-    links: 6,
-    clicks: 230,
-    verification_status: "Failed",
-  },
-  {
-    id: "9b64d59f-3d58-49ac-8684-39b0f278a301",
-    domain: "nextgenapp.app",
-    links: 10,
-    clicks: 410,
-    verification_status: "Verified",
-  },
-  {
-    id: "ffb30e86-a55e-4a0f-9c2d-9c53668c8cb9",
-    domain: "marketplace.store",
-    links: 9,
-    clicks: 375,
-    verification_status: "Pending",
-  },
-  {
-    id: "a5808830-f4a2-406d-a112-92e15115dd49",
-    domain: "cloudsync.cloud",
-    links: 14,
-    clicks: 720,
-    verification_status: "Verified",
-  },
-  {
-    id: "2ffa1a34-28f2-4749-9d63-fe99a5d5492e",
-    domain: "gamingzone.gg",
-    links: 11,
-    clicks: 490,
-    verification_status: "Failed",
-  },
-  {
-    id: "4e222c1a-b569-40ed-adf0-4f02a2e7a9b7",
-    domain: "securityshield.io",
-    links: 7,
-    clicks: 280,
-    verification_status: "Verified",
-  },
-  {
-    id: "c0d5380c-00b4-4b61-91ce-5fb62cfb74f0",
-    domain: "businesspro.biz",
-    links: 5,
-    clicks: 200,
-    verification_status: "Pending",
-  },
-  {
-    id: "192f9743-f81a-4e60-9783-88de65480532",
-    domain: "faststream.tv",
-    links: 13,
-    clicks: 600,
-    verification_status: "Verified",
-  },
-  {
-    id: "819ba509-b314-4a04-a2f8-8497146d40fe",
-    domain: "fashiontrend.style",
-    links: 8,
-    clicks: 330,
-    verification_status: "Failed",
-  },
-  {
-    id: "e0037f7a-7359-416c-8be7-e6b397e9db63",
-    domain: "travelworld.tours",
-    links: 12,
-    clicks: 520,
-    verification_status: "Verified",
-  },
-  {
-    id: "36cc53f3-3d3e-4451-9ad6-50d7eb01ba61",
-    domain: "foodiesdelight.food",
-    links: 6,
-    clicks: 250,
-    verification_status: "Pending",
-  },
-  {
-    id: "2ff52f0b-2c24-4ff0-850a-210d46c8d574",
-    domain: "musicwave.fm",
-    links: 10,
-    clicks: 450,
-    verification_status: "Verified",
-  },
-  {
-    id: "4c1c11d5-3998-4e80-80c8-67f896d5bc65",
-    domain: "cryptoexchange.finance",
-    links: 9,
-    clicks: 390,
-    verification_status: "Failed",
-  },
-];
-
-export const privacyItems = [
-  { key: "public", label: "Public" },
-  { key: "private", label: "Private" },
-];
-
+// Hardcoded Plans
 export const plans = [
   {
     name: "Free",
