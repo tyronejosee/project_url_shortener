@@ -17,7 +17,9 @@ from .choices import (
 
 
 class URLSerializer(serializers.ModelSerializer):
-    """Serializer for URL model (Create)."""
+    """
+    Serializer for URL model (Create).
+    """
 
     class Meta:
         model = URL

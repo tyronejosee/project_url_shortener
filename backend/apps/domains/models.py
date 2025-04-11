@@ -24,9 +24,8 @@ class Domain(BaseModel):
         choices=StatusChoices.choices,
         default=StatusChoices.PENDING,
     )
-    # TODO: Links, Clicks
 
-    objects = DomainRepository()
+    objects: DomainRepository = DomainRepository()
 
     class Meta:
         db_table: str = "domains"
