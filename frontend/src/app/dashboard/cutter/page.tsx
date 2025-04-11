@@ -9,16 +9,20 @@ export const metadata: Metadata = {
 };
 
 export default async function CutterPage() {
-  const res = await fetcher(`${API_URL}api/groups`, {
-    method: "GET",
-  });
+  try {
+    const res = await fetcher(`${API_URL}api/groups`, {
+      method: "GET",
+    });
 
-  if (!res.ok) throw new Error("Error fetching groups");
-  const groups = await res.json();
+    if (!res.ok) throw new Error("Error fetching groups");
+    const groups = await res.json();
 
-  return (
-    <main className="max-w-screen-md mx-auto p-6">
-      <CutterContainer groups={groups} />
-    </main>
-  );
+    return (
+      <main className="max-w-screen-md mx-auto p-6">
+        <CutterContainer groups={groups} />
+      </main>
+    );
+  } catch (error) {
+    throw error;
+  }
 }

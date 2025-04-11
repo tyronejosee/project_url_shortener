@@ -9,19 +9,23 @@ export const metadata: Metadata = {
 };
 
 export default async function ClicksPage() {
-  const res = await fetcher(`${API_URL}api/clicks`, {
-    method: "GET",
-  });
+  try {
+    const res = await fetcher(`${API_URL}api/clicks`, {
+      method: "GET",
+    });
 
-  if (!res.ok) throw new Error("Error fetching clicks");
-  const clicks = await res.json();
+    if (!res.ok) throw new Error("Error fetching clicks");
+    const clicks = await res.json();
 
-  return (
-    <main className="flex flex-col gap-3">
-      <div className="flex justify-between items-center">
-        <span>Total {clicks.length} Clicks</span>
-      </div>
-      <ClicksContainer clicks={clicks} />
-    </main>
-  );
+    return (
+      <main className="flex flex-col gap-3">
+        <div className="flex justify-between items-center">
+          <span>Total {clicks.length} Clicks</span>
+        </div>
+        <ClicksContainer clicks={clicks} />
+      </main>
+    );
+  } catch (error) {
+    throw error;
+  }
 }

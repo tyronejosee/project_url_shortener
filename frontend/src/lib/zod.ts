@@ -7,11 +7,11 @@ export const loginSchema = object({
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters")
-    .regex(
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
-      "Password must contain at least one uppercase letter, one number, and one special character",
-    ),
+    .max(32, "Password must be less than 32 characters"),
+  // .regex(
+  //   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
+  //   "Password must contain at least one uppercase letter, one number, and one special character",
+  // ),
 });
 
 export const registerSchema = object({
@@ -45,6 +45,30 @@ export const registerSchema = object({
 
 export const urlshortenerSchema = object({
   url: string({ required_error: "URL is required" })
+    .url("Invalid URL")
+    .min(1, "URL is required")
+    .max(1000, "URL must be less than 1000 characters"),
+});
+
+export const urlSchema = object({
+  url: string({ required_error: "URL is required" })
+    .url("Invalid URL")
+    .min(1, "URL is required")
+    .max(1000, "URL must be less than 1000 characters"),
+  group: string(),
+  privacy: string(),
+  password: string(),
+  // .min(1, "Password is required")
+  // .min(6, "Password must be more than 6 characters")
+  // .max(32, "Password must be less than 32 characters")
+  // .regex(
+  //   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~\\-]).{8,32}$/,
+  //   "Password must contain at least one uppercase letter, one number, and one special character"
+  // ),
+});
+
+export const domainSchema = object({
+  domain: string({ required_error: "URL is required" })
     .url("Invalid URL")
     .min(1, "URL is required")
     .max(1000, "URL must be less than 1000 characters"),

@@ -38,7 +38,7 @@ export type User = {
   is_staff: boolean;
 };
 
-export type GroupRead = {
+export type GroupResponse = {
   id: string;
   name: string;
   alias: string;
@@ -63,7 +63,7 @@ export type URLRead = {
   updated_at: string;
 };
 
-export type URLWrite = {
+export type URLRequest = {
   url: string;
   group: string;
   privacy: string;
@@ -92,4 +92,15 @@ export type ClickDate = {
 export type ClickType = {
   name: string;
   clicks: number;
+};
+
+export type DomainResponse = {
+  id: string;
+  domain: string;
+  status: string;
+  created_at: string;
+};
+
+export type DomainRequest = {
+  domain: string;
 };
