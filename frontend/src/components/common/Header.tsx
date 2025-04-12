@@ -25,7 +25,7 @@ export default function Header() {
 
   useEffect(() => {
     update();
-  }, []);
+  }, [update]);
 
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">

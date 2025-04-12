@@ -139,8 +139,8 @@ export default function TermsServicePage() {
             8. Disclaimer of Liability
           </h2>
           <p>
-            The service is provided "as is", without warranties of any kind. We
-            are not responsible for any damages arising from the use or
+            The service is provided &quot;as is&quot;, without warranties of any
+            kind. We are not responsible for any damages arising from the use or
             inability to use the service, including direct, indirect,
             incidental, special, consequential, or punitive damages.
           </p>
