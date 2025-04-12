@@ -17,6 +17,7 @@ import { urlSchema } from "@/lib/zod";
 import { API_URL, privacyItems } from "@/config/constants";
 import { GroupResponse, URLRequest } from "@/types";
 import { useFetch } from "@/hooks/use-fetch";
+import clsx from "clsx";
 
 type Props = {
   groups: GroupResponse[];
@@ -89,9 +90,10 @@ export default function CutterContainer({ groups }: Props) {
       <div className="flex space-x-6">
         <Tooltip content="Not available for this plan.">
           <div
-            className={
-              isPlanAllowed ? "" : "w-full pointer-events-none opacity-60"
-            }
+            className={clsx(
+              "w-full",
+              !isPlanAllowed && "pointer-events-none opacity-60",
+            )}
           >
             <Input
               type={isVisible ? "text" : "password"}

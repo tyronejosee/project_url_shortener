@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import clsx from "clsx";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
 import { SidebarList } from "@/components/common";
+import { Logo } from "../icons";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -39,26 +41,50 @@ export default function Sidebar() {
         {isOpen ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
       </button>
 
-      <div className="h-20 bg-neutral-50 rounded-xl w-full"></div>
-
+      {/* Logo */}
+      <Link
+        href={"/"}
+        className="h-10 bg-neutral-50 rounded-xl w-full flex items-center justify-center"
+      >
+        <Logo size="size-8" />
+        <span
+          className={clsx(
+            "overflow-hidden transition-all duration-500 ease-in-out font-bold text-primary",
+            isOpen ? "ml-2 opacity-100 w-auto delay-200" : "opacity-0 w-0",
+          )}
+        >
+          UrlShortener
+        </span>
+      </Link>
       <SidebarList isOpen={isOpen} />
 
       {/* Footer */}
-      {/* <footer className="pb-4 flex items-center">
-        <div className="flex items-center">
-          <div className="w-6 flex-shrink-0">
-            <Settings size={20} className="flex-shrink-0" />
+      <footer className="pb-4 flex items-center">
+        <Link
+          href={"https://github.com/tyronejosee"}
+          target="_blank"
+          className={clsx(
+            "flex justify-center items-center p-2 rounded-xl relative border border-neutral-300 w-full h-10",
+          )}
+        >
+          <div
+            className={clsx(
+              "absolute inset-0 flex justify-center items-center transition-opacity duration-300",
+              isOpen ? "opacity-0" : "opacity-100",
+            )}
+          >
+            <Heart size={24} />
           </div>
           <span
             className={clsx(
-              "ml-3 transition-all overflow-hidden",
-              isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+              "absolute inset-0 flex justify-center items-center text-xs line-clamp-1 transition-opacity duration-300 hover:underline",
+              isOpen ? "opacity-100" : "opacity-0",
             )}
           >
-            Made with ♥️ by Tyrone Jose
+            Made with ♥️ by Tyrone
           </span>
-        </div>
-      </footer> */}
+        </Link>
+      </footer>
     </aside>
   );
 }

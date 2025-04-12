@@ -12,10 +12,7 @@ export const metadata: Metadata = {
 
 export default async function DomainsPage() {
   const session = await auth();
-  if (
-    !session ||
-    !["Basic Plan", "Premium Plan"].includes(session.user.plan || "")
-  ) {
+  if (!session || !["Premium Plan"].includes(session.user.plan || "")) {
     redirect("/dashboard");
   }
 
@@ -24,8 +21,8 @@ export default async function DomainsPage() {
       method: "GET",
     });
 
-    if (!res.ok) throw new Error("Error fetching domains");
     const domains = await res.json();
+    if (!res.ok) throw new Error(`Error: ${domains.detail} (${res.status})`);
 
     return (
       <main className="flex flex-col gap-3">

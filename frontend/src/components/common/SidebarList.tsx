@@ -44,7 +44,7 @@ const sidebarItems = [
     href: "/dashboard/domains",
     label: "Domains",
     icon: <Globe size={20} className="flex-shrink-0" />,
-    restrictedPlans: ["Basic Plan", "Premium Plan"],
+    restrictedPlans: ["Premium Plan"],
   },
   {
     href: "/dashboard/groups",
@@ -88,11 +88,11 @@ export default function SidebarList({ isOpen }: Props) {
                 !isPlanAllowed && "pointer-events-none",
               )}
             >
-              <div className="w-6 flex-shrink-0">{item.icon}</div>
+              <div className="w-6">{item.icon}</div>
               <span
                 className={clsx(
-                  "ml-3 overflow-hidden",
-                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0",
+                  "overflow-hidden",
+                  isOpen ? "ml-2 opacity-100 w-auto" : "opacity-0 w-0",
                 )}
               >
                 {item.label}

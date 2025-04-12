@@ -104,3 +104,24 @@ export type DomainResponse = {
 export type DomainRequest = {
   domain: string;
 };
+
+export type FeatureResponse = {
+  id: number;
+  name: string;
+  quantity: number;
+  is_active: boolean;
+};
+
+export type PlanResponse = {
+  id: string;
+  name: string;
+  description: string;
+  price_monthly: string;
+  price_annual: string;
+  discount_annual: string;
+  links_per_month: number;
+  api_links_per_month: number;
+  link_lifetime: string;
+  analytics_duration: string;
+  plan_features: FeatureResponse[];
+};
