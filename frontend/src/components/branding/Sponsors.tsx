@@ -1,3 +1,5 @@
+"use client";
+
 import { ScrollVelocity } from "@/components/animated";
 import { Heart, Star, Smile, Rocket, Cloud, Sun } from "lucide-react";
 

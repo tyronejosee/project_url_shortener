@@ -18,6 +18,7 @@ async function refreshAccessToken(token) {
     if (!res.ok) {
       throw apiData;
     }
+
     const decodedToken = jwtDecode(apiData.access);
     const newAccessTokenExpires = decodedToken?.exp * 1000;
 
@@ -41,7 +42,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
-    // maxAge: 24 * 60 * 60, // 1 Day
   },
   callbacks: {
     async jwt({ token, account, user }) {

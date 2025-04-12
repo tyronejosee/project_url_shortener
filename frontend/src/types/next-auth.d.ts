@@ -40,6 +40,7 @@ declare module "next-auth/jwt" {
     is_staff: boolean;
     accessToken: string;
     refreshToken: string;
-    expiresAt: number;
+    accessTokenExpires: number;
+    error?: string;
   }
 }
