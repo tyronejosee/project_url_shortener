@@ -5,7 +5,6 @@ from decimal import Decimal
 from django.db import models
 
 from apps.utils.models import BaseModel
-from apps.utils.repositories import BaseRepository
 from .repositories import PlanRepository
 from .choices import (
     LinkLifetimeChoices,
@@ -21,6 +20,10 @@ class Plan(BaseModel):
 
     name = models.CharField(max_length=150, unique=True)
     description = models.CharField(max_length=100, blank=True)
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Order of the plan in the list.",
+    )
     price_monthly = models.DecimalField(max_digits=10, decimal_places=2)
     price_annual = models.DecimalField(max_digits=10, decimal_places=2)
     discount_annual = models.DecimalField(
@@ -41,7 +44,7 @@ class Plan(BaseModel):
         default=AnalyticsDurationChoices.ONE_MONTH,
     )
 
-    objects: BaseRepository = PlanRepository()
+    objects: PlanRepository = PlanRepository()
 
     class Meta:
         db_table: str = "plans"
@@ -64,10 +67,14 @@ class Feature(BaseModel):
         choices=CategoryChoices.choices,
         default=CategoryChoices.BRANDING,
     )
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Order of the feature in the plan.",
+    )
 
     class Meta:
         db_table: str = "features"
-        ordering: list[str] = ["name"]
+        ordering: list[str] = ["order"]
         verbose_name: str = "feature"
         verbose_name_plural: str = "features"
 

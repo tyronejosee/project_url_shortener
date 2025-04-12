@@ -24,7 +24,7 @@ class PlanListView(APIView):
     permission_classes: list = [AllowAny]
 
     def get(self, request: Request, *args, **kwargs) -> Response:
-        plans = Plan.objects.get_available()
+        plans = Plan.objects.get_plans_by_order()
         if not plans.exists():
             return Response(
                 {"detail": "No plans available."},

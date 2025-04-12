@@ -45,6 +45,7 @@ class PlanSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
+            "order",
             "price_monthly",
             "price_annual",
             "discount_annual",

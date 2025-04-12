@@ -20,18 +20,21 @@ class PlanAdmin(admin.ModelAdmin):
         "links_per_month",
         "api_links_per_month",
         "link_lifetime",
+        "order",
         "analytics_duration",
     ]
     search_fields: list[str] = ["name"]
     list_filter: list[str] = ["link_lifetime", "analytics_duration"]
+    ordering: list[str] = ["order"]
     inlines: list = [PlanFeatureInline]
 
 
 @admin.register(Feature)
 class FeatureAdmin(admin.ModelAdmin):
-    list_display: list[str] = ["name", "category"]
+    list_display: list[str] = ["name", "category", "order"]
     search_fields: list[str] = ["name"]
     list_filter: list[str] = ["category"]
+    ordering: list[str] = ["order"]
 
 
 @admin.register(PlanFeature)
