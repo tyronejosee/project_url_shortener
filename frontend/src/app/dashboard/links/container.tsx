@@ -19,7 +19,7 @@ type Props = {
 export default function LinksContainer({ urls }: Props) {
   return (
     <Table
-      aria-label="Domains Table"
+      aria-label="Links Table"
       color="primary"
       selectionMode="multiple"
       radius="lg"

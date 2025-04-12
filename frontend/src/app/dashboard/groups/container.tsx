@@ -26,7 +26,7 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { formatDate } from "@/lib/dates";
-import { GroupForm, GroupRead } from "@/types";
+import { GroupForm, GroupResponse } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { groupSchema } from "@/lib/zod";
@@ -35,13 +35,13 @@ import { API_URL } from "@/config/constants";
 import { EllipsisVertical, Plus, SquarePenIcon, Trash2 } from "lucide-react";
 
 type Props = {
-  groups: GroupRead[];
+  groups: GroupResponse[];
 };
 
 export default function GroupsContainer({ groups }: Props) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editingGroup, setEditingGroup] = useState<GroupRead | null>(null);
+  const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = useSession();
 
@@ -59,7 +59,7 @@ export default function GroupsContainer({ groups }: Props) {
     },
   });
 
-  const openEditModal = (group: GroupRead) => {
+  const openEditModal = (group: GroupResponse) => {
     setEditingGroup(group);
     reset({
       name: group.name,
@@ -158,8 +158,8 @@ export default function GroupsContainer({ groups }: Props) {
           <TableColumn>Name</TableColumn>
           <TableColumn>Alias</TableColumn>
           <TableColumn>Description</TableColumn>
-          <TableColumn>Created at</TableColumn>
-          <TableColumn>Updated at</TableColumn>
+          <TableColumn>Created At</TableColumn>
+          <TableColumn>Updated At</TableColumn>
           <TableColumn>Is Active</TableColumn>
           <TableColumn>Actions</TableColumn>
         </TableHeader>

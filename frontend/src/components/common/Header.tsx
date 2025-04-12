@@ -35,16 +35,7 @@ export default function Header() {
           : "Home"}
       </div>
       {isLoading ? (
-        <div className="flex items-center space-x-4">
-          <div className="flex space-x-4">
-            <div className="flex flex-col gap-1 justify-center">
-              <Skeleton className="flex rounded-full w-36 h-4" />
-              <Skeleton className="flex rounded-full w-36 h-4" />
-            </div>
-            <Button onPress={handleLogout}>Log out</Button>
-            <Skeleton className="flex rounded-full w-10 h-10" />
-          </div>
-        </div>
+        <Skeleton className="rounded-xl w-32 h-12" />
       ) : (
         <Dropdown>
           <DropdownTrigger>

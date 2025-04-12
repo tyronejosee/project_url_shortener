@@ -39,8 +39,8 @@ export default function ClicksContainer({ clicks }: Props) {
             <TableCell>{click.url}</TableCell>
             <TableCell>{click.ip_address}</TableCell>
             <TableCell>{click.device}</TableCell>
-            <TableCell>{click.browser}</TableCell>
             <TableCell>{click.os}</TableCell>
+            <TableCell>{click.browser}</TableCell>
             <TableCell>{formatDate(click.created_at)}</TableCell>
           </TableRow>
         ))}
