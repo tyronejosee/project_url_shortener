@@ -37,7 +37,7 @@ BASE_APPS: list[str] = [
 PROJECT_APPS: list[str] = [
     "apps.communications",
     "apps.domains",
-    "apps.plans",
+    "apps.subscriptions",
     "apps.urls",
     "apps.users",
     "apps.utils",
@@ -298,6 +298,8 @@ DISCORD_WEBHOOKS: dict = {
 
 # Platforms
 
+LEMON_SQUEEZY_SECRET_KEY = env.str("LEMON_SQUEEZY_SECRET_KEY")
+LEMON_SQUEEZY_TOKEN = env.str("LEMON_SQUEEZY_TOKEN")
 KOFI_SECRET_KEY = env.str("KOFI_SECRET_KEY")
 
 # Documentation
