@@ -119,9 +119,11 @@ export type PlanResponse = {
   price_monthly: string;
   price_annual: string;
   discount_annual: string;
+  checkout_url: string;
   links_per_month: number;
   api_links_per_month: number;
   link_lifetime: string;
   analytics_duration: string;
   plan_features: FeatureResponse[];
+  is_test_mode: boolean;
 };
