@@ -3,14 +3,18 @@
 from decimal import Decimal
 
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from apps.utils.models import BaseModel
+from apps.users.models import PlanChoices
 from .repositories import PlanRepository
 from .choices import (
     LinkLifetimeChoices,
     AnalyticsDurationChoices,
     CategoryChoices,
 )
+
+User = get_user_model()
 
 
 class Plan(BaseModel):
@@ -130,3 +134,28 @@ class PlanFeature(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.plan.name} - {self.feature.name}"
+
+
+class Subscription(BaseModel):
+    """
+    Model definition for Subscription.
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    external_id = models.CharField(max_length=255, unique=True)
+    plan = models.CharField(max_length=10, choices=PlanChoices.choices)
+    status = models.CharField(max_length=20)
+    updated_at = models.DateTimeField(auto_now=True)
+    store_id = models.IntegerField()
+    product_id = models.IntegerField()
+    variant_id = models.IntegerField()
+    customer_id = models.IntegerField()
+    renews_at = models.DateTimeField(null=True, blank=True)
+    ends_at = models.DateTimeField(null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
+
+    class Meta:
+        db_table: str = "subscriptions"
+        ordering: list[str] = ["user"]
+        verbose_name: str = "subscription"
+        verbose_name_plural: str = "subscriptions"
