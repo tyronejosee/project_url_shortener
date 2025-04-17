@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Plan, Feature, PlanFeature
+from .models import Plan, Feature, PlanFeature, Subscription
 
 
 class PlanFeatureInline(admin.TabularInline):
@@ -42,3 +42,21 @@ class PlanFeatureAdmin(admin.ModelAdmin):
     list_display: list[str] = ["plan", "feature", "quantity"]
     search_fields: list[str] = ["plan__name", "feature__name"]
     list_filter: list[str] = ["plan", "feature"]
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display: list[str] = [
+        "user",
+        "plan",
+        "status",
+        "updated_at",
+        "store_id",
+        "product_id",
+        "variant_id",
+        "customer_id",
+        "is_paid",
+    ]
+    search_fields: list[str] = ["user__email"]
+    list_filter: list[str] = ["status", "is_paid"]
+    ordering: list[str] = ["user"]
