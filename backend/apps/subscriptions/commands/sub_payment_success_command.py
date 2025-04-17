@@ -1,6 +1,7 @@
 import logging
 
 from core.logging import setup_logging
+from ..models import Subscription
 from .command import Command
 
 setup_logging()
@@ -10,11 +11,16 @@ logger: logging.Logger = logging.getLogger(__name__)
 class SubPaymentSuccessCommand(Command):
     def execute(self) -> None:
         attrs = self.payload["data"]["attributes"]
-        email = attrs["user_email"]
-        subscription_id = self.payload["data"]["id"]
+        sub_id = attrs["subscription_id"]
 
-        if email and subscription_id:
-            logger.info(f"Payment success for {email} ({subscription_id})")
-            # TODO: Add logic
-        else:
-            logger.warning("Missing data in subscription_created")
+        try:
+            subscription = Subscription.objects.get(
+                external_id=sub_id,
+            )
+        except Subscription.DoesNotExist:
+            logger.error(f"No subscription with external_id {sub_id}")
+            return
+
+        if not subscription.is_paid:
+            subscription.is_paid = True
+            subscription.save(update_fields=["is_paid"])
