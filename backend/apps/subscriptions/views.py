@@ -1,9 +1,8 @@
 """Views for Plans App."""
 
-# import hmac
-# import hashlib
 import logging
 
+from django.conf import settings
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -12,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema_view
 
 from core.logging import setup_logging
+from apps.utils.helpers import verify_signature
 from .commands.dispatcher import EventDispatcher
 from .models import Plan
 from .serializers import PlanSerializer
@@ -54,29 +54,21 @@ class LemonSqueezyWebhookView(APIView):
     permission_classes: list = [AllowAny]
 
     def post(self, request: Request, *args, **kwargs) -> Response:
-        # signature = request.headers.get("X-Signature")
-        # if not signature:
-        #     logger.warning("Missing X-Signature header")
-        #     return Response(
-        #         {"detail": "Missing signature in header"},
-        #         status=status.HTTP_400_BAD_REQUEST,
-        #     )
+        signature: str = request.headers.get("X-Signature")
+        raw_body: bytes = request.body
+
+        if not verify_signature(
+            settings.LEMON_SQUEEZY_SECRET_KEY,
+            raw_body,
+            signature,
+        ):
+            logger.warning("Invalid webhook signature")
+            return Response(
+                {"detail": "Invalid signature in payload"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         try:
-            #     raw_body = request.body
-            #     expected_signature = hmac.new(
-            #         key=settings.LEMON_SECRET_KEY.encode(),
-            #         msg=raw_body,
-            #         digestmod=hashlib.sha256,
-            #     ).hexdigest()
-
-            #     if not hmac.compare_digest(expected_signature, signature):
-            #         logger.warning("Invalid webhook signature")
-            #         return Response(
-            #             {"detail": "Invalid signature in payload"},
-            #             status=status.HTTP_403_FORBIDDEN,
-            #         )
-
             payload: dict = request.data
             event_type: str = payload["meta"]["event_name"]
 

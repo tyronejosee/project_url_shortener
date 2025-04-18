@@ -16,16 +16,16 @@ import { getFirstLetter } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
   const lastSegment = pathname.split("/").filter(Boolean).pop();
 
   const { handleLogout } = useLogout();
   const isLoading = status === "loading";
 
-  useEffect(() => {
-    update();
-  }, [update]);
+  // useEffect(() => {
+  //   update();
+  // }, [update]);
 
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
