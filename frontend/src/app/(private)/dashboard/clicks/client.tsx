@@ -1,50 +1,46 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@heroui/react";
-import { formatDate } from "@/lib/dates";
-import type { ClickResponse } from "@/types";
+import { Table } from "@/components/common";
+import type { ClickResponse, CellRendererProps, TableColumn } from "@/types";
 
 type Props = {
   clicks: ClickResponse[];
 };
 
 export default function ClicksPageClient({ clicks }: Props) {
+  // Constants
+  const columns: TableColumn[] = [
+    { name: "URL", uid: "url", sortable: true },
+    { name: "IP Address", uid: "ip_address", sortable: true },
+    { name: "Device", uid: "device", sortable: true },
+    { name: "OS", uid: "os", sortable: true },
+    { name: "Browser", uid: "browser", sortable: true },
+    { name: "Created At", uid: "created_at", sortable: true },
+  ];
+
   return (
-    <Table
-      aria-label="Clicks Table"
-      color="primary"
-      selectionMode="single"
-      radius="lg"
-      shadow="none"
-      className="border border-neutral-300 rounded-xl"
-    >
-      <TableHeader>
-        <TableColumn>URL</TableColumn>
-        <TableColumn>IP</TableColumn>
-        <TableColumn>Device</TableColumn>
-        <TableColumn>OS</TableColumn>
-        <TableColumn>Browser</TableColumn>
-        <TableColumn>Created At</TableColumn>
-      </TableHeader>
-      <TableBody>
-        {clicks.map((click) => (
-          <TableRow key={click.id}>
-            <TableCell>{click.url}</TableCell>
-            <TableCell>{click.ip_address}</TableCell>
-            <TableCell>{click.device}</TableCell>
-            <TableCell>{click.os}</TableCell>
-            <TableCell>{click.browser}</TableCell>
-            <TableCell>{formatDate(click.created_at)}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="flex flex-col gap-4">
+      {/* Table */}
+      <Table
+        title="Clicks table"
+        data={clicks}
+        columns={columns}
+        searchPlaceholder="Search by url..."
+        searchKeys={["url"]}
+        defaultRowsPerPage={10}
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        cellRenderer={({
+          columnKey,
+          value,
+        }: CellRendererProps<ClickResponse>) => {
+          switch (columnKey) {
+            case "created_at":
+              return new Date(value as string).toLocaleDateString();
+            default:
+              return String(value ?? "");
+          }
+        }}
+      />
+    </div>
   );
 }

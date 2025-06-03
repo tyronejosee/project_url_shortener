@@ -1,5 +1,5 @@
-import { fetcher } from "@/lib/fetcher";
-import { API_URL, COMPANY_NAME } from "@/config/constants";
+import { getClicks } from "@/actions/urls";
+import { COMPANY_NAME } from "@/config/constants";
 import ClicksPageClient from "./client";
 import type { Metadata } from "next";
 
@@ -9,23 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ClicksPage() {
-  try {
-    const res = await fetcher(`${API_URL}api/clicks`, {
-      method: "GET",
-    });
+  const clicks = await getClicks();
 
-    if (!res.ok) throw new Error("Error fetching clicks");
-    const clicks = await res.json();
-
-    return (
-      <main className="flex flex-col gap-3">
-        <div className="flex justify-between items-center">
-          <span>Total {clicks.length} Clicks</span>
-        </div>
-        <ClicksPageClient clicks={clicks} />
-      </main>
-    );
-  } catch (error) {
-    throw error;
-  }
+  return (
+    <main className="flex flex-col gap-3">
+      <ClicksPageClient clicks={clicks} />
+    </main>
+  );
 }
