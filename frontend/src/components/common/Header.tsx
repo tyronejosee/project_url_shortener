@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -23,12 +22,8 @@ export default function Header() {
   const { handleLogout } = useLogout();
   const isLoading = status === "loading";
 
-  // useEffect(() => {
-  //   update();
-  // }, [update]);
-
   return (
-    <header className="z-10 bg-white/50 backdrop-blur-sm border-b border-neutral-300 p-4 flex justify-between items-center">
+    <header className="z-10 bg-white/50 backdrop-blur-sm border-b-2 border-neutral-200 p-4 flex justify-between items-center">
       <div className="ml-8 text-3xl font-bold">
         {lastSegment
           ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)

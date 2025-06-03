@@ -53,8 +53,8 @@ const sidebarItems = [
     restrictedPlans: ["Basic Plan", "Premium Plan"],
   },
   {
-    href: "/dashboard/prices",
-    label: "Prices",
+    href: "/dashboard/plans",
+    label: "Plans",
     icon: <Gem size={20} className="flex-shrink-0" />,
   },
   {

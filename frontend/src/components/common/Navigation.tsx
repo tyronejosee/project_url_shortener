@@ -30,13 +30,13 @@ export default function Navigation() {
         </Link>
       </NavbarBrand>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/prices">Prices</Link>
+        <NavbarItem>
+          <Link href="/plans">Plans</Link>
         </NavbarItem>
 
         {session?.user ? (
           <>
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem>
               <Button
                 as={Link}
                 color="primary"
@@ -49,7 +49,7 @@ export default function Navigation() {
           </>
         ) : (
           <>
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem>
               <Link href="/auth/login">Login</Link>
             </NavbarItem>
             <NavbarItem>

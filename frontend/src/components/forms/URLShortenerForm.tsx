@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Input } from "@heroui/react";
 import { useState } from "react";
-import { URLForm } from "@/types";
+import { Button, Input } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { API_URL } from "@/config/constants";
 import { urlshortenerSchema } from "@/lib/zod";
+import type { URLForm } from "@/types";
 
 export default function URLShortenerForm() {
   const { data: session } = useSession();
@@ -47,7 +47,7 @@ export default function URLShortenerForm() {
   };
 
   return (
-    <div className="mt-2 mb-24 flex justify-center">
+    <div className="mt-2 mb-24 flex justify-center px-6 lg:px-8">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-xl flex gap-x-4"

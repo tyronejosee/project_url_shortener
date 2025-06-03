@@ -5,7 +5,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
 import { SidebarList } from "@/components/common";
-import { Logo } from "../icons";
+import { Logo } from "@/components/icons";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -28,7 +28,7 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "relative z-20 transition-all duration-300 ease-in-out bg-white border-r border-neutral-300 p-5 flex flex-col h-screen",
+        "relative z-20 transition-all duration-300 ease-in-out bg-white border-r-2 border-neutral-200 p-5 flex flex-col h-screen",
         isOpen ? "w-56" : "w-20",
       )}
     >
@@ -36,7 +36,7 @@ export default function Sidebar() {
       <button
         aria-label="Toggle Sidebar"
         onClick={toggleSidebar}
-        className="bg-white p-1 rounded-md border border-neutral-300 absolute top-4 -right-4 z-50 outline-none focus:ring-0"
+        className="bg-white p-1 rounded-xl border-2 border-neutral-200 absolute top-4 -right-4 z-50 outline-none focus:ring-0"
       >
         {isOpen ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
       </button>
@@ -64,7 +64,7 @@ export default function Sidebar() {
           href={"https://github.com/tyronejosee"}
           target="_blank"
           className={clsx(
-            "flex justify-center items-center p-2 rounded-xl relative border border-neutral-300 w-full h-10",
+            "flex justify-center items-center p-2 rounded-xl relative border-2 border-neutral-200 w-full h-10",
           )}
         >
           <div

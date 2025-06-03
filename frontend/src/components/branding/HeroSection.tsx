@@ -5,10 +5,10 @@ import { Link2, SquareArrowOutUpRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="mx-auto max-w-2xl text-center space-y-6">
+    <section className="mx-auto max-w-2xl text-center space-y-6 px-6 lg:px-8">
       <div className="flex flex-col max-w-md mx-auto gap-4">
         <ButtonGroup variant="faded" size="sm" radius="lg">
-          <Button>Introducing Dub Conversions</Button>
+          <Button>Introducing Short Conversions</Button>
           <Button endContent={<SquareArrowOutUpRight size={12} />}>
             Read More
           </Button>

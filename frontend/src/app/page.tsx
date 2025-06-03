@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { HeroSection, Sponsors, UrlList } from "@/components/branding";
 import { URLShortenerForm } from "@/components/forms";
 import { AnimatedContent } from "@/components/animated";
-import { URLRead } from "@/types";
+import type { URLRead } from "@/types";
 
 export default function Home() {
   const [urls, setUrls] = useState<URLRead[]>([]);
@@ -30,21 +30,23 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex-1 relative isolate overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
+    <main className="flex-1 relative isolate overflow-hidden py-24 sm:py-20">
       <HeroSection />
       <URLShortenerForm />
-      <AnimatedContent
-        distance={100}
-        direction="vertical"
-        reverse={false}
-        config={{ tension: 80, friction: 20 }}
-        initialOpacity={0.0}
-        animateOpacity
-        scale={1.0}
-        threshold={0.2}
-      >
-        <UrlList urls={urls} loading={loading} setUrls={setUrls} />
-      </AnimatedContent>
+      {urls.length > 0 && (
+        <AnimatedContent
+          distance={100}
+          direction="vertical"
+          reverse={false}
+          config={{ tension: 80, friction: 20 }}
+          initialOpacity={0.0}
+          animateOpacity
+          scale={1.0}
+          threshold={0.2}
+        >
+          <UrlList urls={urls} loading={loading} setUrls={setUrls} />
+        </AnimatedContent>
+      )}
       <Sponsors />
     </main>
   );

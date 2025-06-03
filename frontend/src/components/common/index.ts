@@ -1,3 +1,5 @@
+export { default as DeleteModal } from "./DeleteModal";
+export { default as EmptyList } from "./EmptyList";
 export { default as Footer } from "./Footer";
 export { default as Header } from "./Header";
 export { default as Navigation } from "./Navigation";
@@ -6,3 +8,4 @@ export { default as SidebarList } from "./SidebarList";
 export { default as SocialButton } from "./SocialButton";
 export { default as SocialButtons } from "./SocialButtons";
 export { default as HR } from "./HR";
+export { default as Table } from "./Table";

@@ -5,6 +5,7 @@ import {
   registerSchema,
   urlshortenerSchema,
 } from "@/lib/zod";
+import { ChipProps } from "@heroui/react";
 
 // Form types
 export type LoginForm = z.infer<typeof loginSchema>;
@@ -126,4 +127,39 @@ export type PlanResponse = {
   analytics_duration: string;
   plan_features: FeatureResponse[];
   is_test_mode: boolean;
+};
+
+// UI
+
+export type Filters = {
+  category: string;
+  sortBy: "newest" | "oldest" | "popular" | "name" | "";
+  search: string;
+};
+
+export type TableColumn = {
+  uid: string;
+  name: string;
+  align?: "start" | "center" | "end";
+  sortable?: boolean;
+};
+
+export type FilterOption = {
+  uid: string;
+  name: string;
+};
+
+export type TableAction<T> = {
+  key: string;
+  label: string;
+  icon?: React.ReactNode;
+  color?: ChipProps["color"];
+  shortcut?: string;
+  onAction?: (item: T) => void;
+};
+
+export type CellRendererProps<T> = {
+  item: T;
+  columnKey: string;
+  value: any;
 };

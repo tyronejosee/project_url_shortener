@@ -1,7 +1,7 @@
 "use client";
 
-import { URLRead } from "@/types";
 import { Button, Snippet } from "@heroui/react";
+import type { URLRead } from "@/types";
 
 type Props = {
   urls: URLRead[];
@@ -16,7 +16,7 @@ export default function UrlList({ urls, setUrls }: Props) {
   };
 
   return (
-    <section className="mt-16 max-w-2xl mx-auto space-y-6">
+    <section className="my-16 max-w-2xl mx-auto space-y-6 px-6 lg:px-0">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Your Shortened Links</h2>
         {urls.length > 0 && (
@@ -30,7 +30,7 @@ export default function UrlList({ urls, setUrls }: Props) {
           <span>No saved links.</span>
         </div>
       ) : (
-        <ul className="mt-6 divide-y-2 divide-dashed divide-neutral-300">
+        <ul className="divide-y-2 divide-dashed divide-neutral-300 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-neutral-200 scrollbar-track-transparent">
           {urls.map((url, index) => (
             <li
               key={url.id || index}
