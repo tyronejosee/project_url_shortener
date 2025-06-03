@@ -15,7 +15,6 @@ export const privacyItems = [
 // UI Items
 export const links = [
   { name: "Feedback", href: "/feedback" },
-  { name: "Prices", href: "/prices" },
   { name: "Privacy Policy", href: "/privacy-policy" },
   { name: "Terms Service", href: "/terms-service" },
   { name: "Donate", href: "/donate" },

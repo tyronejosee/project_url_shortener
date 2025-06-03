@@ -1,4 +1,4 @@
-export default function PricesLoading() {
+export default function PlansLoading() {
   return (
     <div className="max-w-screen-lg mx-auto animate-pulse p-4 space-y-6">
       <div className="space-y-4 py-4">

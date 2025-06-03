@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { Outfit, Roboto_Mono } from "next/font/google";
-import Providers from "./providers";
 import { Footer, Navigation } from "@/components/common";
-import "../styles/globals.css";
-// import { Aurora } from "@/components/animated";
 import { COMPANY_NAME } from "@/config/constants";
+import Providers from "./providers";
+import "../styles/globals.css";
+import type { Metadata } from "next";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -33,12 +32,6 @@ export default function RootLayout({
       <body className={`${outfit.variable} ${robotoMono.variable} antialiased`}>
         <Providers>
           <div className="min-h-screen flex flex-col">
-            {/* <Aurora
-              colorStops={["#ff1168", "#292cff", "#5856D6"]}
-              blend={1.0}
-              amplitude={1.0}
-              speed={0.5}
-            /> */}
             <Navigation />
             {children}
             <Footer />
