@@ -18,34 +18,3 @@ body {
 .code {
   font-family: var(--font-roboto-mono);
 }
-
-@keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-@-webkit-keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-.fade-in {
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
-}
-
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-@layer base {
-  :root {
-    --radius: 0.5rem
-  }
-}
