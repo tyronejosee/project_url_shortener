@@ -2,11 +2,9 @@ import NextAuth from "next-auth";
 import { jwtDecode } from "jwt-decode";
 import authConfig from "@/auth.config";
 import { API_URL } from "./config/constants";
+import type { JWT } from "next-auth/jwt";
 
-async function refreshAccessToken(token) {
-  console.log("\n\n🔄 STARTING REFRESH TOKEN...");
-  console.log("\n\n🔄 TOKEN TO REFRESH...", token.refreshToken);
-
+async function refreshAccessToken(token: JWT) {
   try {
     const res = await fetch(`${API_URL}api/tokens/refresh`, {
       method: "POST",
@@ -20,6 +18,10 @@ async function refreshAccessToken(token) {
     }
 
     const decodedToken = jwtDecode(apiData.access);
+
+    if (!decodedToken?.exp) {
+      throw new Error("Access token is missing expiration time.");
+    }
     const newAccessTokenExpires = decodedToken?.exp * 1000;
 
     return {
@@ -47,6 +49,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account, user }) {
       if (account && user) {
         const decodedToken = jwtDecode(user.accessToken);
+
+        if (!decodedToken?.exp) {
+          throw new Error("Access token is missing expiration time.");
+        }
+
         const accessTokenExpires = decodedToken?.exp * 1000;
 
         return {

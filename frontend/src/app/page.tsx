@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { HeroSection, Sponsors, UrlList } from "@/components/branding";
-import { URLShortenerForm } from "@/components/forms";
+import { URLShortenerForm } from "@/components/urls";
 import { AnimatedContent } from "@/components/animated";
 import type { URLRead } from "@/types";
 

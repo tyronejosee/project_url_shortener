@@ -395,7 +395,6 @@ export default function Table<T extends TableData>({
   }, []);
 
   // Top content
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -528,6 +527,13 @@ export default function Table<T extends TableData>({
       </div>
     );
   }, [
+    // Dependencies for test
+    handleFilterChange,
+    loading,
+    onClear,
+    serverSide,
+    totalItems,
+    // Dependencies for test
     searchable,
     filterValue,
     statusFilter,

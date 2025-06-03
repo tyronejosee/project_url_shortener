@@ -74,7 +74,7 @@ export default function AnimatedContent({
   });
 
   return (
-    // ! TODO: Fix this
+    // ! TODO: Fix the type error
     <animated.div ref={ref} style={springProps}>
       {children}
     </animated.div>
