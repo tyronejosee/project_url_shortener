@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { fetcher } from "@/lib/fetcher";
-import { API_URL, COMPANY_NAME } from "@/config/constants";
-import GroupsContainer from "./container";
+import { getGroups } from "@/actions/groups";
+import { COMPANY_NAME } from "@/config/constants";
+import GroupsPageClient from "./client";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Groups - ${COMPANY_NAME}`,
@@ -18,21 +18,11 @@ export default async function GroupsPage() {
   ) {
     redirect("/dashboard");
   }
+  const groups = await getGroups();
 
-  try {
-    const res = await fetcher(`${API_URL}api/groups`, {
-      method: "GET",
-    });
-
-    if (!res.ok) throw new Error("Error fetching groups");
-    const groups = await res.json();
-
-    return (
-      <main className="flex flex-col gap-3">
-        <GroupsContainer groups={groups} />
-      </main>
-    );
-  } catch (error) {
-    throw error;
-  }
+  return (
+    <main className="flex flex-col gap-3">
+      <GroupsPageClient groups={groups} />
+    </main>
+  );
 }
