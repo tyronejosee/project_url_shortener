@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { fetcher } from "@/lib/fetcher";
-import { API_URL, COMPANY_NAME } from "@/config/constants";
+import { getDomains } from "@/actions/domains";
+import { COMPANY_NAME } from "@/config/constants";
 import DomainsPageClient from "./client";
 import type { Metadata } from "next";
 
@@ -15,21 +15,11 @@ export default async function DomainsPage() {
   if (!session || !["Premium Plan"].includes(session.user.plan || "")) {
     redirect("/dashboard");
   }
+  const domains = await getDomains();
 
-  try {
-    const res = await fetcher(`${API_URL}api/domains`, {
-      method: "GET",
-    });
-
-    const domains = await res.json();
-    if (!res.ok) throw new Error(`Error: ${domains.detail} (${res.status})`);
-
-    return (
-      <main className="flex flex-col gap-3">
-        <DomainsPageClient domains={domains} />
-      </main>
-    );
-  } catch (error) {
-    throw error;
-  }
+  return (
+    <main className="flex flex-col gap-3">
+      <DomainsPageClient domains={domains} />
+    </main>
+  );
 }

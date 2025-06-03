@@ -2,32 +2,27 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
+import { addToast, Chip, useDisclosure } from "@heroui/react";
+import { SquarePenIcon, Trash2 } from "lucide-react";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Chip,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Input,
-  ModalFooter,
-  addToast,
-} from "@heroui/react";
-import { Plus } from "lucide-react";
+  createDomain,
+  deleteDomainById,
+  updateDomainById,
+} from "@/actions/domains";
+import { DeleteModal, Table } from "@/components/common";
+import { DomainDrawer } from "@/components/domains";
 import { domainSchema } from "@/lib/zod";
-import { formatDate } from "@/lib/dates";
-import { API_URL } from "@/config/constants";
-import type { DomainRequest, DomainResponse } from "@/types";
+import type {
+  CellRendererProps,
+  TableColumn,
+  DomainResponse,
+  TableAction,
+  DomainForm,
+} from "@/types";
+import { capitalize } from "@/lib/utils";
 
 type Props = {
   domains: DomainResponse[];
@@ -38,8 +33,17 @@ export default function DomainsPageClient({ domains }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isConfirmOpen,
+    onOpen: onConfirmOpen,
+    onClose: onConfirmClose,
+  } = useDisclosure();
 
   // States
+  const [editingDomain, setEditingDomain] = useState<DomainResponse | null>(
+    null,
+  );
+  const [domainToDelete, setDomainToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   // Form
@@ -48,136 +52,168 @@ export default function DomainsPageClient({ domains }: Props) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<DomainRequest>({
+  } = useForm<DomainForm>({
     resolver: zodResolver(domainSchema),
     defaultValues: {
       domain: "",
     },
   });
 
-  // Actions
-  const onSubmit = async (data: DomainRequest) => {
+  // Functions
+  const openEditModal = (domain: DomainResponse) => {
+    setEditingDomain(domain);
+    reset({
+      domain: domain.domain,
+    });
+    onOpen();
+  };
+
+  const openAddModal = () => {
+    setEditingDomain(null);
+    reset({
+      domain: "",
+    });
+    onOpen();
+  };
+
+  const onSubmit = async (data: DomainForm) => {
     setLoading(true);
     try {
-      await fetch(`${API_URL}api/domains`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      onClose();
+      const payload = {
+        domain: data.domain,
+      };
+
+      if (editingDomain)
+        await updateDomainById(editingDomain.id, payload, session);
+      else await createDomain(payload, session);
+
       router.refresh();
+      onClose();
+      setEditingDomain(null);
     } catch (error) {
       console.error("Submit error:", error);
-      addToast({
-        title: "Error",
-        description: "An error occurred while submitting the form.",
-      });
+      addToast({ title: "Error", description: "Error submitting form." });
     } finally {
       setLoading(false);
     }
   };
 
-  // Functions
-  const openAddModal = () => {
-    reset({ domain: "" });
-    onOpen();
+  // Handlers
+  const handleDelete = (id: string) => {
+    setDomainToDelete(id);
+    onConfirmOpen();
   };
+
+  const confirmDelete = async () => {
+    if (!domainToDelete) return;
+    setLoading(true);
+    try {
+      await deleteDomainById(domainToDelete, session);
+      router.refresh();
+      addToast({
+        title: "Deleted",
+        description: "Resource deleted successfully.",
+      });
+    } catch (error) {
+      console.error("Delete error:", error);
+      addToast({ title: "Error", description: "Failed to delete domain." });
+    } finally {
+      setDomainToDelete(null);
+      setLoading(false);
+      onConfirmClose();
+    }
+  };
+
+  // Constants
+  const columns: TableColumn[] = [
+    { name: "Domain", uid: "domain", sortable: true },
+    { name: "Created At", uid: "created_at", sortable: true },
+    { name: "Verification Status", uid: "status", sortable: true },
+  ];
+
+  const actions: TableAction<DomainResponse>[] = [
+    {
+      key: "update",
+      label: "Update domain",
+      icon: <SquarePenIcon size={18} />,
+      shortcut: "⌘U",
+      onAction: (group) => openEditModal(group),
+    },
+    {
+      key: "delete",
+      label: "Delete domain",
+      icon: <Trash2 size={18} />,
+      color: "danger",
+      shortcut: "⌘D",
+      onAction: (group) => handleDelete(group.id),
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
-        <p className="text-sm font-medium text-neutral-500">
-          Total {domains.length} domains
-        </p>
-        <Button
-          onPress={openAddModal}
-          color="primary"
-          endContent={<Plus size={18} />}
-        >
-          Add Domain
-        </Button>
-      </header>
-
+      {/* Table */}
       <Table
-        aria-label="Domains Table"
-        radius="lg"
-        color="primary"
-        shadow="none"
-        selectionMode="multiple"
-        className="border border-neutral-300 rounded-xl"
-      >
-        <TableHeader>
-          <TableColumn>Domain</TableColumn>
-          <TableColumn>Created At</TableColumn>
-          <TableColumn>Verification Status</TableColumn>
-        </TableHeader>
-        {domains && domains.length > 0 ? (
-          <TableBody>
-            {domains.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.domain}</TableCell>
-                <TableCell>{formatDate(item.created_at)}</TableCell>
-                <TableCell>
-                  <Chip
-                    size="sm"
-                    color={
-                      item.status === "Pending"
-                        ? "default"
-                        : item.status === "Failed"
-                          ? "danger"
-                          : item.status === "Verified"
-                            ? "success"
-                            : "default"
-                    }
-                    variant="flat"
-                  >
-                    {item.status}
-                  </Chip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        ) : (
-          <TableBody emptyContent="No rows to display.">{[]}</TableBody>
-        )}
-      </Table>
+        title="Domains table"
+        data={domains}
+        columns={columns}
+        actions={actions}
+        searchPlaceholder="Search by domain..."
+        searchKeys={["domain"]}
+        defaultRowsPerPage={10}
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        addButton={{ label: "Add Domain", onAdd: () => openAddModal() }}
+        cellRenderer={({
+          columnKey,
+          value,
+        }: CellRendererProps<DomainResponse>) => {
+          switch (columnKey) {
+            case "created_at":
+              return new Date(value as string).toLocaleDateString();
+            case "status":
+              return (
+                <Chip
+                  size="sm"
+                  color={
+                    value === "verified"
+                      ? "success"
+                      : value === "failed"
+                        ? "danger"
+                        : "default"
+                  }
+                  variant="flat"
+                >
+                  {capitalize(value)}
+                </Chip>
+              );
+            default:
+              return String(value ?? "");
+          }
+        }}
+      />
 
-      {/* Modal */}
-      <Modal isOpen={isOpen} onOpenChange={onClose}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Add New Domain
-          </ModalHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalBody>
-              <Input
-                label="Domain"
-                labelPlacement="outside"
-                type="text"
-                placeholder="https://example.com"
-                isInvalid={!!errors.domain}
-                errorMessage={errors.domain?.message}
-                {...register("domain")}
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                color="primary"
-                disabled={loading || isSubmitting}
-              >
-                {loading || isSubmitting ? "Saving..." : "Save"}
-              </Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
+      {/* Drawer */}
+      <DomainDrawer
+        editingDomain={editingDomain}
+        errors={errors}
+        onSubmit={onSubmit}
+        handleSubmit={handleSubmit}
+        register={register}
+        onClose={onClose}
+        isOpen={isOpen}
+        loading={loading}
+        isSubmitting={isSubmitting}
+      />
+
+      {/* Delete Modal */}
+      <DeleteModal
+        loading={loading}
+        isConfirmOpen={isConfirmOpen}
+        onConfirmClose={onConfirmClose}
+        confirmDelete={confirmDelete}
+        title="Delete Domain"
+        description="Are you sure you want to delete this domain? This action cannot be undone."
+        confirmLabel="Delete"
+      />
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import { z } from "zod";
 import {
-  groupSchema,
   loginSchema,
   registerSchema,
+  groupSchema,
   urlshortenerSchema,
+  domainSchema,
 } from "@/lib/zod";
 import { ChipProps } from "@heroui/react";
 
@@ -15,6 +16,8 @@ export type RegisterForm = z.infer<typeof registerSchema>;
 export type GroupForm = z.infer<typeof groupSchema>;
 
 export type URLForm = z.infer<typeof urlshortenerSchema>;
+
+export type DomainForm = z.infer<typeof domainSchema>;
 
 export type FeedbackForm = {
   name: string;
