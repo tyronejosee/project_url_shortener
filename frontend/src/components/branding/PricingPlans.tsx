@@ -1,26 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button, Switch } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { Check, InfinityIcon, TestTubeDiagonal, X } from "lucide-react";
-import { PlanResponse } from "@/types";
-import Link from "next/link";
+import { cn } from "@/lib/utils";
+import type { PlanResponse } from "@/types";
 
 type Props = {
   plans: PlanResponse[];
 };
 
 export default function PricingPlans({ plans }: Props) {
+  // Hooks
+  const pathname = usePathname();
   const { data: session } = useSession();
+
+  // States
   const [selectedPlan, setSelectedPlan] = useState<string>(
     session?.user?.plan || "Basic Plan",
   );
   const [isAnnual, setIsAnnual] = useState<boolean>(false);
 
+  // Constants
+  const topClass = pathname?.includes("/dashboard/plans")
+    ? "top-0 py-0"
+    : "top-16 py-4";
+
   return (
     <section>
-      <div className="z-10 sticky top-16 w-full flex items-center justify-center gap-4 py-4 mb-4 bg-white/50 backdrop-blur-xl">
+      <nav
+        className={cn(
+          "z-10 sticky w-full flex items-center justify-center gap-4 mb-4 bg-white/50 backdrop-blur-xl",
+          topClass,
+        )}
+      >
         <span>Monthly</span>
         <Switch
           isSelected={isAnnual}
@@ -28,7 +44,7 @@ export default function PricingPlans({ plans }: Props) {
           color="primary"
         ></Switch>
         <span>Annual</span>
-      </div>
+      </nav>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.name;

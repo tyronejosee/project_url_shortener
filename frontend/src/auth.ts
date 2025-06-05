@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user, trigger, session }) {
       if (account && user) {
         const decodedToken = jwtDecode(user.accessToken);
 
@@ -69,6 +69,39 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           refreshToken: user.refreshToken,
           accessTokenExpires,
         };
+      }
+
+      if (trigger === "update") {
+        if (session) {
+          return {
+            ...token,
+            ...session,
+          };
+        } else {
+          try {
+            const freshUserData = await fetch(`${API_URL}api/users/me`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+                "Content-Type": "application/json",
+              },
+            });
+
+            if (freshUserData.ok) {
+              const userData = await freshUserData.json();
+              return {
+                ...token,
+                username: userData.username,
+                slug: userData.slug,
+                plan: userData.plan,
+                is_active: userData.is_active,
+                is_staff: userData.is_staff,
+              };
+            }
+          } catch (error) {
+            console.error("Error fetching fresh user data:", error);
+          }
+        }
       }
 
       if (Date.now() < token.accessTokenExpires) {
