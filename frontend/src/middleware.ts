@@ -12,7 +12,7 @@ const publicRoutes = [
   "/privacy-policy",
   "/terms-service",
 ];
-const authRoutes = ["/auth/login", "/auth/register"];
+const authRoutes = ["/auth/login", "/auth/register", "/auth/google"];
 const apiAuthPrefix = "/api/auth";
 
 export default auth((req) => {

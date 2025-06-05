@@ -1,6 +1,6 @@
 import { TableSkeleton } from "@/components/dashboard";
 
-export default function GroupsLoading() {
+export default function UrlsLoading() {
   const columns = [
     "URL",
     "Alias",

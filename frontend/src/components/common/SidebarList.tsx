@@ -31,8 +31,8 @@ const sidebarItems = [
     icon: <Scissors size={20} className="flex-shrink-0" />,
   },
   {
-    href: "/dashboard/links",
-    label: "Links",
+    href: "/dashboard/urls",
+    label: "Urls",
     icon: <Link2 size={20} className="flex-shrink-0" />,
   },
   {

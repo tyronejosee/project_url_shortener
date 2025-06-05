@@ -5,6 +5,7 @@ import {
   groupSchema,
   urlshortenerSchema,
   domainSchema,
+  urlSchema,
 } from "@/lib/zod";
 import { ChipProps } from "@heroui/react";
 
@@ -15,7 +16,9 @@ export type RegisterForm = z.infer<typeof registerSchema>;
 
 export type GroupForm = z.infer<typeof groupSchema>;
 
-export type URLForm = z.infer<typeof urlshortenerSchema>;
+export type URLForm = z.infer<typeof urlSchema>;
+
+export type URLShortenerForm = z.infer<typeof urlshortenerSchema>;
 
 export type DomainForm = z.infer<typeof domainSchema>;
 
@@ -57,7 +60,7 @@ export type GroupWrite = {
   description: string;
 };
 
-export type URLRead = {
+export type URLResponse = {
   id: string;
   url: string;
   alias: string;
@@ -67,7 +70,7 @@ export type URLRead = {
   updated_at: string;
 };
 
-export type URLRequest = {
+export type URLWrite = {
   url: string;
   group: string;
   privacy: string;
