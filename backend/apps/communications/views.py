@@ -9,7 +9,7 @@ from drf_spectacular.utils import extend_schema_view
 
 from .serializers import NotificationSerializer
 from .services import NotificationService, DonationService
-from .schemas import support_schema, feedback_schema
+from .schemas import support_schema, feedback_schema, kofi_webhook_schema
 
 
 class BaseNotifierView(APIView):
@@ -61,6 +61,7 @@ class FeedbackView(BaseNotifierView):
     category = "feedback"
 
 
+@extend_schema_view(**kofi_webhook_schema)
 class KoFiWebhookView(APIView):
     """
     View to handle Ko-Fi webhooks.

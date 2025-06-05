@@ -5,12 +5,18 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema_view
 
 from apps.users.permissions import IsPremium
 from .models import Domain
 from .serializers import DomainReadSerializer, DomainWriteSerializer
+from .schemas import (
+    domain_list_schema,
+    domain_detail_schema,
+)
 
 
+@extend_schema_view(**domain_list_schema)
 class DomainListView(APIView):
     """
     View to retrieve the list of domains belonging to the auth user.
@@ -40,6 +46,7 @@ class DomainListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema_view(**domain_detail_schema)
 class DomainDetailView(APIView):
     """
     View to update, and delete a specific domain.

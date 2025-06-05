@@ -26,6 +26,7 @@ from .serializers import (
     ClickReadSerializer,
 )
 from .schemas import (
+    url_list_schema,
     url_create_schema,
     url_redirect_schema,
     url_delete_schema,
@@ -39,13 +40,13 @@ from .schemas import (
 User = get_user_model()
 
 
-# @extend_schema_view(**url_list_schema)
+@extend_schema_view(**url_list_schema)
 class URLListView(APIView):
     """
-    View for shortening URLs.
+    View for listing shortened URLs.
 
     Endpoints:
-    - POST /api/urls
+    - GET /api/urls
     """
 
     permission_classes: list = [IsFree | IsBasic | IsPremium]

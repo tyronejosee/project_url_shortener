@@ -15,7 +15,10 @@ from apps.utils.helpers import verify_signature
 from .commands.dispatcher import EventDispatcher
 from .models import Plan
 from .serializers import PlanSerializer
-from .schemas import plan_list_schema
+from .schemas import (
+    plan_list_schema,
+    leemon_squeezey_webhook_schema,
+)
 
 setup_logging()
 logger: logging.Logger = logging.getLogger(__name__)
@@ -43,6 +46,7 @@ class PlanListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@extend_schema_view(**leemon_squeezey_webhook_schema)
 class LemonSqueezyWebhookView(APIView):
     """
     View to handle Lemon Squeezy webhooks.
@@ -69,7 +73,7 @@ class LemonSqueezyWebhookView(APIView):
             )
 
         try:
-            payload: dict = request.data
+            payload: dict = request.data  # type: ignore
             event_type: str = payload["meta"]["event_name"]
 
             if not event_type:

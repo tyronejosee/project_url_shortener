@@ -15,6 +15,26 @@ from .serializers import (
     ClickReadSerializer,
 )
 
+url_list_schema: dict = {
+    "get": extend_schema(
+        summary="Retrieve a list of shortened URLs.",
+        description=(
+            "This endpoint returns a list of all shortened URLs "
+            "associated with the authenticated user."
+        ),
+        responses={
+            200: OpenApiResponse(
+                URLSerializer,
+                description="Urls retrieved successfully.",
+            ),
+            403: OpenApiResponse(
+                description="Access denied due to insufficient permissions."
+            ),
+        },
+        tags=["urls"],
+    ),
+}
+
 url_create_schema: dict = {
     "post": extend_schema(
         summary="Create a shortened URL.",
@@ -250,7 +270,7 @@ clicks_summary_schema: dict = {
                                 {"name": "<type>", "value": 0},
                             ],
                         },
-                        response_only=True
+                        response_only=True,
                     )
                 ],
             ),
