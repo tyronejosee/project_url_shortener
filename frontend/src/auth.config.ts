@@ -59,5 +59,45 @@ export default {
         }
       },
     }),
+    Credentials({
+      id: "oauth2-credentials",
+      name: "OAuth2 Credentials",
+      credentials: {
+        accessToken: {},
+        refreshToken: {},
+      },
+      authorize: async (credentials) => {
+        try {
+          const { accessToken, refreshToken } = credentials;
+
+          if (!accessToken) return null;
+
+          const userRes = await fetch(`${API_URL}api/users/me`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!userRes.ok) return null;
+          const user = await userRes.json();
+
+          return {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            slug: user.slug,
+            plan: user.plan,
+            is_active: user.is_active,
+            is_staff: user.is_staff,
+            accessToken: accessToken as string,
+            refreshToken: refreshToken as string,
+          };
+        } catch (error) {
+          return null;
+        }
+      },
+    }),
   ],
 } satisfies NextAuthConfig;

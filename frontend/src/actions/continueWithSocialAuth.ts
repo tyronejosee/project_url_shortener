@@ -8,18 +8,15 @@ export default async function continueWithSocialAuth(
   redirect: string,
 ) {
   try {
-    const url = `${API_URL}api/socials/o/${provider}/?redirect_uri=${
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_REDIRECT_URL
-        : "http://localhost:3000"
-    }/auth/${redirect}`;
+    const url = `${API_URL}api/socials/o/${provider}/?redirect_uri=${process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_REDIRECT_URL
+      : "http://localhost:3000"
+      }/auth/${redirect}`;
 
     const res = await fetch(url, {
       method: "GET",
-      headers: {
-        // Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
 

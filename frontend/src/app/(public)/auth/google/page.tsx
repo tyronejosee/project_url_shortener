@@ -1,9 +1,9 @@
 "use client";
 
+import AuthLoading from "@/components/common/AuthLoading";
 import useSocialAuth from "@/hooks/useSocialAuth";
-import { DashboardSkeleton } from "@/components/dashboard";
 
 export default function GooglePage() {
   useSocialAuth("google-oauth2");
-  return <DashboardSkeleton />;
+  return <AuthLoading />;
 }

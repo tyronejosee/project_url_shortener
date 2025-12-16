@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { addToast } from "@heroui/react";
+import { useEffect } from "react";
+
 import { API_URL } from "@/config/constants";
-// import { signIn } from "next-auth/react";
 
 export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
   const router = useRouter();
@@ -18,26 +18,21 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
 
     const authenticate = async () => {
       try {
-        const res = await fetch(
-          `${API_URL}api/socials/o/${provider}/?state=${encodeURIComponent(
-            state,
-          )}&code=${encodeURIComponent(code)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          },
-        );
-        // const data = await res.json();
+        const formBody = new URLSearchParams({ state, code }).toString();
 
-        if (res.status == 201) {
-          // await signIn("OAuth2 Credentials", {
-          //   accessToken: data.access,
-          //   refreshToken: data.refresh,
-          //   redirect: false,
-          // });
-          addToast({
-            title: "Logged in!",
-            description: "You have successfully logged in.",
+        const res = await fetch(`${API_URL}api/socials/o/${provider}/`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formBody,
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          await signIn("oauth2-credentials", {
+            accessToken: data.access,
+            refreshToken: data.refresh,
+            redirect: false,
           });
           router.push("/dashboard");
         } else {
@@ -45,7 +40,7 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
         }
       } catch (error) {
         console.error(`Something went wrong: ${error}`);
-        // router.push("/auth/login");
+        router.push("/auth/login");
       }
     };
 
