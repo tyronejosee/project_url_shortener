@@ -37,11 +37,6 @@ class PlanListView(APIView):
 
     def get(self, request: Request, *args, **kwargs) -> Response:
         plans = Plan.objects.get_plans_by_order()
-        if not plans.exists():
-            return Response(
-                {"detail": "No plans available."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
         serializer = PlanSerializer(plans, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

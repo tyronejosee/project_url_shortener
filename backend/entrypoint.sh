@@ -25,10 +25,10 @@ orange="\033[38;2;255;66;0m"
 
 # Start the Django development server on all network interfaces, listening on port 8100
 echo -e "${bold}${orange}Starting URL Shortener backend...${normal}"
-echo -e "${bold}${blue}Access at${normal} ${bold}${red}http://127.0.0.1:8050/${normal}"
-python manage.py runserver 0.0.0.0:8050
+echo -e "${bold}${blue}Access at${normal} ${bold}${red}http://127.0.0.1:8400/${normal}"
+python manage.py runserver 0.0.0.0:8000
 
 # Start the Gunicorn server, which is a production WSGI HTTP server for Django,
-# echo -e "${bold}${red}Starting Gunicorn server on port 8050...${normal}"
-# binding to all network interfaces on port 8050
+# echo -e "${bold}${red}Starting Gunicorn server on port 8400...${normal}"
+# binding to all network interfaces on port 8400
 # gunicorn config.wsgi:application --bind 0.0.0.0:$PORT

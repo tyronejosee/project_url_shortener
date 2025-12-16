@@ -69,6 +69,7 @@ export default function LoginPageClient() {
             color={errors.email?.message ? "danger" : "default"}
             errorMessage={errors.email?.message}
             {...register("email", { required: true })}
+            classNames={{ label: "pb-20", input: "outline-none" }}
           />
           <Input
             type={isVisible ? "text" : "password"}
@@ -94,6 +95,7 @@ export default function LoginPageClient() {
             color={errors.password?.message ? "danger" : "default"}
             errorMessage={errors.password?.message}
             {...register("password", { required: true })}
+            classNames={{ label: "pb-20", input: "outline-none" }}
           />
         </div>
 

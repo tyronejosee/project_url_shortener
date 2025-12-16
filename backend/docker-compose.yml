@@ -25,7 +25,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8400:8050"
+      - "8400:8000"
     env_file:
       - ./.env
     depends_on:

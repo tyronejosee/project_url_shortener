@@ -62,6 +62,7 @@ export default function URLShortenerForm() {
           isInvalid={!!errors.url?.message}
           color={errors.url?.message ? "danger" : "default"}
           errorMessage={errors.url?.message}
+          classNames={{ label: "pb-20", input: "outline-none" }}
           {...register("url")}
         />
         {apiError && <p className="text-red-500">{apiError}</p>}

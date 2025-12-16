@@ -87,6 +87,7 @@ export default function RegisterPageClient() {
             color={errors.username ? "danger" : "default"}
             isInvalid={!!errors.username?.message}
             errorMessage={errors.username?.message}
+            classNames={{ label: "pb-20", input: "outline-none" }}
             {...register("username", { required: true })}
           />
 
@@ -99,6 +100,7 @@ export default function RegisterPageClient() {
             isInvalid={!!errors.email?.message}
             color={errors.email ? "danger" : "default"}
             errorMessage={errors.email?.message}
+            classNames={{ label: "pb-20", input: "outline-none" }}
             {...register("email", { required: true })}
           />
           <Input
@@ -124,6 +126,7 @@ export default function RegisterPageClient() {
             isInvalid={!!errors.password?.message}
             color={errors.password ? "danger" : "default"}
             errorMessage={errors.password?.message}
+            classNames={{ label: "pb-20", input: "outline-none" }}
             {...register("password", { required: true })}
           />
 
@@ -150,6 +153,7 @@ export default function RegisterPageClient() {
             isInvalid={!!errors.re_password?.message}
             color={errors.re_password ? "danger" : "default"}
             errorMessage={errors.re_password?.message}
+            classNames={{ label: "pb-20", input: "outline-none" }}
             {...register("re_password", { required: true })}
           />
         </div>

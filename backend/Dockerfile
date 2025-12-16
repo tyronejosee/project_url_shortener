@@ -27,8 +27,8 @@ COPY entrypoint.sh /app/entrypoint.sh
 # Make the entrypoint script executable.
 RUN chmod +x /app/entrypoint.sh
 
-# # Expose port 8050 on the container to allow communication to and from this port.
-# EXPOSE 8050
+# # Expose port 8400 on the container to allow communication to and from this port.
+EXPOSE 8400
 
 # Set the entrypoint for the container to execute the entrypoint.sh script when the container starts.
 ENTRYPOINT ["/app/entrypoint.sh"]

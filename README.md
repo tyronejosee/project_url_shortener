@@ -177,14 +177,14 @@ python manage.py createsuperuser
 Log in to `dashboard`:
 
 ```bash
-http://127.0.0.1:8050/dashboard/
+http://127.0.0.1:8400/dashboard/
 ```
 
 Access Swagger or Redoc.
 
 ```bash
-http://127.0.0.1:8050/api/schema/swagger/
-http://127.0.0.1:8050/api/schema/redoc/
+http://127.0.0.1:8400/api/schema/swagger/
+http://127.0.0.1:8400/api/schema/redoc/
 ```
 
 ### 🚨 Important Notes
@@ -238,7 +238,7 @@ The front-end of the application was created with [Next.js](https://nextjs.org/)
 ### ✅ Requirements
 
 - [Node.js](https://nodejs.org/) >= 22.11.0
-- [NPM](https://www.npmjs.com/) >= 10.8.2
+- [PNPM](https://pnpm.io/) >= 10.14.0
 
 ### ⚙️ Installation (Front-end)
 
@@ -251,7 +251,7 @@ cd ./frontend/
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Available Scripts
@@ -259,25 +259,25 @@ npm install
 Start the development server at `http://localhost:3000/`
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Build the application for production.
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Start the server in production mode.
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 Run the linter to check the code quality.
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ### 📂 App Router Setup
@@ -308,6 +308,7 @@ Some resources used in this project:
 - [Ruff](https://docs.astral.sh/) - Linter in Python.
 - [Pre-commit](https://pre-commit.com/) - Git hooks in Python.
 - [Next.js Documentation](https://nextjs.org/docs) - Frontend framework in JavaScript.
+- [PNPM](https://pnpm.io/) - Package manager in JavaScript.
 - [Prettier](https://prettier.io/) - Code formatter in JavaScript.
 - [Auth.js](https://authjs.dev/) - Authentication library in JavaScript.
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework in JavaScript.
