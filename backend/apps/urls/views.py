@@ -273,19 +273,9 @@ class ClickListView(APIView):
 
     def get(self, request: Request) -> Response:
         user_urls = URL.objects.get_urls_by_user(request.user)
-        if not user_urls.exists():
-            return Response(
-                {"detail": "No URLs found for user."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
         clicks = Click.objects.get_clicks_by_urls(user_urls)
-        if clicks.exists():
-            serializer = ClickReadSerializer(clicks, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(
-            {"detail": "No clicks found for the provided URLs."},
-            status=status.HTTP_204_NO_CONTENT,
-        )
+        serializer = ClickReadSerializer(clicks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema_view(**clicks_summary_schema)
