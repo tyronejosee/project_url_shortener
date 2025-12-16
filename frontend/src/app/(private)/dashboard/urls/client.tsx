@@ -1,24 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useDisclosure, addToast, Chip } from "@heroui/react";
-import { SquarePenIcon, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
+import { useUser } from "@/hooks/use-user";
+import { addToast, Chip, useDisclosure } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SquarePenIcon, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import { createURL, deleteURLByAlias } from "@/actions/urls";
 import { DeleteModal, Table } from "@/components/common";
 import { URLDrawer } from "@/components/urls";
+import { capitalize } from "@/lib/utils";
 import { urlSchema } from "@/lib/zod";
 import type {
-  URLForm,
-  URLResponse,
+  CellRendererProps,
   TableAction,
   TableColumn,
-  CellRendererProps,
+  URLForm,
+  URLResponse,
 } from "@/types";
-import { capitalize } from "@/lib/utils";
 
 type Props = {
   urls: URLResponse[];
@@ -26,9 +27,10 @@ type Props = {
 
 export default function URLsPageClient({ urls }: Props) {
   // Hooks
+  // Hooks
   const router = useRouter();
-  const { data: session } = useSession();
-  const plan = session?.user?.plan;
+  const { user } = useUser();
+  const plan = user?.plan;
   const isPlanAllowed = plan === "Basic Plan" || plan === "Premium Plan";
 
   const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,19 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { Button, Input, Textarea, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { Input, Textarea, Button, addToast } from "@heroui/react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { feedbackSchema } from "@/lib/zod";
+
 import { API_URL } from "@/config/constants";
+import { useUser } from "@/hooks/use-user";
+import { feedbackSchema } from "@/lib/zod";
 import type { FeedbackForm } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function FeedbackPageClient() {
   // Hooks
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
 
   // States
   const [apiError, setApiError] = useState<string | null>(null);
@@ -27,8 +28,8 @@ export default function FeedbackPageClient() {
   } = useForm<FeedbackForm>({
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
-      name: session?.user?.username || "",
-      email: session?.user?.email || "",
+      name: user?.username || "",
+      email: user?.email || "",
       message: "",
     },
   });

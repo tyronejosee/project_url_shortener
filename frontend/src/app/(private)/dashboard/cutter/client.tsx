@@ -1,9 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import {
   addToast,
   Button,
@@ -12,12 +8,17 @@ import {
   SelectItem,
   Tooltip,
 } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Eye, EyeClosed } from "lucide-react";
-import { urlSchema } from "@/lib/zod";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
 import { API_URL, privacyItems } from "@/config/constants";
 import { useFetch } from "@/hooks/use-fetch";
-import type { GroupResponse, URLRequest } from "@/types";
+import { useUser } from "@/hooks/use-user";
+import { urlSchema } from "@/lib/zod";
+import type { GroupResponse, URLForm } from "@/types";
 
 type Props = {
   groups: GroupResponse[];
@@ -25,9 +26,10 @@ type Props = {
 
 export default function CutterPageClient({ groups }: Props) {
   // Hooks
+  // Hooks
   const fetchClient = useFetch();
-  const { data: session } = useSession();
-  const plan = session?.user?.plan;
+  const { user } = useUser();
+  const plan = user?.plan;
   const isPlanAllowed = plan === "Basic Plan" || plan === "Premium Plan";
 
   // States
@@ -41,7 +43,7 @@ export default function CutterPageClient({ groups }: Props) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<URLRequest>({
+  } = useForm<URLForm>({
     resolver: zodResolver(urlSchema),
     defaultValues: {
       url: "",
@@ -52,7 +54,7 @@ export default function CutterPageClient({ groups }: Props) {
   });
 
   // Actions
-  const onSubmit = async (data: URLRequest) => {
+  const onSubmit = async (data: URLForm) => {
     setLoading(true);
     try {
       await fetchClient(`${API_URL}api/urls/shorten`, {
@@ -97,7 +99,7 @@ export default function CutterPageClient({ groups }: Props) {
           <div
             className={clsx(
               "w-full",
-              !isPlanAllowed && "pointer-events-none opacity-60",
+              !isPlanAllowed && "pointer-events-none opacity-60"
             )}
           >
             <Input

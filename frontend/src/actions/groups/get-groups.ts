@@ -7,6 +7,7 @@ export async function getGroups() {
   try {
     const res = await fetcher(`${API_URL}api/groups`, {
       method: "GET",
+      credentials: "include",
     });
 
     if (!res.ok) throw new Error("Error fetching groups");

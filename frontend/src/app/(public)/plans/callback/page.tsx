@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { getMe } from "@/actions/auth";
+import { useEffect } from "react";
+
 import { PricingPlansLoading } from "@/components/branding";
+import { useUser } from "@/hooks/use-user";
 
 export default function CallbackPage() {
   // Hooks
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { update } = useSession();
+  const { fetchUser } = useUser();
 
   // Effects
   useEffect(() => {
@@ -19,15 +19,12 @@ export default function CallbackPage() {
     if (!order_id || !email) return;
 
     async function syncPlan() {
-      const user = await getMe();
-      if (user) {
-        await update({ plan: user.plan });
-      }
+      await fetchUser();
       router.push("/dashboard");
     }
 
     syncPlan();
-  }, [searchParams, router, update]);
+  }, [searchParams, router, fetchUser]);
 
   return <PricingPlansLoading />;
 }

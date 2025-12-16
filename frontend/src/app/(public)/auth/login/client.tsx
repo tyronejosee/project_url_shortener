@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Button, Input } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@heroui/react";
-import { Eye, EyeClosed } from "lucide-react";
-import { SocialButtons } from "@/components/common";
+
 import { loginAction } from "@/actions/auth-action";
+import { SocialButtons } from "@/components/common";
+import { useUser } from "@/hooks/use-user";
 import { loginSchema } from "@/lib/zod";
 import type { LoginForm } from "@/types";
 
 export default function LoginPageClient() {
   const router = useRouter();
+  const { fetchUser } = useUser();
 
   // States
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -51,6 +54,7 @@ export default function LoginPageClient() {
       setIsLoading(false);
     } else {
       setError(null);
+      await fetchUser();
       router.push("/dashboard");
     }
   };

@@ -1,8 +1,5 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import NextAuth from "next-auth";
-import authConfig from "@/auth.config";
-
-const { auth } = NextAuth(authConfig);
 
 const publicRoutes = [
   "/",
@@ -15,9 +12,11 @@ const publicRoutes = [
 const authRoutes = ["/auth/login", "/auth/register", "/auth/google"];
 const apiAuthPrefix = "/api/auth";
 
-export default auth((req) => {
+const accessCookieName = "access";
+
+export function middleware(req: NextRequest) {
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
+  const hasSession = req.cookies.get(accessCookieName);
 
   // Permit all authentication API routes
   if (nextUrl.pathname.startsWith(apiAuthPrefix)) {
@@ -30,13 +29,13 @@ export default auth((req) => {
   }
 
   // Redirect to /dashboard if the user is logged in and tries to access an authentication route
-  if (isLoggedIn && authRoutes.includes(nextUrl.pathname)) {
+  if (hasSession && authRoutes.includes(nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
   // Redirect to /login if the user is not logged in and tries to access a protected route
   if (
-    !isLoggedIn &&
+    !hasSession &&
     !authRoutes.includes(nextUrl.pathname) &&
     !publicRoutes.includes(nextUrl.pathname)
   ) {
@@ -44,7 +43,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],

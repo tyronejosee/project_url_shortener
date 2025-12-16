@@ -1,24 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {
+  Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Button,
 } from "@heroui/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { Logo } from "@/components/icons";
+import { useUser } from "@/hooks/use-user";
 
 export default function Navigation() {
-  const { data: session } = useSession();
+  const { user } = useUser();
 
   const pathname = usePathname();
   const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
   const isIgnoredRoute = ignoredRoutes.some((route) =>
-    pathname.startsWith(route),
+    pathname.startsWith(route)
   );
   if (isIgnoredRoute) return null;
 
@@ -34,7 +35,7 @@ export default function Navigation() {
           <Link href="/plans">Plans</Link>
         </NavbarItem>
 
-        {session?.user ? (
+        {user ? (
           <>
             <NavbarItem>
               <Button

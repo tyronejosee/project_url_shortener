@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Input } from "@heroui/react";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import { API_URL } from "@/config/constants";
 import { urlshortenerSchema } from "@/lib/zod";
 import type { URLForm } from "@/types";
 
 export default function URLShortenerForm() {
-  const { data: session } = useSession();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
@@ -26,10 +25,8 @@ export default function URLShortenerForm() {
     try {
       const res = await fetch(`${API_URL}api/urls/shorten`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}` || "",
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
       });
       if (!res) throw new Error("Server error");

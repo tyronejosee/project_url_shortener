@@ -1,13 +1,15 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { API_URL } from "@/config/constants";
 
+import { useUser } from "./use-user";
+
 export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
   const router = useRouter();
+  const { fetchUser } = useUser();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -26,15 +28,11 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: formBody,
         });
-        const data = await res.json();
 
         if (res.ok) {
-          await signIn("oauth2-credentials", {
-            accessToken: data.access,
-            refreshToken: data.refresh,
-            redirect: false,
-          });
           router.push("/dashboard");
+          router.refresh();
+          await fetchUser();
         } else {
           throw new Error("Failed to log in");
         }
@@ -45,5 +43,5 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
     };
 
     authenticate();
-  }, [searchParams, provider, router]);
+  }, [searchParams, provider, router, fetchUser]);
 }

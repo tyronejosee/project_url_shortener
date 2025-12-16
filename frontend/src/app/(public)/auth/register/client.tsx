@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Button, Input } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@heroui/react";
-import { Eye, EyeClosed } from "lucide-react";
+
 import { registerAction } from "@/actions/auth-action";
 import { SocialButtons } from "@/components/common";
+import { useUser } from "@/hooks/use-user";
 import { registerSchema } from "@/lib/zod";
 import type { RegisterForm } from "@/types";
 
 export default function RegisterPageClient() {
   const router = useRouter();
+  const { fetchUser } = useUser();
 
   // States
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -57,20 +60,8 @@ export default function RegisterPageClient() {
       return;
     }
 
-    if (response.errors) {
-      Object.entries(response.errors).forEach(([field, messages]) => {
-        if (Array.isArray(messages)) {
-          setError(field as keyof RegisterForm, {
-            type: "server",
-            message: messages[0],
-          });
-        }
-      });
-      setIsLoading(false);
-      return;
-    }
-
     setApiError(null);
+    await fetchUser();
     router.push("/dashboard");
   };
 

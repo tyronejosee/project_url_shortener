@@ -1,20 +1,25 @@
-"use client";
-
-import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { API_URL } from "@/config/constants";
+import { useUser } from "./use-user";
 
 export default function useLogout() {
-  const { data: session } = useSession();
+  const router = useRouter();
+  const { fetchUser } = useUser();
 
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/tokens/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-      body: JSON.stringify({ refresh: session?.refreshToken }),
-    });
-    await signOut({ callbackUrl: "/auth/login" });
+    try {
+      await fetch(`${API_URL}api/tokens/logout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      await fetchUser();
+    } catch (error) {
+      console.error("Logout failed", error);
+    } finally {
+      router.push("/auth/login");
+      router.refresh();
+    }
   };
 
   return { handleLogout };

@@ -7,6 +7,7 @@ export async function getClicks() {
   try {
     const res = await fetcher(`${API_URL}api/clicks`, {
       method: "GET",
+      credentials: "include",
     });
 
     if (!res.ok) throw new Error("Error fetching clicks");

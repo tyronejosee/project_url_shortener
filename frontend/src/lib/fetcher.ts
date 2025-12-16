@@ -1,13 +1,14 @@
-import { auth } from "@/auth";
+import { cookies } from "next/headers";
 
 export const fetcher = async (url: string, options: RequestInit = {}) => {
-  const session = await auth();
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access")?.value;
 
   return fetch(url, {
     ...options,
     headers: {
       ...options?.headers,
-      ...(session && { Authorization: `Bearer ${session.accessToken}` }),
+      ...(accessToken && { Cookie: `access=${accessToken}` }),
     },
   });
 };

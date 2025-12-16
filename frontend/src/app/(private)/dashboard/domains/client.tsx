@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast, Chip, useDisclosure } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SquarePenIcon, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import {
   createDomain,
   deleteDomainById,
@@ -14,15 +14,16 @@ import {
 } from "@/actions/domains";
 import { DeleteModal, Table } from "@/components/common";
 import { DomainDrawer } from "@/components/domains";
+import { useUser } from "@/hooks/use-user";
+import { capitalize } from "@/lib/utils";
 import { domainSchema } from "@/lib/zod";
 import type {
   CellRendererProps,
-  TableColumn,
+  DomainForm,
   DomainResponse,
   TableAction,
-  DomainForm,
+  TableColumn,
 } from "@/types";
-import { capitalize } from "@/lib/utils";
 
 type Props = {
   domains: DomainResponse[];
@@ -31,7 +32,7 @@ type Props = {
 export default function DomainsPageClient({ domains }: Props) {
   // Hooks
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isConfirmOpen,
@@ -41,7 +42,7 @@ export default function DomainsPageClient({ domains }: Props) {
 
   // States
   const [editingDomain, setEditingDomain] = useState<DomainResponse | null>(
-    null,
+    null
   );
   const [domainToDelete, setDomainToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -83,9 +84,8 @@ export default function DomainsPageClient({ domains }: Props) {
         domain: data.domain,
       };
 
-      if (editingDomain)
-        await updateDomainById(editingDomain.id, payload, session);
-      else await createDomain(payload, session);
+      if (editingDomain) await updateDomainById(editingDomain.id, payload);
+      else await createDomain(payload);
 
       router.refresh();
       onClose();
@@ -108,7 +108,7 @@ export default function DomainsPageClient({ domains }: Props) {
     if (!domainToDelete) return;
     setLoading(true);
     try {
-      await deleteDomainById(domainToDelete, session);
+      await deleteDomainById(domainToDelete);
       router.refresh();
       addToast({
         title: "Deleted",
@@ -177,8 +177,8 @@ export default function DomainsPageClient({ domains }: Props) {
                     value === "verified"
                       ? "success"
                       : value === "failed"
-                        ? "danger"
-                        : "default"
+                      ? "danger"
+                      : "default"
                   }
                   variant="flat"
                 >

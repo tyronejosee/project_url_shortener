@@ -1,21 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useUser } from "@/hooks/use-user";
+import { Button, Input, Textarea, addToast } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Textarea, Button, addToast } from "@heroui/react";
-import { supportSchema } from "@/lib/zod";
-import { useFetch } from "@/hooks/use-fetch";
+
 import { API_URL } from "@/config/constants";
+import { useFetch } from "@/hooks/use-fetch";
+import { supportSchema } from "@/lib/zod";
 import type { SupportForm } from "@/types";
 
 export default function SupportPageClient() {
   // Hooks
   const fetchClient = useFetch();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const router = useRouter();
 
   // States
@@ -30,8 +31,8 @@ export default function SupportPageClient() {
   } = useForm<SupportForm>({
     resolver: zodResolver(supportSchema),
     defaultValues: {
-      name: session?.user?.username || "",
-      email: session?.user?.email || "",
+      name: user?.username || "",
+      email: user?.email || "",
       message: "",
     },
   });

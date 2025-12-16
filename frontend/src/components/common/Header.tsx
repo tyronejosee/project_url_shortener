@@ -1,26 +1,26 @@
 "use client";
 
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Skeleton,
   Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Skeleton,
 } from "@heroui/react";
-import { useSession } from "next-auth/react";
-import useLogout from "@/hooks/use-logout";
-import { getFirstLetter } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
+import useLogout from "@/hooks/use-logout";
+import { useUser } from "@/hooks/use-user";
+import { getFirstLetter } from "@/lib/utils";
+
 export default function Header() {
-  const { data: session, status } = useSession();
+  const { user, isLoading } = useUser();
   const pathname = usePathname();
   const lastSegment = pathname.split("/").filter(Boolean).pop();
 
   const { handleLogout } = useLogout();
-  const isLoading = status === "loading";
 
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b-2 border-neutral-200 p-4 flex justify-between items-center">
@@ -37,14 +37,14 @@ export default function Header() {
             <Button variant="bordered" size="lg" className="px-4">
               <div className="text-xs flex flex-col text-right">
                 <span className="text-primary font-semibold">
-                  {session?.user?.username}
+                  {user?.username}
                 </span>
-                <span>{session?.user?.plan}</span>
+                <span>{user?.plan}</span>
               </div>
               <Avatar
                 size="sm"
                 radius="full"
-                name={getFirstLetter(session?.user?.username || "User")}
+                name={getFirstLetter(user?.username || "User")}
                 className="bg-primary text-white text-xl"
               />
             </Button>

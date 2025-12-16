@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Button, Switch } from "@heroui/react";
+import { Check, InfinityIcon, TestTubeDiagonal, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Switch } from "@heroui/react";
-import { useSession } from "next-auth/react";
-import { Check, InfinityIcon, TestTubeDiagonal, X } from "lucide-react";
+import { useState } from "react";
+
+import { useUser } from "@/hooks/use-user";
 import { cn } from "@/lib/utils";
 import type { PlanResponse } from "@/types";
 
@@ -16,11 +17,11 @@ type Props = {
 export default function PricingPlans({ plans }: Props) {
   // Hooks
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { user } = useUser();
 
   // States
   const [selectedPlan, setSelectedPlan] = useState<string>(
-    session?.user?.plan || "Basic Plan",
+    user?.plan || "Basic Plan"
   );
   const [isAnnual, setIsAnnual] = useState<boolean>(false);
 
@@ -34,7 +35,7 @@ export default function PricingPlans({ plans }: Props) {
       <nav
         className={cn(
           "z-10 sticky w-full flex items-center justify-center gap-4 mb-4 bg-white/50 backdrop-blur-xl",
-          topClass,
+          topClass
         )}
       >
         <span>Monthly</span>

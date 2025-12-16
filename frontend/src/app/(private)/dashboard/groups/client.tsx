@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useDisclosure, addToast, Chip } from "@heroui/react";
-import { SquarePenIcon, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
+import { addToast, Chip, useDisclosure } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SquarePenIcon, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import {
   createGroup,
   deleteGroupById,
@@ -14,6 +14,7 @@ import {
 } from "@/actions/groups";
 import { DeleteModal, Table } from "@/components/common";
 import { GroupDrawer } from "@/components/groups";
+import { useUser } from "@/hooks/use-user";
 import { groupSchema } from "@/lib/zod";
 import type {
   CellRendererProps,
@@ -30,7 +31,7 @@ type Props = {
 export default function GroupsPageClient({ groups }: Props) {
   // Hooks
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isConfirmOpen,
@@ -84,9 +85,8 @@ export default function GroupsPageClient({ groups }: Props) {
         description: data.description,
       };
 
-      if (editingGroup)
-        await updateGroupById(editingGroup.id, payload, session);
-      else await createGroup(payload, session);
+      if (editingGroup) await updateGroupById(editingGroup.id, payload);
+      else await createGroup(payload);
 
       router.refresh();
       onClose();
@@ -109,7 +109,7 @@ export default function GroupsPageClient({ groups }: Props) {
     if (!groupToDelete) return;
     setLoading(true);
     try {
-      await deleteGroupById(groupToDelete, session);
+      await deleteGroupById(groupToDelete);
       router.refresh();
       addToast({
         title: "Deleted",
