@@ -3,16 +3,9 @@
 from django.urls import path
 from django.urls.resolvers import URLPattern
 
-from .views import DomainListView, DomainDetailView
-
+from apps.domains.controllers import DomainDetailController, DomainListController
 
 urlpatterns: list[URLPattern] = [
-    path(
-        "api/domains",
-        DomainListView.as_view(),
-    ),
-    path(
-        "api/domains/<str:domain_id>",
-        DomainDetailView.as_view(),
-    ),
+    path("api/domains", DomainListController.as_view()),
+    path("api/domains/<uuid:domain_id>", DomainDetailController.as_view()),
 ]
