@@ -4,19 +4,17 @@ import { useEffect, useState } from "react";
 import { HeroSection, Sponsors, UrlList } from "@/components/branding";
 import { URLShortenerForm } from "@/components/urls";
 import { AnimatedContent } from "@/components/animated";
-import type { URLRead } from "@/types";
+import type { URLResponse } from "@/types";
 
 export default function Home() {
-  const [urls, setUrls] = useState<URLRead[]>([]);
+  const [urls, setUrls] = useState<URLResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const handleStorageChange = () => {
       const storedLinks = JSON.parse(localStorage.getItem("urls") || "[]");
-      const sortedLinks = storedLinks.sort((a: URLRead, b: URLRead) => {
-        return (
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
+      const sortedLinks = storedLinks.sort((a: URLResponse, b: URLResponse) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
       setUrls(sortedLinks);
       setLoading(false);

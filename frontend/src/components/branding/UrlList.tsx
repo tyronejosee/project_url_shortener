@@ -1,12 +1,12 @@
 "use client";
 
 import { Button, Snippet } from "@heroui/react";
-import type { URLRead } from "@/types";
+import type { URLResponse } from "@/types";
 
 type Props = {
-  urls: URLRead[];
+  urls: URLResponse[];
   loading: boolean;
-  setUrls: React.Dispatch<React.SetStateAction<URLRead[]>>;
+  setUrls: React.Dispatch<React.SetStateAction<URLResponse[]>>;
 };
 
 export default function UrlList({ urls, setUrls }: Props) {
@@ -32,15 +32,8 @@ export default function UrlList({ urls, setUrls }: Props) {
       ) : (
         <ul className="divide-y-2 divide-dashed divide-neutral-300 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-neutral-200 scrollbar-track-transparent">
           {urls.map((url, index) => (
-            <li
-              key={url.id || index}
-              className="flex items-center justify-between py-2 pl-6 pr-1"
-            >
-              <a
-                href={url.url}
-                className="text-sm text-primary hover:underline"
-                target="_blank"
-              >
+            <li key={url.id || index} className="flex items-center justify-between py-2 pl-6 pr-1">
+              <a href={url.url} className="text-sm text-primary hover:underline" target="_blank">
                 {url.url}
               </a>
               <Snippet symbol className="bg-transparent">

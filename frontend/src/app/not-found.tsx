@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function NotFoundPage() {
   const router = useRouter();

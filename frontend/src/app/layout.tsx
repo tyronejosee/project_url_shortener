@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import { Outfit, Roboto_Mono } from "next/font/google";
+
 import { Footer, Navigation } from "@/components/common";
 import { COMPANY_NAME } from "@/config/constants";
+
 import Providers from "./providers";
-import "../styles/globals.css";
-import type { Metadata } from "next";
+
+import "@/app/global.css";
 
 const outfit = Outfit({
   variable: "--font-outfit",

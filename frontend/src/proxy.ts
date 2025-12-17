@@ -14,7 +14,7 @@ const apiAuthPrefix = "/api/auth";
 
 const accessCookieName = "access";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { nextUrl } = req;
   const hasSession = req.cookies.get(accessCookieName);
 

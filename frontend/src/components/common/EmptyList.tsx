@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { FolderOpen } from "lucide-react";
+import { motion } from "motion/react";
 
 type Props = {
   type: string;
@@ -25,9 +25,7 @@ export default function EmptyList({ type }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
-        <p className="text-sm text-neutral-500">
-          No items have been added yet.
-        </p>
+        <p className="text-sm text-neutral-500">No items have been added yet.</p>
       </motion.div>
     </section>
   );

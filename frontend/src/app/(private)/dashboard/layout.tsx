@@ -1,5 +1,6 @@
 import { Header, Sidebar } from "@/components/common";
-import "../../../styles/globals.css";
+
+import "@/app/global.css";
 
 type Props = {
   children: React.ReactNode;

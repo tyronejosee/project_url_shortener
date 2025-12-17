@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 export default function PricingPlansLoading() {
   // States
@@ -41,9 +41,9 @@ export default function PricingPlansLoading() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="w-24 h-24 rounded-full bg-gradient-to-r from-violet-400 via-purple-500 to-indigo-500 p-0.5"
+              className="w-24 h-24 rounded-full bg-linear-to-r from-violet-400 via-purple-500 to-indigo-500 p-0.5"
             >
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-violet-100 to-indigo-100 flex items-center justify-center">
+              <div className="w-full h-full rounded-full bg-linear-to-br from-violet-100 to-indigo-100 flex items-center justify-center">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -84,7 +84,7 @@ export default function PricingPlansLoading() {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="space-y-4"
         >
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Welcome! 🎉
           </h1>
           <p className="text-gray-700 text-lg max-w-sm mx-auto">
@@ -103,7 +103,7 @@ export default function PricingPlansLoading() {
           <div className="w-64 mx-auto">
             <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-violet-400 to-purple-500 rounded-full"
+                className="h-full bg-linear-to-r from-violet-400 to-purple-500 rounded-full"
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 6, ease: "easeInOut" }}
@@ -127,7 +127,7 @@ export default function PricingPlansLoading() {
             {[0, 1, 2].map((index) => (
               <motion.div
                 key={index}
-                className="w-3 h-3 rounded-full bg-gradient-to-r from-violet-400 to-purple-500"
+                className="w-3 h-3 rounded-full bg-linear-to-r from-violet-400 to-purple-500"
                 animate={{
                   y: [-8, 8, -8],
                   opacity: [0.5, 1, 0.5],

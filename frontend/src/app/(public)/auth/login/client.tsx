@@ -73,7 +73,7 @@ export default function LoginPageClient() {
             color={errors.email?.message ? "danger" : "default"}
             errorMessage={errors.email?.message}
             {...register("email", { required: true })}
-            classNames={{ label: "pb-20", input: "outline-none" }}
+            // classNames={{ label: "pb-20", input: "outline-none" }}
           />
           <Input
             type={isVisible ? "text" : "password"}
@@ -99,7 +99,7 @@ export default function LoginPageClient() {
             color={errors.password?.message ? "danger" : "default"}
             errorMessage={errors.password?.message}
             {...register("password", { required: true })}
-            classNames={{ label: "pb-20", input: "outline-none" }}
+            // classNames={{ label: "pb-20", input: "outline-none" }}
           />
         </div>
 
@@ -107,22 +107,13 @@ export default function LoginPageClient() {
 
         <div className="flex items-center justify-between">
           <div className="text-sm">
-            <Link
-              href="/forgot-password"
-              className="font-medium text-primary hover:underline"
-            >
+            <Link href="/forgot-password" className="font-medium text-primary hover:underline">
               Forgot your password?
             </Link>
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <Button
-            type="submit"
-            size="lg"
-            color="primary"
-            className="w-full"
-            disabled={isLoading}
-          >
+          <Button type="submit" size="lg" color="primary" className="w-full" disabled={isLoading}>
             {isLoading ? "Signing In..." : "Sign In"}
           </Button>
         </div>
