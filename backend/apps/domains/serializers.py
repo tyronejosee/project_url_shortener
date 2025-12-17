@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import Domain
+from apps.domains.models import Domain
 
 
 class DomainReadSerializer(serializers.ModelSerializer):

@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Domain
+from apps.domains.models import Domain
 
 
 @admin.register(Domain)

@@ -1,15 +1,11 @@
 """Schemas for Domains App."""
 
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiResponse,
-)
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from .serializers import (
+from apps.domains.serializers import (
     DomainReadSerializer,
     DomainWriteSerializer,
 )
-
 
 domain_list_schema: dict = {
     "get": extend_schema(
