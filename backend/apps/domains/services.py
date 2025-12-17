@@ -1,6 +1,7 @@
 """Services for Domains App."""
 
 from typing import Any
+from uuid import UUID
 
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound, ValidationError
@@ -22,7 +23,7 @@ class DomainService:
         domains = self.repository.get_by_user(user)
         return list(domains)
 
-    def get_domain_by_id(self, domain_id: str) -> Domain:
+    def get_domain_by_id(self, domain_id: UUID) -> Domain:
         """Get a single domain by ID."""
         domain = self.repository.get_by_id(domain_id)
         if not domain:
@@ -35,7 +36,7 @@ class DomainService:
 
     def update_domain(
         self,
-        domain_id: str,
+        domain_id: UUID,
         validated_data: dict[str, Any],
         user: User | None = None,
     ) -> Domain:
@@ -48,7 +49,7 @@ class DomainService:
 
         return self.repository.update(domain, **validated_data)
 
-    def delete_domain(self, domain_id: str, user: User | None = None) -> None:
+    def delete_domain(self, domain_id: UUID, user: User | None = None) -> None:
         """Delete a domain."""
         domain = self.get_domain_by_id(domain_id)
 

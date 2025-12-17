@@ -4,13 +4,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { API_URL } from "@/config/constants";
+import { useFetch } from "@/hooks/use-fetch";
+import { useUser } from "@/hooks/use-user";
 
-import { useUser } from "./use-user";
-
-export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
+export function useSocialAuth(provider: "google-oauth2" | "facebook"): void {
   const router = useRouter();
-  const { fetchUser } = useUser();
   const searchParams = useSearchParams();
+  const { fetchClient } = useFetch();
+  const { fetchUser } = useUser();
 
   useEffect(() => {
     const state = searchParams.get("state");
@@ -22,9 +23,8 @@ export default function useSocialAuth(provider: "google-oauth2" | "facebook") {
       try {
         const formBody = new URLSearchParams({ state, code }).toString();
 
-        const res = await fetch(`${API_URL}api/socials/o/${provider}/`, {
+        const res = await fetchClient(`${API_URL}api/socials/o/${provider}/`, {
           method: "POST",
-          credentials: "include",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: formBody,
         });

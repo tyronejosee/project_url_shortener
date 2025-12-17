@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  addToast,
-  Button,
-  Input,
-  Select,
-  SelectItem,
-  Tooltip,
-} from "@heroui/react";
+import { addToast, Button, Input, Select, SelectItem, Tooltip } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Eye, EyeClosed } from "lucide-react";
@@ -26,8 +19,7 @@ type Props = {
 
 export default function CutterPageClient({ groups }: Props) {
   // Hooks
-  // Hooks
-  const fetchClient = useFetch();
+  const { fetchClient } = useFetch();
   const { user } = useUser();
   const plan = user?.plan;
   const isPlanAllowed = plan === "Basic Plan" || plan === "Premium Plan";
@@ -59,9 +51,7 @@ export default function CutterPageClient({ groups }: Props) {
     try {
       await fetchClient(`${API_URL}api/urls/shorten`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       reset();
@@ -96,12 +86,7 @@ export default function CutterPageClient({ groups }: Props) {
       />
       <div className="flex space-x-6">
         <Tooltip content="Not available for this plan.">
-          <div
-            className={clsx(
-              "w-full",
-              !isPlanAllowed && "pointer-events-none opacity-60"
-            )}
-          >
+          <div className={clsx("w-full", !isPlanAllowed && "pointer-events-none opacity-60")}>
             <Input
               type={isVisible ? "text" : "password"}
               size="lg"

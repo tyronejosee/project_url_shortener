@@ -20,7 +20,7 @@ SITE_NAME = "URL Shortener"
 DOMAIN = env.str("DOMAIN")
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env.str("SECRET_KEY")
-VERIFICATION_CODE = env.str("VERIFICATION_CODE")
+API_KEY = env.str("API_KEY")
 WSGI_APPLICATION = "core.wsgi.application"
 ROOT_URLCONF = "core.urls"
 
@@ -64,7 +64,7 @@ MIDDLEWARE: list[str] = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "apps.utils.middleware.VerificationCodeMiddleware",
+    "apps.utils.middleware.VerificationApiKeyMiddleware",
 ]
 
 TEMPLATES: list[dict] = [
@@ -167,7 +167,7 @@ CORS_ALLOW_HEADERS: list[str] = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-    "X-Verification-Code",
+    "X-API-KEY",
 ]
 
 # Auth, Djoser, rest_framework_simple_jwt
@@ -330,7 +330,7 @@ SPECTACULAR_SETTINGS: dict = {
     "REDOC_DIST": "SIDECAR",
     "REDOC_UI_SETTINGS": {
         "hideHostname": True,
-        "theme": {"colors": {"primary": {"main": "#16FF00"}}},
+        "theme": {"colors": {"primary": {"main": "#8a2be2"}}},
     },
     "TAGS": [
         {"name": "urls", "description": "Operations related to urls"},
@@ -348,9 +348,7 @@ SPECTACULAR_SETTINGS: dict = {
 # Static and Media
 STATIC_URL: str = "/static/"
 STATIC_ROOT: str = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS: list[str] = [
-    os.path.join(BASE_DIR, "static"),
-]
+STATICFILES_DIRS: list[str] = [os.path.join(BASE_DIR, "static")]
 
 MEDIA_URL: str = "/media/"
 MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")

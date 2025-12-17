@@ -1,20 +1,22 @@
 "use client";
 
 import { Button, Input, Textarea, addToast } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { API_URL } from "@/config/constants";
+import { useFetch } from "@/hooks/use-fetch";
 import { useUser } from "@/hooks/use-user";
 import { feedbackSchema } from "@/lib/zod";
 import type { FeedbackForm } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function FeedbackPageClient() {
   // Hooks
   const router = useRouter();
   const { user } = useUser();
+  const { fetchClient } = useFetch();
 
   // States
   const [apiError, setApiError] = useState<string | null>(null);
@@ -37,7 +39,7 @@ export default function FeedbackPageClient() {
   // Actions
   const onSubmit = async (data: FeedbackForm) => {
     try {
-      await fetch(`${API_URL}api/feedback`, {
+      await fetchClient(`${API_URL}api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

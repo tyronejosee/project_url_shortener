@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 
 import { API_URL } from "@/config/constants";
+import { fetcher } from "@/lib/fetcher";
 import { loginSchema, registerSchema } from "@/lib/zod";
 
 export const loginAction = async (values: z.infer<typeof loginSchema>) => {
   try {
-    const res = await fetch(`${API_URL}api/tokens/create/`, {
+    const res = await fetcher(`${API_URL}api/tokens/create/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -36,17 +37,15 @@ export const loginAction = async (values: z.infer<typeof loginSchema>) => {
           if (k.toLowerCase() === "path") cookieOptions.path = v;
           if (k.toLowerCase() === "httponly") cookieOptions.httpOnly = true;
           if (k.toLowerCase() === "secure") cookieOptions.secure = true;
-          if (k.toLowerCase() === "samesite")
-            cookieOptions.sameSite = v.toLowerCase();
+          if (k.toLowerCase() === "samesite") cookieOptions.sameSite = v.toLowerCase();
           if (k.toLowerCase() === "max-age") cookieOptions.maxAge = parseInt(v);
-          if (k.toLowerCase() === "expires")
-            cookieOptions.expires = new Date(v);
+          if (k.toLowerCase() === "expires") cookieOptions.expires = new Date(v);
         });
 
         if (name === "access" || name === "refresh") {
           cookieStore.set(name, value, {
             path: cookieOptions.path || "/",
-            httpOnly: true, // Force these to be sure
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: cookieOptions.sameSite || "lax",
             maxAge: cookieOptions.maxAge,
@@ -62,9 +61,7 @@ export const loginAction = async (values: z.infer<typeof loginSchema>) => {
   }
 };
 
-export const registerAction = async (
-  values: z.infer<typeof registerSchema>
-) => {
+export const registerAction = async (values: z.infer<typeof registerSchema>) => {
   try {
     const { data, success } = registerSchema.safeParse(values);
 
@@ -74,7 +71,7 @@ export const registerAction = async (
       };
     }
 
-    const res = await fetch(`${API_URL}api/users`, {
+    const res = await fetcher(`${API_URL}api/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -88,9 +85,7 @@ export const registerAction = async (
 
     if (!res.ok) {
       const firstError = Object.values(apiData)[0];
-      const errorMessage = Array.isArray(firstError)
-        ? firstError[0]
-        : "Registration failed";
+      const errorMessage = Array.isArray(firstError) ? firstError[0] : "Registration failed";
       return {
         error: errorMessage as string,
       };

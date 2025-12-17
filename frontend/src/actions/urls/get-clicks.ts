@@ -5,11 +5,7 @@ import { fetcher } from "@/lib/fetcher";
 
 export async function getClicks() {
   try {
-    const res = await fetcher(`${API_URL}api/clicks`, {
-      method: "GET",
-      credentials: "include",
-    });
-
+    const res = await fetcher(`${API_URL}api/clicks`, { method: "GET" });
     if (!res.ok) throw new Error("Error fetching clicks");
     return res.json();
   } catch (error) {

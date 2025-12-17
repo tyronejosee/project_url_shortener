@@ -1,5 +1,7 @@
 """Interfaces for Domains App."""
 
+from uuid import UUID
+
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 
@@ -11,7 +13,7 @@ User = get_user_model()
 class DomainRepositoryInterface:
     """Interface for Domain repository."""
 
-    def get_by_id(self, domain_id: str) -> Domain | None: ...
+    def get_by_id(self, domain_id: UUID) -> Domain | None: ...
 
     def get_by_user(self, user: User) -> QuerySet[Domain]: ...
 
@@ -21,4 +23,4 @@ class DomainRepositoryInterface:
 
     def delete(self, domain: Domain) -> None: ...
 
-    def exists(self, domain_id: str) -> bool: ...
+    def exists(self, domain_id: UUID) -> bool: ...

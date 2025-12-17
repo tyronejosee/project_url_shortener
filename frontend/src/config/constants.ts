@@ -3,8 +3,8 @@ export const COMPANY_NAME = "URL Shortener";
 export const COMPANY_DESCRIPTION = "Pending.";
 
 // API
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
-export const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
 
 // Selects
 export const privacyItems = [

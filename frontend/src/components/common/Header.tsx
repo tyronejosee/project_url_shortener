@@ -11,7 +11,7 @@ import {
 } from "@heroui/react";
 import { usePathname } from "next/navigation";
 
-import useLogout from "@/hooks/use-logout";
+import { useLogout } from "@/hooks/use-logout";
 import { useUser } from "@/hooks/use-user";
 import { getFirstLetter } from "@/lib/utils";
 
@@ -25,9 +25,7 @@ export default function Header() {
   return (
     <header className="z-10 bg-white/50 backdrop-blur-sm border-b-2 border-neutral-200 p-4 flex justify-between items-center">
       <div className="ml-8 text-3xl font-bold">
-        {lastSegment
-          ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)
-          : "Home"}
+        {lastSegment ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1) : "Home"}
       </div>
       {isLoading ? (
         <Skeleton className="rounded-xl w-32 h-12" />
@@ -36,9 +34,7 @@ export default function Header() {
           <DropdownTrigger>
             <Button variant="bordered" size="lg" className="px-4">
               <div className="text-xs flex flex-col text-right">
-                <span className="text-primary font-semibold">
-                  {user?.username}
-                </span>
+                <span className="text-primary font-semibold">{user?.username}</span>
                 <span>{user?.plan}</span>
               </div>
               <Avatar

@@ -1,17 +1,17 @@
 import { create } from "zustand";
 
-import { API_URL } from "@/config/constants";
+import { API_KEY, API_URL } from "@/config/constants";
 import type { User } from "@/types";
 
-interface AuthState {
+type AuthState = {
   user: User | null;
   isLoading: boolean;
   error: string | null;
   fetchUser: () => Promise<void>;
   setUser: (user: User | null) => void;
-}
+};
 
-export const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isLoading: true,
   error: null,
@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const res = await fetch(`${API_URL}api/users/me`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-API-KEY": API_KEY },
         credentials: "include",
       });
 
@@ -39,3 +39,5 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+export { useAuthStore };

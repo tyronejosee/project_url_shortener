@@ -1,6 +1,7 @@
 """Repositories for Domains App."""
 
 from typing import override
+from uuid import UUID
 
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
@@ -15,7 +16,7 @@ class DomainRepository(DomainRepositoryInterface):
     """Repository for Domain model operations."""
 
     @override
-    def get_by_id(self, domain_id: str) -> Domain | None:
+    def get_by_id(self, domain_id: UUID) -> Domain | None:
         """Get a domain by its ID."""
         try:
             return Domain.objects.get(pk=domain_id)
@@ -48,6 +49,6 @@ class DomainRepository(DomainRepositoryInterface):
         domain.delete()
 
     @override
-    def exists(self, domain_id: str) -> bool:
+    def exists(self, domain_id: UUID) -> bool:
         """Check if a domain exists."""
         return Domain.objects.filter(pk=domain_id).exists()

@@ -15,9 +15,9 @@ import type { SupportForm } from "@/types";
 
 export default function SupportPageClient() {
   // Hooks
-  const fetchClient = useFetch();
-  const { user } = useUser();
   const router = useRouter();
+  const { fetchClient } = useFetch();
+  const { user } = useUser();
 
   // States
   const [apiError, setApiError] = useState<string | null>(null);
