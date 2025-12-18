@@ -3,29 +3,26 @@
 import logging
 
 from django.conf import settings
+from drf_spectacular.utils import extend_schema_view
 from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from drf_spectacular.utils import extend_schema_view
+from rest_framework.views import APIView
 
-from core.logging import setup_logging
+from apps.subscriptions.commands.dispatcher import EventDispatcher
+from apps.subscriptions.schemas import leemon_squeezey_webhook_schema, plan_list_schema
+from apps.subscriptions.serializers import PlanSerializer
+from apps.subscriptions.services import PlanService
 from apps.utils.helpers import verify_signature
-from .commands.dispatcher import EventDispatcher
-from .models import Plan
-from .serializers import PlanSerializer
-from .schemas import (
-    plan_list_schema,
-    leemon_squeezey_webhook_schema,
-)
+from core.logging import setup_logging
 
 setup_logging()
 logger: logging.Logger = logging.getLogger(__name__)
 
 
 @extend_schema_view(**plan_list_schema)
-class PlanListView(APIView):
+class PlanListController(APIView):
     """
     View to retrieve the list of plans with their features.
 
@@ -35,14 +32,19 @@ class PlanListView(APIView):
 
     permission_classes: list = [AllowAny]
 
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.service = PlanService()
+
     def get(self, request: Request, *args, **kwargs) -> Response:
-        plans = Plan.objects.get_plans_by_order()
-        serializer = PlanSerializer(plans, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        plans = self.service.get_plans()
+        return Response(
+            PlanSerializer(plans, many=True).data, status=status.HTTP_200_OK
+        )
 
 
 @extend_schema_view(**leemon_squeezey_webhook_schema)
-class LemonSqueezyWebhookView(APIView):
+class LemonSqueezyWebhook(APIView):
     """
     View to handle Lemon Squeezy webhooks.
 

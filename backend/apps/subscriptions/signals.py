@@ -3,8 +3,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from apps.subscriptions.models import Subscription
 from apps.users.models import PlanChoices
-from .models import Subscription
 
 
 @receiver(post_save, sender=Subscription)

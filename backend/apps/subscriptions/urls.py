@@ -1,18 +1,11 @@
-"""Urls for Plans App."""
+"""Urls for Suscriptions App."""
 
 from django.urls import path
 from django.urls.resolvers import URLPattern
 
-from .views import PlanListView, LemonSqueezyWebhookView
-
+from apps.subscriptions.controllers import PlanListController, LemonSqueezyWebhook
 
 urlpatterns: list[URLPattern] = [
-    path(
-        "api/plans",
-        PlanListView.as_view(),
-    ),
-    path(
-        "api/webhooks/lemon-squeezy",
-        LemonSqueezyWebhookView.as_view(),
-    ),
+    path("api/plans", PlanListController.as_view()),
+    path("api/webhooks/lemon-squeezy", LemonSqueezyWebhook.as_view()),
 ]

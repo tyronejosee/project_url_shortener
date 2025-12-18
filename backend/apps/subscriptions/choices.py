@@ -1,4 +1,4 @@
-"""Choices for Plans App."""
+"""Choices for Subscriptions App."""
 
 from django.db import models
 

@@ -2,10 +2,10 @@ import logging
 
 from django.utils.dateparse import parse_datetime
 
+from apps.subscriptions.commands.command import Command
+from apps.subscriptions.models import Subscription
 from apps.users.models import User
 from core.logging import setup_logging
-from ..models import Subscription
-from .command import Command
 
 setup_logging()
 logger: logging.Logger = logging.getLogger(__name__)

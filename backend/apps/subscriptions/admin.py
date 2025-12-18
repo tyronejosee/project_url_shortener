@@ -1,8 +1,8 @@
-"""Admin for Plans App."""
+"""Admin for Subscriptions App."""
 
 from django.contrib import admin
 
-from .models import Plan, Feature, PlanFeature, Subscription
+from apps.subscriptions.models import Plan, Feature, PlanFeature, Subscription
 
 
 class PlanFeatureInline(admin.TabularInline):

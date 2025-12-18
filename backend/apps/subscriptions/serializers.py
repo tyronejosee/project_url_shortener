@@ -1,8 +1,8 @@
-"""Serializers for Plans App."""
+"""Serializers for Subscriptions App."""
 
 from rest_framework import serializers
 
-from .models import Plan, Feature, PlanFeature
+from apps.subscriptions.models import Plan, Feature, PlanFeature
 
 
 class FeatureSerializer(serializers.ModelSerializer):

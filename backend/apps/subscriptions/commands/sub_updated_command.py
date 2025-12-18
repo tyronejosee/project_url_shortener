@@ -1,7 +1,7 @@
 import logging
 
+from apps.subscriptions.commands.command import Command
 from core.logging import setup_logging
-from .command import Command
 
 setup_logging()
 logger: logging.Logger = logging.getLogger(__name__)

@@ -1,4 +1,4 @@
-"""Schemas for Plans App."""
+"""Schemas for Subscriptions App."""
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
@@ -12,11 +12,9 @@ plan_list_schema: dict = {
         ),
         responses={
             200: OpenApiResponse(
-                description="Successful response with the list of available plans.",
+                description="Successful response with the list of available plans."
             ),
-            404: OpenApiResponse(
-                description="No plans available.",
-            ),
+            404: OpenApiResponse(description="No plans available."),
         },
         auth=[],
         tags=["plans"],
@@ -33,18 +31,10 @@ leemon_squeezey_webhook_schema: dict = {
             "to the appropriate handler."
         ),
         responses={
-            200: OpenApiResponse(
-                description="Event dispatched successfully.",
-            ),
-            400: OpenApiResponse(
-                description="Invalid payload or missing event_name.",
-            ),
-            403: OpenApiResponse(
-                description="Invalid signature in payload.",
-            ),
-            500: OpenApiResponse(
-                description="Internal error.",
-            ),
+            200: OpenApiResponse(description="Event dispatched successfully."),
+            400: OpenApiResponse(description="Invalid payload or missing event_name."),
+            403: OpenApiResponse(description="Invalid signature in payload."),
+            500: OpenApiResponse(description="Internal error."),
         },
         auth=[],
         tags=["plans"],
