@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useFetch } from "@/hooks/use-fetch";
 import { API_URL } from "@/config/constants";
+import { useFetch } from "@/hooks/use-fetch";
 import { urlshortenerSchema } from "@/lib/zod";
 import type { URLForm } from "@/types";
 
@@ -47,7 +47,7 @@ export default function URLShortenerForm() {
   };
 
   return (
-    <div className="mt-2 mb-24 flex justify-center px-6 lg:px-8">
+    <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl flex gap-x-4">
         <Input
           type="url"
