@@ -3,20 +3,18 @@
 from typing import Any
 from uuid import UUID
 
-from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound, ValidationError
 
-from apps.domains.interfaces import DomainRepositoryInterface
 from apps.domains.models import Domain
-
-User = get_user_model()
+from apps.domains.repositories import DomainRepository
+from apps.users.models import User
 
 
 class DomainService:
     """Service layer for domain business logic."""
 
-    def __init__(self, repository: DomainRepositoryInterface):
-        self.repository = repository
+    def __init__(self) -> None:
+        self.repository = DomainRepository()
 
     def get_user_domains(self, user: User) -> list[Domain]:
         """Get all domains for a user."""

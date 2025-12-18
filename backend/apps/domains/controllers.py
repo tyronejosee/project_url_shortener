@@ -1,5 +1,6 @@
 """Controllers for Domains App."""
 
+from typing import cast
 from uuid import UUID
 
 from drf_spectacular.utils import extend_schema_view
@@ -8,7 +9,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.domains.repositories import DomainRepository
 from apps.domains.schemas import domain_detail_schema, domain_list_schema
 from apps.domains.serializers import DomainReadSerializer, DomainWriteSerializer
 from apps.domains.services import DomainService
@@ -27,9 +27,9 @@ class DomainListController(APIView):
 
     permission_classes: list = [IsPremium]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.service = DomainService(DomainRepository())
+        self.service = DomainService()
 
     def get(self, request: Request) -> Response:
         domains = self.service.get_user_domains(request.user)
@@ -42,8 +42,9 @@ class DomainListController(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        validated_data = cast("dict", serializer.validated_data)
         domain = self.service.create_domain(
-            user=request.user, validated_data=serializer.validated_data
+            user=request.user, validated_data=validated_data
         )
         return Response(
             DomainReadSerializer(domain).data, status=status.HTTP_201_CREATED
@@ -62,19 +63,18 @@ class DomainDetailController(APIView):
 
     permission_classes: list = [IsPremium]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.service = DomainService(DomainRepository())
+        self.service = DomainService()
 
     def patch(self, request: Request, domain_id: UUID) -> Response:
         serializer = DomainWriteSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        validated_data = cast("dict", serializer.validated_data)
         domain = self.service.update_domain(
-            domain_id=domain_id,
-            validated_data=serializer.validated_data,
-            user=request.user,
+            domain_id=domain_id, validated_data=validated_data, user=request.user
         )
         return Response(DomainReadSerializer(domain).data, status=status.HTTP_200_OK)
 
