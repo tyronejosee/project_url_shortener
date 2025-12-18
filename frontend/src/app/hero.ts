@@ -34,26 +34,26 @@ export default heroui({
           DEFAULT: "#fff1f2",
         },
         content1: {
-          DEFAULT: "#ffe4e6",
+          DEFAULT: "#faf5ff",
           foreground: "#0a0a0a",
         },
         content2: {
-          DEFAULT: "#fecdd3",
+          DEFAULT: "#f3e9fe",
           foreground: "#0a0a0a",
         },
         content3: {
-          DEFAULT: "#ffffffff",
+          DEFAULT: "#e9d6fe",
           foreground: "#0a0a0a",
         },
         content4: {
-          DEFAULT: "#ffe4e6",
+          DEFAULT: "#d8b6fc",
           foreground: "#0a0a0a",
         },
         divider: {
           DEFAULT: "rgba(17, 17, 17, 0.15)",
         },
         focus: {
-          DEFAULT: "#f43f5e",
+          DEFAULT: "#8a2be2",
         },
         foreground: {
           50: "#fafafa",

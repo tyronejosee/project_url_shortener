@@ -6,8 +6,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Plans - ${COMPANY_NAME}`,
-  description:
-    "Explore our pricing plans and choose the one that best suits your needs.",
+  description: "Explore our pricing plans and choose the one that best suits your needs.",
 };
 
 export default async function PlansPage() {
@@ -19,7 +18,7 @@ export default async function PlansPage() {
   };
 
   return (
-    <main className="flex-1 max-w-screen-lg mx-auto p-6 w-full">
+    <main className="flex-1 max-w-6xl mx-auto p-6 w-full">
       <div className="py-6">
         <h1 className="text-4xl font-bold text-center">Pricing Plans</h1>
         <p className="text-gray-600 mt-2 text-center">
