@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from "@heroui/react";
+import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -18,13 +12,11 @@ export default function Navigation() {
 
   const pathname = usePathname();
   const ignoredRoutes = ["/dashboard", "/auth/google", "/auth/facebook"];
-  const isIgnoredRoute = ignoredRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+  const isIgnoredRoute = ignoredRoutes.some((route) => pathname.startsWith(route));
   if (isIgnoredRoute) return null;
 
   return (
-    <Navbar isBordered>
+    <Navbar maxWidth="xl">
       <NavbarBrand>
         <Link href={"/"}>
           <Logo size="size-8" />
@@ -38,12 +30,7 @@ export default function Navigation() {
         {user ? (
           <>
             <NavbarItem>
-              <Button
-                as={Link}
-                color="primary"
-                href="/dashboard"
-                variant="solid"
-              >
+              <Button as={Link} color="primary" href="/dashboard" variant="solid">
                 Dashboard
               </Button>
             </NavbarItem>
@@ -54,12 +41,7 @@ export default function Navigation() {
               <Link href="/auth/login">Login</Link>
             </NavbarItem>
             <NavbarItem>
-              <Button
-                as={Link}
-                color="primary"
-                href="/auth/register"
-                variant="solid"
-              >
+              <Button as={Link} color="primary" href="/auth/register" variant="solid">
                 Register
               </Button>
             </NavbarItem>

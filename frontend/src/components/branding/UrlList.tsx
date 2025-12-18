@@ -3,24 +3,24 @@
 import { Button, Snippet } from "@heroui/react";
 import type { URLResponse } from "@/types";
 
-type Props = {
+type UrlListProps = {
   urls: URLResponse[];
   loading: boolean;
   setUrls: React.Dispatch<React.SetStateAction<URLResponse[]>>;
 };
 
-export default function UrlList({ urls, setUrls }: Props) {
+export default function UrlList({ urls, setUrls }: UrlListProps) {
   const handleClearUrls = () => {
     localStorage.removeItem("urls");
     setUrls([]);
   };
 
   return (
-    <section className="my-16 max-w-2xl mx-auto space-y-6 px-6 lg:px-0">
+    <section className="w-full space-y-4 px-4 lg:px-0">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Your Shortened Links</h2>
         {urls.length > 0 && (
-          <Button color="danger" variant="light" onPress={handleClearUrls}>
+          <Button color="danger" variant="faded" onPress={handleClearUrls}>
             Clear All
           </Button>
         )}

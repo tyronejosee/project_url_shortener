@@ -1,5 +1,4 @@
 export { default as HeaderSkeleton } from "./HeaderSkeleton";
-export { default as HeroSection } from "./HeroSection";
 export { default as KoFiWidget } from "./KoFiWidget";
 export { default as PricingPlans } from "./PricingPlans";
 export { default as PricingPlansLoading } from "./PricingPlansLoading";
