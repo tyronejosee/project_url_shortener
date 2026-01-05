@@ -29,10 +29,7 @@ export default function ClicksPageClient({ clicks }: Props) {
         searchKeys={["url"]}
         defaultRowsPerPage={10}
         rowsPerPageOptions={[10, 25, 50, 100]}
-        cellRenderer={({
-          columnKey,
-          value,
-        }: CellRendererProps<ClickResponse>) => {
+        cellRenderer={({ columnKey, value }: CellRendererProps<ClickResponse>) => {
           switch (columnKey) {
             case "created_at":
               return new Date(value as string).toLocaleDateString();

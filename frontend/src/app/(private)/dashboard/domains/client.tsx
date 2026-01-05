@@ -7,11 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  createDomain,
-  deleteDomainById,
-  updateDomainById,
-} from "@/actions/domains";
+import { createDomain, deleteDomainById, updateDomainById } from "@/actions/domains";
 import { DeleteModal, Table } from "@/components/common";
 import { DomainDrawer } from "@/components/domains";
 import { useUser } from "@/hooks/use-user";
@@ -34,16 +30,10 @@ export default function DomainsPageClient({ domains }: Props) {
   const router = useRouter();
   const { user } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isConfirmOpen,
-    onOpen: onConfirmOpen,
-    onClose: onConfirmClose,
-  } = useDisclosure();
+  const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure();
 
   // States
-  const [editingDomain, setEditingDomain] = useState<DomainResponse | null>(
-    null
-  );
+  const [editingDomain, setEditingDomain] = useState<DomainResponse | null>(null);
   const [domainToDelete, setDomainToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -162,10 +152,7 @@ export default function DomainsPageClient({ domains }: Props) {
         defaultRowsPerPage={10}
         rowsPerPageOptions={[10, 25, 50, 100]}
         addButton={{ label: "Add Domain", onAdd: () => openAddModal() }}
-        cellRenderer={({
-          columnKey,
-          value,
-        }: CellRendererProps<DomainResponse>) => {
+        cellRenderer={({ columnKey, value }: CellRendererProps<DomainResponse>) => {
           switch (columnKey) {
             case "created_at":
               return new Date(value as string).toLocaleDateString();
@@ -174,11 +161,7 @@ export default function DomainsPageClient({ domains }: Props) {
                 <Chip
                   size="sm"
                   color={
-                    value === "verified"
-                      ? "success"
-                      : value === "failed"
-                      ? "danger"
-                      : "default"
+                    value === "verified" ? "success" : value === "failed" ? "danger" : "default"
                   }
                   variant="flat"
                 >

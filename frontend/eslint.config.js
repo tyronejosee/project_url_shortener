@@ -11,15 +11,7 @@ import importPlugin from "eslint-plugin-import";
 export default [
   {
     files: ["src/**/*.{js,jsx,ts,tsx}"],
-    ignores: [
-      "node_modules/",
-      ".next/",
-      "dist/",
-      "build/",
-      "coverage/",
-      "public/",
-      "supabase/",
-    ],
+    ignores: ["node_modules/", ".next/", "dist/", "build/", "coverage/", "public/", "supabase/"],
     languageOptions: {
       parser,
       parserOptions: {
@@ -49,10 +41,7 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/explicit-function-return-type": [
-        "warn",
-        { allowExpressions: true },
-      ],
+      "@typescript-eslint/explicit-function-return-type": ["warn", { allowExpressions: true }],
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/ban-ts-comment": "warn",
 
@@ -81,14 +70,7 @@ export default [
       "import/order": [
         "error",
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
         },

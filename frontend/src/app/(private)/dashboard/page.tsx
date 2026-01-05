@@ -18,9 +18,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="space-y-6">
-      <h1 className="text-4xl font-bold text-center">
-        Global Click Statistics
-      </h1>
+      <h1 className="text-4xl font-bold text-center">Global Click Statistics</h1>
       <BarChartGraphic clicks={data.clicks} />
       <div className="grid grid-cols-3 gap-6">
         <PieChartGraphic title="Devices" types={data.device} />

@@ -22,19 +22,11 @@ import {
 } from "@heroui/react";
 import { ChevronDown, EllipsisVertical, Plus, Search } from "lucide-react";
 import { capitalize } from "@/lib/utils";
-import type {
-  CellRendererProps,
-  FilterOption,
-  TableAction,
-  TableColumn,
-} from "@/types";
+import type { CellRendererProps, FilterOption, TableAction, TableColumn } from "@/types";
 
-const HeroUITable = dynamic(
-  () => import("@heroui/table").then((c) => c.Table),
-  {
-    ssr: false,
-  },
-);
+const HeroUITable = dynamic(() => import("@heroui/table").then((c) => c.Table), {
+  ssr: false,
+});
 
 export interface TableData {
   id?: string | number;
@@ -115,9 +107,7 @@ export default function Table<T extends TableData>({
   const [filterValue, setFilterValue] = useState<string>("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(() => {
-    const base =
-      initialVisibleColumns ||
-      columns.map((col: TableColumn) => col.uid as string);
+    const base = initialVisibleColumns || columns.map((col: TableColumn) => col.uid as string);
     const uids = [...base];
 
     if (actions.length > 0 && !uids.includes("actions")) {
@@ -147,9 +137,7 @@ export default function Table<T extends TableData>({
 
     if (visibleColumns === "all") return cols;
 
-    return cols.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid),
-    );
+    return cols.filter((column) => Array.from(visibleColumns).includes(column.uid));
   }, [visibleColumns, columns, actions]);
 
   // Visible columns filter (client-side)
@@ -160,12 +148,9 @@ export default function Table<T extends TableData>({
 
     if (hasSearchFilter && searchable) {
       filteredData = filteredData.filter((item) =>
-        searchKeys.some((key) =>
-          item[key]
-            ?.toString()
-            .toLowerCase()
-            .includes(filterValue.toLowerCase()),
-        ),
+        searchKeys.some(
+          (key) => item[key]?.toString().toLowerCase().includes(filterValue.toLowerCase())
+        )
       );
     }
 
@@ -277,10 +262,7 @@ export default function Table<T extends TableData>({
           );
         default:
           const statusValue = item[statusKey];
-          if (
-            columnKey === statusKey &&
-            statusColorMap[statusValue as string]
-          ) {
+          if (columnKey === statusKey && statusColorMap[statusValue as string]) {
             return (
               <Chip
                 className="capitalize"
@@ -296,7 +278,7 @@ export default function Table<T extends TableData>({
           return cellValue as React.ReactNode;
       }
     },
-    [cellRenderer, actions, statusKey, statusColorMap],
+    [cellRenderer, actions, statusKey, statusColorMap]
   );
 
   // Event handlers with debounce for search
@@ -331,7 +313,7 @@ export default function Table<T extends TableData>({
         onPageChange(1, newRowsPerPage);
       }
     },
-    [serverSide, onPageChange],
+    [serverSide, onPageChange]
   );
 
   const onSearchChange = useCallback(
@@ -349,7 +331,7 @@ export default function Table<T extends TableData>({
         }, 500); // Wait 500ms
       }
     },
-    [serverSide, onSearchChangeExternal],
+    [serverSide, onSearchChangeExternal]
   );
 
   const onClear = useCallback(() => {
@@ -371,7 +353,7 @@ export default function Table<T extends TableData>({
         onSortChangeExternal(descriptor);
       }
     },
-    [serverSide, onSortChangeExternal],
+    [serverSide, onSortChangeExternal]
   );
 
   const handleFilterChange = useCallback(
@@ -382,7 +364,7 @@ export default function Table<T extends TableData>({
         onFilterChange(selection);
       }
     },
-    [serverSide, onFilterChange],
+    [serverSide, onFilterChange]
   );
 
   // Effects
@@ -499,12 +481,8 @@ export default function Table<T extends TableData>({
               {loading
                 ? "Loading..."
                 : title
-                  ? `${title} (${
-                      serverSide ? totalItems || data.length : data.length
-                    } items)`
-                  : `Total ${
-                      serverSide ? totalItems || data.length : data.length
-                    } items`}
+                  ? `${title} (${serverSide ? totalItems || data.length : data.length} items)`
+                  : `Total ${serverSide ? totalItems || data.length : data.length} items`}
             </span>
             {paginated && (
               <label className="flex items-center text-neutral-500 text-small">
@@ -652,9 +630,7 @@ export default function Table<T extends TableData>({
       >
         {(item) => (
           <TableRow key={item.id || item.uid || Math.random()}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
+            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}
       </TableBody>

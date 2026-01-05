@@ -7,11 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  createGroup,
-  deleteGroupById,
-  updateGroupById,
-} from "@/actions/groups";
+import { createGroup, deleteGroupById, updateGroupById } from "@/actions/groups";
 import { DeleteModal, Table } from "@/components/common";
 import { GroupDrawer } from "@/components/groups";
 import { useUser } from "@/hooks/use-user";
@@ -33,11 +29,7 @@ export default function GroupsPageClient({ groups }: Props) {
   const router = useRouter();
   const { user } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isConfirmOpen,
-    onOpen: onConfirmOpen,
-    onClose: onConfirmClose,
-  } = useDisclosure();
+  const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure();
 
   // States
   const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
@@ -166,10 +158,7 @@ export default function GroupsPageClient({ groups }: Props) {
         defaultRowsPerPage={10}
         rowsPerPageOptions={[10, 25, 50, 100]}
         addButton={{ label: "Add Group", onAdd: () => openAddModal() }}
-        cellRenderer={({
-          columnKey,
-          value,
-        }: CellRendererProps<GroupResponse>) => {
+        cellRenderer={({ columnKey, value }: CellRendererProps<GroupResponse>) => {
           switch (columnKey) {
             case "created_at":
               return new Date(value as string).toLocaleDateString();
@@ -177,11 +166,7 @@ export default function GroupsPageClient({ groups }: Props) {
               return new Date(value as string).toLocaleDateString();
             case "is_available":
               return (
-                <Chip
-                  size="sm"
-                  color={value ? "success" : "danger"}
-                  variant="flat"
-                >
+                <Chip size="sm" color={value ? "success" : "danger"} variant="flat">
                   {value === true ? "Active" : "Inactive"}
                 </Chip>
               );

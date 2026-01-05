@@ -41,7 +41,7 @@ API built with Django and Django REST Framework, it provides endpoints for creat
 Clone the repository.
 
 ```bash
-git@github.com:tyronejosee/project_url_shortener.git
+git clone git@github.com:tyronejosee/project_url_shortener.git
 ```
 
 ### 🌱 Contribute
@@ -56,7 +56,7 @@ If you would like to contribute to the project:
 
 ### ⚖️ License
 
-This project is under the [Apache License](https://github.com/tyronejosee/project_url_shortener/blob/main/LICENSE) Licence.
+This project is under the [Apache License](/LICENSE) Licence.
 
 ## 🛠️ Backend
 

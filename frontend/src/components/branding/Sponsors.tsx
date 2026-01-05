@@ -35,12 +35,7 @@ export default function Sponsors() {
   return (
     <InfiniteSlider gap={16} reverse>
       {sponsors.map((sponsor) => (
-        <a
-          key={sponsor.name}
-          href={sponsor.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a key={sponsor.name} href={sponsor.url} target="_blank" rel="noopener noreferrer">
           <Image
             src={sponsor.logo}
             alt={sponsor.name}

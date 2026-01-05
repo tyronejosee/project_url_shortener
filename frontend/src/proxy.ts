@@ -1,14 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const publicRoutes = [
-  "/",
-  "/donate",
-  "/feedback",
-  "/plans",
-  "/privacy-policy",
-  "/terms-service",
-];
+const publicRoutes = ["/", "/donate", "/feedback", "/plans", "/privacy-policy", "/terms-service"];
 const authRoutes = ["/auth/login", "/auth/register", "/auth/google"];
 const apiAuthPrefix = "/api/auth";
 

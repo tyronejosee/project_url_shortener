@@ -37,7 +37,7 @@ class ProviderAuthExtensionView(ProviderAuthView):
     Extends the standard ProviderAuthView `djoser.social.urls`
     to include custom schema documentation using drf-spectacular.
     """
-    
+
     def post(self, request, *args, **kwargs) -> Response:
         response = super().post(request, *args, **kwargs)
 

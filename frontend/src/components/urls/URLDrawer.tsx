@@ -82,12 +82,7 @@ export default function URLDrawer({
             />
             <div className="flex space-x-6">
               <Tooltip content="Not available for this plan.">
-                <div
-                  className={clsx(
-                    "w-full",
-                    !isPlanAllowed && "pointer-events-none opacity-60",
-                  )}
-                >
+                <div className={clsx("w-full", !isPlanAllowed && "pointer-events-none opacity-60")}>
                   <Input
                     type={isVisible ? "text" : "password"}
                     size="lg"
@@ -124,19 +119,13 @@ export default function URLDrawer({
                     label={isPlanAllowed ? "Privacy" : "Privacy (*)"}
                     labelPlacement="outside"
                     placeholder="Select a Privacy"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
+                    selectedKeys={field.value ? new Set([field.value]) : new Set()}
+                    onSelectionChange={(keys) => field.onChange(Array.from(keys)[0])}
                     items={privacyItems}
                     isInvalid={!!errors.privacy}
                     errorMessage={errors.privacy?.message}
                   >
-                    {(item) => (
-                      <SelectItem key={item.key}>{item.label}</SelectItem>
-                    )}
+                    {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
                   </Select>
                 )}
               />
@@ -152,11 +141,7 @@ export default function URLDrawer({
               disabled={loading || isSubmitting}
               className="bg-primary text-white font-medium"
             >
-              {loading || isSubmitting
-                ? "Saving..."
-                : editingURL
-                  ? "Update"
-                  : "Save"}
+              {loading || isSubmitting ? "Saving..." : editingURL ? "Update" : "Save"}
             </Button>
           </DrawerFooter>
         </form>

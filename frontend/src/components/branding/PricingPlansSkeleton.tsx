@@ -19,10 +19,7 @@ export default function PricingPlansSkeleton({ cards = 3 }: Props) {
       {/* Plans */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {[...Array(cards)].map((_, i) => (
-          <div
-            key={i}
-            className="space-y-4 border border-neutral-300 rounded-2xl p-6 text-center"
-          >
+          <div key={i} className="space-y-4 border border-neutral-300 rounded-2xl p-6 text-center">
             {/* Name */}
             <div className="flex items-center justify-center gap-2">
               <Skeleton className="h-6 w-32 rounded-md" />
@@ -42,10 +39,7 @@ export default function PricingPlansSkeleton({ cards = 3 }: Props) {
                 </li>
               ))}
               {[...Array(7)].map((_, j) => (
-                <li
-                  key={`feature-${j}`}
-                  className="flex w-full justify-between"
-                >
+                <li key={`feature-${j}`} className="flex w-full justify-between">
                   <Skeleton className="h-4 w-36 rounded-md" />
                   <Skeleton className="h-4 w-5 rounded-full" />
                 </li>

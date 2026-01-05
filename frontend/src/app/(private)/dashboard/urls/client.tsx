@@ -13,13 +13,7 @@ import { DeleteModal, Table } from "@/components/common";
 import { URLDrawer } from "@/components/urls";
 import { capitalize } from "@/lib/utils";
 import { urlSchema } from "@/lib/zod";
-import type {
-  CellRendererProps,
-  TableAction,
-  TableColumn,
-  URLForm,
-  URLResponse,
-} from "@/types";
+import type { CellRendererProps, TableAction, TableColumn, URLForm, URLResponse } from "@/types";
 
 type Props = {
   urls: URLResponse[];
@@ -34,11 +28,7 @@ export default function URLsPageClient({ urls }: Props) {
   const isPlanAllowed = plan === "Basic Plan" || plan === "Premium Plan";
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isConfirmOpen,
-    onOpen: onConfirmOpen,
-    onClose: onConfirmClose,
-  } = useDisclosure();
+  const { isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose } = useDisclosure();
 
   // States
   const [editingURL, setEditingURL] = useState<URLResponse | null>(null);
@@ -179,10 +169,7 @@ export default function URLsPageClient({ urls }: Props) {
         defaultRowsPerPage={10}
         rowsPerPageOptions={[10, 25, 50, 100]}
         addButton={{ label: "Add Url", onAdd: () => openAddModal() }}
-        cellRenderer={({
-          columnKey,
-          value,
-        }: CellRendererProps<URLResponse>) => {
+        cellRenderer={({ columnKey, value }: CellRendererProps<URLResponse>) => {
           switch (columnKey) {
             case "created_at":
               return new Date(value as string).toLocaleDateString();
@@ -190,11 +177,7 @@ export default function URLsPageClient({ urls }: Props) {
               return new Date(value as string).toLocaleDateString();
             case "privacy":
               return (
-                <Chip
-                  size="sm"
-                  color={value === "public" ? "success" : "default"}
-                  variant="flat"
-                >
+                <Chip size="sm" color={value === "public" ? "success" : "default"} variant="flat">
                   {capitalize(value)}
                 </Chip>
               );

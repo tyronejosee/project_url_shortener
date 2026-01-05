@@ -6,8 +6,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Plans - ${COMPANY_NAME}`,
-  description:
-    "Explore our pricing plans and choose the one that best suits your needs.",
+  description: "Explore our pricing plans and choose the one that best suits your needs.",
 };
 
 export default async function PlansPage() {

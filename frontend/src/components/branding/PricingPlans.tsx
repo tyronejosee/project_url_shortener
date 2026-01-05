@@ -20,15 +20,11 @@ export default function PricingPlans({ plans }: Props) {
   const { user } = useUser();
 
   // States
-  const [selectedPlan, setSelectedPlan] = useState<string>(
-    user?.plan || "Basic Plan"
-  );
+  const [selectedPlan, setSelectedPlan] = useState<string>(user?.plan || "Basic Plan");
   const [isAnnual, setIsAnnual] = useState<boolean>(false);
 
   // Constants
-  const topClass = pathname?.includes("/dashboard/plans")
-    ? "top-0 py-0"
-    : "top-16 py-4";
+  const topClass = pathname?.includes("/dashboard/plans") ? "top-0 py-0" : "top-16 py-4";
 
   return (
     <section>
@@ -39,11 +35,7 @@ export default function PricingPlans({ plans }: Props) {
         )}
       >
         <span>Monthly</span>
-        <Switch
-          isSelected={isAnnual}
-          onValueChange={setIsAnnual}
-          color="primary"
-        ></Switch>
+        <Switch isSelected={isAnnual} onValueChange={setIsAnnual} color="primary"></Switch>
         <span>Annual</span>
       </nav>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
@@ -61,19 +53,13 @@ export default function PricingPlans({ plans }: Props) {
             >
               <h2 className="flex items-center justify-center gap-2 text-2xl font-semibold">
                 {plan.name}
-                {plan.is_test_mode && (
-                  <TestTubeDiagonal size={18} className="text-red-600" />
-                )}
+                {plan.is_test_mode && <TestTubeDiagonal size={18} className="text-red-600" />}
               </h2>
               <div className="flex items-center justify-center gap-2">
                 <p className="text-3xl font-bold">
                   {isAnnual ? plan.price_annual : plan.price_monthly}
                 </p>
-                {!!isAnnual && (
-                  <p className="text-xs text-green-600">
-                    {plan.discount_annual}
-                  </p>
-                )}
+                {!!isAnnual && <p className="text-xs text-green-600">{plan.discount_annual}</p>}
               </div>
               <ul className="mt-4 space-y-1 text-gray-600 text-left">
                 <li className="flex w-full justify-between">

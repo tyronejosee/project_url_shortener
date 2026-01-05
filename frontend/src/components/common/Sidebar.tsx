@@ -29,7 +29,7 @@ export default function Sidebar() {
     <aside
       className={clsx(
         "relative z-20 transition-all duration-300 ease-in-out bg-white border-r-2 border-neutral-200 p-5 flex flex-col h-screen",
-        isOpen ? "w-56" : "w-20",
+        isOpen ? "w-56" : "w-20"
       )}
     >
       {/* Button */}
@@ -50,7 +50,7 @@ export default function Sidebar() {
         <span
           className={clsx(
             "overflow-hidden transition-all duration-500 ease-in-out font-bold text-primary",
-            isOpen ? "ml-2 opacity-100 w-auto delay-200" : "opacity-0 w-0",
+            isOpen ? "ml-2 opacity-100 w-auto delay-200" : "opacity-0 w-0"
           )}
         >
           UrlShortener
@@ -64,13 +64,13 @@ export default function Sidebar() {
           href={"https://github.com/tyronejosee"}
           target="_blank"
           className={clsx(
-            "flex justify-center items-center p-2 rounded-xl relative border-2 border-neutral-200 w-full h-10",
+            "flex justify-center items-center p-2 rounded-xl relative border-2 border-neutral-200 w-full h-10"
           )}
         >
           <div
             className={clsx(
               "absolute inset-0 flex justify-center items-center transition-opacity duration-300",
-              isOpen ? "opacity-0" : "opacity-100",
+              isOpen ? "opacity-0" : "opacity-100"
             )}
           >
             <Heart size={24} />
@@ -78,7 +78,7 @@ export default function Sidebar() {
           <span
             className={clsx(
               "absolute inset-0 flex justify-center items-center text-xs line-clamp-1 transition-opacity duration-300 hover:underline",
-              isOpen ? "opacity-100" : "opacity-0",
+              isOpen ? "opacity-100" : "opacity-0"
             )}
           >
             Made with ♥️ by Tyrone

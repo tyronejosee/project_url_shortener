@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import { Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { ClickType } from "@/types";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#B9A0BB"];
@@ -36,12 +29,7 @@ export default function PieChartGraphic({ title, types }: Props) {
             ))}
           </Pie>
           <Tooltip />
-          <Legend
-            layout="horizontal"
-            align="center"
-            verticalAlign="bottom"
-            iconSize={15}
-          />
+          <Legend layout="horizontal" align="center" verticalAlign="bottom" iconSize={15} />
         </PieChart>
       </ResponsiveContainer>
     </figure>

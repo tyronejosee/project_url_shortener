@@ -10,11 +10,7 @@ import {
   DrawerHeader,
   Button,
 } from "@heroui/react";
-import {
-  FieldErrors,
-  UseFormHandleSubmit,
-  UseFormRegister,
-} from "react-hook-form";
+import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import type { GroupResponse, GroupForm } from "@/types";
 
 type Props = {
@@ -85,11 +81,7 @@ export default function GroupDrawer({
               disabled={loading || isSubmitting}
               className="bg-primary text-white font-medium"
             >
-              {loading || isSubmitting
-                ? "Saving..."
-                : editingGroup
-                  ? "Update"
-                  : "Save"}
+              {loading || isSubmitting ? "Saving..." : editingGroup ? "Update" : "Save"}
             </Button>
           </DrawerFooter>
         </form>
