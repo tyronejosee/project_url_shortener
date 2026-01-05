@@ -2,19 +2,17 @@
 
 import logging
 
-from django.conf import settings
-from drf_spectacular.utils import extend_schema_view
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema_view
 
-from apps.subscriptions.commands.dispatcher import EventDispatcher
+from apps.subscriptions.bootstrap import get_plans_service, get_process_webhook_service
+from apps.subscriptions.exceptions import InvalidPayloadError, InvalidSignatureError
 from apps.subscriptions.schemas import leemon_squeezey_webhook_schema, plan_list_schema
 from apps.subscriptions.serializers import PlanSerializer
-from apps.subscriptions.services import PlanService
-from apps.utils.helpers import verify_signature
 from core.logging import setup_logging
 
 setup_logging()
@@ -32,12 +30,8 @@ class PlanListController(APIView):
 
     permission_classes: list = [AllowAny]
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.service = PlanService()
-
     def get(self, request: Request, *args, **kwargs) -> Response:
-        plans = self.service.get_plans()
+        plans = get_plans_service().execute()
         return Response(
             PlanSerializer(plans, many=True).data, status=status.HTTP_200_OK
         )
@@ -55,41 +49,35 @@ class LemonSqueezyWebhook(APIView):
     permission_classes: list = [AllowAny]
 
     def post(self, request: Request, *args, **kwargs) -> Response:
-        signature: str = request.headers.get("X-Signature")
-        raw_body: bytes = request.body
-
-        if not verify_signature(
-            settings.LEMON_SQUEEZY_SECRET_KEY,
-            raw_body,
-            signature,
-        ):
-            logger.warning("Invalid webhook signature")
-            return Response(
-                {"detail": "Invalid signature in payload"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        service = get_process_webhook_service(
+            raw_body=request.body,
+            signature=request.headers.get("X-Signature"),
+            payload=request.data,  # type: ignore
+        )
 
         try:
-            payload: dict = request.data  # type: ignore
-            event_type: str = payload["meta"]["event_name"]
-
-            if not event_type:
-                logger.error("Webhook received without event_name")
-                return Response(
-                    {"detail": "Missing event_name in payload"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            logger.info(f"Received webhook event: {event_type}")
-            processor = EventDispatcher(event_type, payload)
-            processor.dispatch()
+            service.execute()
             return Response(
                 {"detail": "Event dispatched successfully"},
                 status=status.HTTP_200_OK,
             )
 
-        except Exception as e:
-            logger.exception(f"Error processing Lemon Squeezy webhook: {e}")
+        except InvalidSignatureError as e:
+            logger.warning(str(e))
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        except InvalidPayloadError as e:
+            logger.error(str(e))
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        except Exception:
+            logger.exception("Unhandled Lemon Squeezy webhook error")
             return Response(
                 {"detail": "Internal error"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
