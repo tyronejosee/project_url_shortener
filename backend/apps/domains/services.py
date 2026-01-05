@@ -3,57 +3,64 @@
 from typing import Any
 from uuid import UUID
 
-from rest_framework.exceptions import NotFound, ValidationError
-
+from apps.domains.exceptions import DomainNotFound, DomainNotOwned
 from apps.domains.models import Domain
 from apps.domains.repositories import DomainRepository
 from apps.users.models import User
 
 
-class DomainService:
-    """Service layer for domain business logic."""
+class BaseDomainService:
+    def __init__(self, domain_repository: DomainRepository) -> None:
+        self.domain_repository = domain_repository
 
-    def __init__(self) -> None:
-        self.repository = DomainRepository()
-
-    def get_user_domains(self, user: User) -> list[Domain]:
-        """Get all domains for a user."""
-        domains = self.repository.get_by_user(user)
-        return list(domains)
-
-    def get_domain_by_id(self, domain_id: UUID) -> Domain:
-        """Get a single domain by ID."""
-        domain = self.repository.get_by_id(domain_id)
-        if not domain:
-            raise NotFound(detail="Domain not found.")
-        return domain
-
-    def create_domain(self, user: User, validated_data: dict[str, Any]) -> Domain:
-        """Create a new domain with business logic validation."""
-        return self.repository.create(user=user, **validated_data)
-
-    def update_domain(
+    def get_domain_or_fail(
         self,
         domain_id: UUID,
-        validated_data: dict[str, Any],
+        *,
         user: User | None = None,
     ) -> Domain:
-        """Update an existing domain."""
-        domain = self.get_domain_by_id(domain_id)
-        if user and domain.user != user:
-            raise ValidationError(
-                detail="You don't have permission to update this domain."
-            )
+        domain = self.domain_repository.get_by_id(domain_id)
 
-        return self.repository.update(domain, **validated_data)
-
-    def delete_domain(self, domain_id: UUID, user: User | None = None) -> None:
-        """Delete a domain."""
-        domain = self.get_domain_by_id(domain_id)
+        if not domain:
+            raise DomainNotFound("Domain not found.")
 
         if user and domain.user != user:
-            raise ValidationError(
-                detail="You don't have permission to delete this domain."
-            )
+            raise DomainNotOwned("You don't have permission to access this domain.")
 
-        self.repository.delete(domain)
+        return domain
+
+
+class GetUserDomainsService:
+    def __init__(self, domain_repository: DomainRepository) -> None:
+        self.domain_repository = domain_repository
+
+    def execute(self, user: User) -> list[Domain]:
+        domains = self.domain_repository.get_by_user(user)
+        return list(domains)
+
+
+class GetDomainByIdService(BaseDomainService):
+    def execute(self, domain_id: UUID) -> Domain:
+        return self.get_domain_or_fail(domain_id)
+
+
+class CreateDomainService:
+    def __init__(self, domain_repository: DomainRepository) -> None:
+        self.domain_repository = domain_repository
+
+    def execute(self, user: User, validated_data: dict[str, Any]) -> Domain:
+        return self.domain_repository.create(user=user, **validated_data)
+
+
+class UpdateDomainService(BaseDomainService):
+    def execute(
+        self, domain_id: UUID, validated_data: dict[str, Any], user: User | None = None
+    ) -> Domain:
+        domain = self.get_domain_or_fail(domain_id, user=user)
+        return self.domain_repository.update(domain, **validated_data)
+
+
+class DeleteDomainService(BaseDomainService):
+    def execute(self, domain_id: UUID, user: User | None = None) -> None:
+        domain = self.get_domain_or_fail(domain_id, user=user)
+        self.domain_repository.delete(domain)

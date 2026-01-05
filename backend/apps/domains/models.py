@@ -14,7 +14,7 @@ class Domain(BaseModel):
     """Model definition for Domain model."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    domain = models.URLField()
+    domain = models.URLField(unique=True)
     status = models.CharField(
         max_length=10, choices=StatusChoices.choices, default=StatusChoices.PENDING
     )
