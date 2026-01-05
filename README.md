@@ -187,6 +187,92 @@ http://127.0.0.1:8400/api/schema/swagger/
 http://127.0.0.1:8400/api/schema/redoc/
 ```
 
+### 🐛 Debugging
+
+I recommend using [pdb](https://docs.python.org/3/library/pdb.html) to debug the backend.
+
+Find the code you want to debug and add:
+
+```python
+domains = self.repo.get_by_user(user)
+import pdb; pdb.set_trace()  # <-- Add this line
+return list(domains)
+```
+
+List your machine's containers to find the one running the backend.
+
+```bash
+docker ps -a
+```
+
+Open the container that runs the backend.
+
+```bash
+docker attach <container_id>
+```
+
+Make a request to the endpoint you want to debug and where the breakpoint is set.
+
+```bash
+curl -X GET http://127.0.0.1:8400/api/domains
+```
+
+You will see the breakpoint in your machine's console.
+
+```bash
+/app/apps/domains/services.py(44)execute()
+-> return list(domains)
+(Pdb)
+```
+
+You can view the context of your breakpoint.
+
+```bash
+(Pdb) locals()
+```
+
+To inspect variables at the breakpoint, use `p`.
+
+```bash
+(Pdb) p domains
+[<Domain id=1 domain='example.com' status='pending' user_id=1>,
+ <Domain id=2 domain='example.net' status='pending' user_id=1>,
+ <Domain id=3 domain='example.org' status='pending' user_id=1>]
+
+
+(Pdb) p domains[0]
+<Domain id=1 domain='example.com' status='pending' user_id=1>
+
+(Pdb) p domains[0].domain
+'example.com'
+
+(Pdb) p domains.count()
+3
+
+(Pdb) p domains.exists()
+True
+
+(Pdb) p type(domains)
+<class 'django.db.models.query.QuerySet'>
+
+(Pdb) pp list(domains.values())
+[{'domain': 'example.com',
+  'id': 1,
+  'status': 'pending',
+  'user_id': 1},
+ {'domain': 'example.net',
+  'id': 2,
+  'status': 'pending',
+  'user_id': 1},
+ {'domain': 'example.org',
+  'id': 3,
+  'status': 'pending',
+  'user_id': 1}]
+```
+
+To continue running the backend, press `c`.
+To exit the breakpoint, press `q`.
+
 ### 🚨 Important Notes
 
 Check the creation of migrations before creating them.
